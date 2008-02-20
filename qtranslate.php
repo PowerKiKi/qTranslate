@@ -57,7 +57,7 @@ $q_config['date_format']['zh'] = '%x %A';
 
 $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
-$q_config['time_format']['zh'] = '%I:%M %r';
+$q_config['time_format']['zh'] = '%I:%M%p';
 
 /* CONFIGURATION PART ENDS HERE */
 /* Don't change anything below this line! */
@@ -631,8 +631,8 @@ function qtrans_date($date, $default = '', $format ='', $before = '', $after = '
     if($format==''&&isset($q_config['date_format'][$q_config['language']]))
         $format = $q_config['date_format'][$q_config['language']];
     // use format for default language if not set
-    if($format==''&&isset($q_config['date_format'][$q_config['language']]))
-        $format = $q_config['date_format'][$q_config['language']];
+    if($format==''&&isset($q_config['date_format'][$q_config['default_language']]))
+        $format = $q_config['date_format'][$q_config['default_language']];
     // use wordpress generated string if both are not set
     if($format=='') return $default;
     // return translated date
@@ -666,12 +666,11 @@ function qtrans_time($time, $default = '', $format ='') {
     if($format==''&&isset($q_config['time_format'][$q_config['language']]))
         $format = $q_config['time_format'][$q_config['language']];
     // use format for default language if not set
-    if($format==''&&isset($q_config['time_format'][$q_config['language']]))
-        $format = $q_config['time_format'][$q_config['language']];
+    if($format==''&&isset($q_config['time_format'][$q_config['default_language']]))
+        $format = $q_config['time_format'][$q_config['default_language']];
     // use wordpress generated string if both are not set
     if($format=='') return $default;
     // return translated date
-    
     return strftime($format, $time);
 }
 
