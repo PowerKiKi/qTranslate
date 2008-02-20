@@ -174,13 +174,26 @@ $q_config['js']['qtrans_save'].= "
         return text;
     }
     ";
+$q_config['js']['qtrans_integrate_category'] = "
+    function qtrans_integrate_category() {
+        var t = document.getElementById('cat_name');
+    ";
+foreach($q_config['enabled_languages'] as $language)
+    $q_config['js']['qtrans_integrate_category'].= "
+        if(document.getElementById('qtrans_category_".$language."').value!='')
+            t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_category_".$language."').value,t.value);
+        ";
+$q_config['js']['qtrans_integrate_category'].= "
+    }
+    ";
 $q_config['js']['qtrans_integrate_title'] = "
     function qtrans_integrate_title() {
         var t = document.getElementById('title');
     ";
 foreach($q_config['enabled_languages'] as $language)
     $q_config['js']['qtrans_integrate_title'].= "
-        t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_title_".$language."').value,t.value);
+        if(document.getElementById('qtrans_title_".$language."').value!='')
+            t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_title_".$language."').value,t.value);
         ";
 $q_config['js']['qtrans_integrate_title'].= "
     }
@@ -367,8 +380,36 @@ function qtrans_insertTitleInput($language){
     return $html;    
 }
 
-// Modifys TinyMCE to edit
-function qtrans_modifyEditor($old_content) {
+function qtrans_insertCategoryInput($language){
+    global $q_config;
+    $html ="
+        var tr = document.createElement('tr');
+        var th = document.createElement('th');
+        var ll = document.createElement('label');
+        var l = document.createTextNode('".$q_config['language_name'][$language]." ".__("Category name:")."');
+        var td = document.createElement('td');
+        var i = document.createElement('input');
+        var ins = document.getElementById('cat_name').parentNode.parentNode;
+        i.type = 'text';
+        i.id = i.name = ll.htmlFor ='qtrans_category_".$language."';
+        i.value = qtrans_use('".$language."', document.getElementById('cat_name').value);
+        i.onchange = qtrans_integrate_category;
+        td.width = '67%';
+        th.width = '33%';
+        th.scope = 'row';
+        th.vAlign = 'top';
+        ll.appendChild(l);
+        th.appendChild(ll);
+        tr.appendChild(th);
+        td.appendChild(i);
+        tr.appendChild(td);
+        ins.parentNode.insertBefore(tr,ins);
+        ";
+    return $html;    
+}
+
+// Modifys TinyMCE to edit multilingual content
+function qtrans_modifyRichEditor($old_content) {
     global $q_config;
     // don't do anything to the editor if it's not rich
     if(!user_can_richedit()) return $old_content;
@@ -427,6 +468,23 @@ function qtrans_modifyEditor($old_content) {
     return $content.$old_content.$content_append;
 }
 
+// modifys category form to support multilingual content
+function qtrans_modifyCategoryForm($category) {
+    global $q_config;
+    echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
+    // include needed js functions
+    echo $q_config['js']['qtrans_integrate'];
+    echo $q_config['js']['qtrans_use'];
+    echo $q_config['js']['qtrans_integrate_category'];
+    foreach($q_config['enabled_languages'] as $language) {
+        echo qtrans_insertCategoryInput($language);
+    }
+    // hide real category text
+    echo "document.getElementById('cat_name').parentNode.parentNode.style.display='none';\n";
+    echo "// ]]>\n</script>\n";
+
+}
+
 function qtrans_getFirstLanguage($text) {
     global $q_config;
     $langregex = '/\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\1\]/i';
@@ -457,7 +515,8 @@ function qtrans_use($lang, $text, $show_available=false) {
         if(sizeof($matches[0])>0) {
             for($i=0;$i<sizeof($matches[0]);$i++){
                 if(in_array($matches[1][$i], $q_config['enabled_languages']))
-                    $available_languages[] = $matches[1][$i];
+                    if(trim($matches[2][$i])!="")
+                        $available_languages[] = $matches[1][$i];
                 if($matches[1][$i]==$lang){
                     $result = str_replace($matches[0][$i],$matches[2][$i],$result);
                     if(trim($matches[2][$i])!="") {
@@ -701,10 +760,12 @@ function qtrans_timeFromPostForCurrentLanguage($old_date, $format ='', $gmt = fa
 
 // Hooks (Actions)
 add_action('wp_head',                       'qtrans_header');
+add_action('edit_category_form',            'qtrans_modifyCategoryForm');
 
 // Hooks (execution time critical filters) 
 add_filter('the_content',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_title',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
+add_filter('the_category',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('sanitize_title',                'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',              'qtrans_dateFromCommentForCurrentLanguage',0,2);
 add_filter('get_comment_time',              'qtrans_timeFromCommentForCurrentLanguage',0,3);
@@ -716,7 +777,7 @@ add_filter('the_date',                      'qtrans_dateFromPostForCurrentLangua
 add_filter('locale',                        'qtrans_localeForCurrentLanguage',99);
 
 // Hooks (execution time non-critical filters) 
-add_filter('the_editor',                    'qtrans_modifyEditor');
+add_filter('the_editor',                    'qtrans_modifyRichEditor');
 add_filter('attachment_link',               'qtrans_convertURL');
 add_filter('author_feed_link',              'qtrans_convertURL');
 add_filter('author_link',                   'qtrans_convertURL');
@@ -730,5 +791,6 @@ add_filter('post_link',                     'qtrans_convertURL');
 add_filter('year_link',                     'qtrans_convertURL');
 add_filter('category_feed_link',            'qtrans_convertURL');
 add_filter('category_link',                 'qtrans_convertURL');
+add_filter('tag_link',                      'qtrans_convertURL');
 
 ?>
