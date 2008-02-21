@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 RC1
+Version: 1.0 RC1 for Wordpress 2.3.3
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 */
@@ -696,9 +696,9 @@ function qtrans_convertURL($url, $lang='') {
 }
 
 function qtrans_localeForCurrentLanguage($locale){
-    global $q_config;
     // wordpress is looking for locale, this should happen even before init action, so let's hook in here
     qtrans_init();
+    global $q_config;
     // try to figure out the correct locale
     $locale = array();
     $locale[] = $q_config['locale'][$q_config['language']].".utf8";
@@ -807,7 +807,7 @@ function qtrans_widget_init() {
         extract($args);
         
         // Collect our widget's options, or define their defaults.
-        $options = get_option('qtrans_switch');
+        $options = get_option('qtranslate_switch');
         $title = empty($options['qtrans-switch-title']) ? __('Language') : $options['qtrans-switch-title'];
 
          // It's important to use the $before_widget, $before_title,
@@ -822,21 +822,21 @@ function qtrans_widget_init() {
                 echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
             echo '><span>'.$q_config['language_name'][$language].'</span></a></li>';
         }
-        echo "</ul>";
+        echo "</ul><div class=\"qtrans_widget_end\"></div>";
         echo $after_widget;     
     }
     
     function qtrans_widget_switch_control() {
 
         // Collect our widget's options.
-        $options = get_option('qtrans_switch');
+        $options = get_option('qtranslate_switch');
         // This is for handing the control form submission.
         if ( $_POST['qtrans-switch-submit'] ) {
             // Clean up control form submission options
             $options['qtrans-switch-title'] = strip_tags(stripslashes($_POST['qtrans-switch-title']));
             $options['qtrans-switch-hide-title'] = strip_tags(stripslashes($_POST['qtrans-switch-hide-title']));
             $options['qtrans-switch-use-flags'] = strip_tags(stripslashes($_POST['qtrans-switch-use-flags']));
-            update_option('qtrans_switch', $options);
+            update_option('qtranslate_switch', $options);
         }
 
         // Format options as valid HTML. Hey, why not.
@@ -847,9 +847,9 @@ function qtrans_widget_init() {
         // The HTML below is the control form for editing options.
         ?>
         <div>
-            <label for="qtrans-switch-title" style="line-height:35px;display:block;">Title: <input type="text" id="qtrans-switch-title" name="qtrans-switch-title" value="<?php echo $title; ?>" /></label>
-            <label for="qtrans-switch-hide-title" style="line-height:35px;display:block;">Hide Title: <input type="checkbox" id="qtrans-switch-hide-title" name="qtrans-switch-hide-title" <?php echo ($hide_title=='on')?'checked="checked"':''; ?>/></label>
-            <label for="qtrans-switch-use-flags" style="line-height:35px;display:block;">Use Flags: <input type="checkbox" id="qtrans-switch-use-flags" name="qtrans-switch-use-flags" <?php echo ($use_flags=='on')?'checked="checked"':''; ?>/></label>
+            <label for="qtrans-switch-title" style="line-height:35px;display:block;"><?php _e('Title:'); ?> <input type="text" id="qtrans-switch-title" name="qtrans-switch-title" value="<?php echo $title; ?>" /></label>
+            <label for="qtrans-switch-hide-title" style="line-height:35px;display:block;"><?php _e('Hide Title:'); ?> <input type="checkbox" id="qtrans-switch-hide-title" name="qtrans-switch-hide-title" <?php echo ($hide_title=='on')?'checked="checked"':''; ?>/></label>
+            <label for="qtrans-switch-use-flags" style="line-height:35px;display:block;"><?php _e('Use Flags:'); ?> <input type="checkbox" id="qtrans-switch-use-flags" name="qtrans-switch-use-flags" <?php echo ($use_flags=='on')?'checked="checked"':''; ?>/></label>
             <input type="hidden" name="qtrans-switch-submit" id="qtrans-switch-submit" value="1" />
         </div>
         <?php
@@ -860,12 +860,83 @@ function qtrans_widget_init() {
 }
 
 /* END WIDGETS */
+
+/* BEGIN Configuration */
+function qtranslate_config_page() {
+	if ( function_exists('add_submenu_page') )
+		add_submenu_page('plugins.php', __('qTranslate Configuration'), __('qTranslate Configuration'), 'manage_options', 'qtranslate-config', 'qtranslate_conf');
+}
+
+function qtranslate_conf() {
+    global $q_config;
+    $enabled_languages = get_option('qtranslate_enabled_languages');
+    $default_language = get_option('qtranslate_default_language');
+    $flag_location = get_option('qtranslate_flag_location');
+    echo $default_language;
+    if(!is_array($enabled_languages)) $enabled_languages = $q_config['enabled_languages'];
+    if($default_language=='') $default_language = $q_config['default_language'];
+    if($flag_location=='') $flag_location = $q_config['flag_location'];
+    ?>
+    
+<?php if ( !empty($_POST ) ) : ?>
+<div id="message" class="updated fade"><p><strong><?php _e('Options saved.') ?></strong></p></div>
+<?php endif; ?>
+<div class="wrap">
+<h2><?php _e('qTranslate Configuration'); ?></h2>
+<form action="" method="post" id="qtranslate-conf">
+<p><?php printf(__('For help on how to configure qTranslate correctly, visit the <a href="%1$s">qTranslate Website</a>.'), 'http://www.qianqin.de/qtranslate/'); ?></p>
+<p class="submit"><input type="submit" name="submit" value="<?php _e('Update options &raquo;'); ?>" /></p>
+<fieldset class="options">
+    <legend>General Configuration</legend>
+    <table class="optiontable">
+        <tr valign="top">
+            <th scope="row"><?php _e('Enabled Languages:');?></th>
+            <td>
+                <?php foreach($q_config['language_name'] as $lang => $language) { if($lang!='code') {?>
+                    <label for="enable_<?php echo $lang; ?>"><input type="checkbox" name="enable_<?php echo $lang; ?>" <?php echo in_array($lang,$enabled_languages)?'checked="checked"':''; ?> value="1"/> <?php echo $language ?></label><br/>
+                <?php }} ?>
+                <br/>
+                Check all languages that should be available on your site.
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row"><?php _e('Default Language:');?></th>
+            <td>
+                <select id="default_language" name="default_language">
+                    <?php foreach($q_config['language_name'] as $lang => $language) { if($lang!='code') {?>
+                        <option value="<?php echo $lang; ?>" <?php echo ($default_language==$lang)?'selected="selected"':''; ?>><?php echo $language ?></option>
+                    <?php }} ?>
+                </select>
+                <br/>
+                Select your default language, which will be shown without any URL modifications.
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row"><?php _e('Flag Image Path:');?></th>
+            <td>
+                <input type="text" name="flag_location" id="flag_location" value="<?php echo $flag_location; ?>" style="width:95%"/>
+                <br/>
+                Relative path to the flag images, with trailing slash. (Default: wp-content/plugins/qtranslate/flags/)
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<p class="submit"><input type="submit" name="submit" value="<?php _e('Update options &raquo;'); ?>" /></p>
+<h3><?php _e('If you have changed anything above, please update the options before editing anything below!'); ?></h3>
+</form>
+</div>
+
+<?php
+}
+/* END Configuration */
+
 // qtrans_init hooks in locale filter which comes before init action
 
 // Hooks (Actions)
 add_action('wp_head',                       'qtrans_header');
 add_action('edit_category_form',            'qtrans_modifyCategoryForm');
 add_action('plugins_loaded',                'qtrans_widget_init'); 
+add_action('admin_menu',                    'qtranslate_config_page');
 
 // Hooks (execution time critical filters) 
 add_filter('the_content',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
