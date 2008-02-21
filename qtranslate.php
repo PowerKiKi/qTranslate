@@ -7,7 +7,11 @@ Version: 1.0 RC1
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 */
-
+/*
+    Flags in flags directory are made by Luc Balemans and downloaded from
+    FOTW Flags Of The World website at http://flagspot.net/flags/
+    (http://www.crwflags.com/FOTW/FLAGS/wflags.html)
+*/
 /*  Copyright 2008  Qian Qin  (email : mail@qianqin.de)
 
     This program is free software; you can redistribute it and/or modify
@@ -59,8 +63,30 @@ $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
 $q_config['time_format']['zh'] = '%I:%M%p';
 
+// Flag images configuration
+// Look in /flags/ directory for a huge list of flags for usage
+$q_config['flag']['en'] = 'gb.png';
+$q_config['flag']['de'] = 'de.png';
+$q_config['flag']['zh'] = 'cn.png';
+
+// Location of flags (needs trailing slash!)
+$q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
+
+
+
+
+
+
+
 /* CONFIGURATION PART ENDS HERE */
 /* Don't change anything below this line! */
+
+
+
+
+
+
+
 
 $q_config['language_name']['code'] = __('Code');
 $q_config['locale']['code'] = "code";
@@ -476,6 +502,7 @@ function qtrans_modifyCategoryForm($category) {
     echo $q_config['js']['qtrans_integrate'];
     echo $q_config['js']['qtrans_use'];
     echo $q_config['js']['qtrans_integrate_category'];
+    // create input fields for each language
     foreach($q_config['enabled_languages'] as $language) {
         echo qtrans_insertCategoryInput($language);
     }
@@ -483,6 +510,11 @@ function qtrans_modifyCategoryForm($category) {
     echo "document.getElementById('cat_name').parentNode.parentNode.style.display='none';\n";
     echo "// ]]>\n</script>\n";
 
+}
+
+function qtrans_getLanguage() {
+    global $q_config;
+    return $q_config['language'];
 }
 
 function qtrans_getFirstLanguage($text) {
@@ -681,6 +713,13 @@ function qtrans_localeForCurrentLanguage($locale){
 function qtrans_header(){
     global $q_config;
     echo "\n<meta http-equiv=\"Content-Language\" content=\"".$q_config['locale'][$q_config['language']]."\" />\n";
+    echo "<style type=\"text/css\" media=\"screen\">\n";
+    echo ".qtrans_flag span { display:none }\n";
+    echo ".qtrans_flag { height:12px; width:18px; display:block }\n";
+    foreach($q_config['enabled_languages'] as $language) {
+        echo ".qtrans_flag_".$language." { background:url(".get_option('home').'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
+    }    
+    echo "</style>\n";
 }
 
 /* BEGIN DATE FUNCTIONS */
@@ -756,11 +795,77 @@ function qtrans_timeFromPostForCurrentLanguage($old_date, $format ='', $gmt = fa
 
 /* END TIME FUNCTIONS */
 
+/* BEGIN WIDGETS */
+
+function qtrans_widget_init() {
+    // Check to see required Widget API functions are defined...
+    if ( !function_exists('register_sidebar_widget') || !function_exists('register_widget_control') )
+        return; // ...and if not, exit gracefully from the script.
+    
+    function qtrans_widget_switch($args) {
+        global $q_config;
+        extract($args);
+        
+        // Collect our widget's options, or define their defaults.
+        $options = get_option('qtrans_switch');
+        $title = empty($options['qtrans-switch-title']) ? __('Language') : $options['qtrans-switch-title'];
+
+         // It's important to use the $before_widget, $before_title,
+         // $after_title and $after_widget variables in your output.
+        echo $before_widget;
+        if($options['qtrans-switch-hide-title']!='on')
+            echo $before_title . $title . $after_title;
+        echo "<ul class=\"qtrans_language_chooser\">";
+        foreach($q_config['enabled_languages'] as $language) {
+            echo '<li><a href="'.qtrans_convertURL($_SERVER['REQUEST_URI'], $language).'"';
+            if($options['qtrans-switch-use-flags']=='on')
+                echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
+            echo '><span>'.$q_config['language_name'][$language].'</span></a></li>';
+        }
+        echo "</ul>";
+        echo $after_widget;     
+    }
+    
+    function qtrans_widget_switch_control() {
+
+        // Collect our widget's options.
+        $options = get_option('qtrans_switch');
+        // This is for handing the control form submission.
+        if ( $_POST['qtrans-switch-submit'] ) {
+            // Clean up control form submission options
+            $options['qtrans-switch-title'] = strip_tags(stripslashes($_POST['qtrans-switch-title']));
+            $options['qtrans-switch-hide-title'] = strip_tags(stripslashes($_POST['qtrans-switch-hide-title']));
+            $options['qtrans-switch-use-flags'] = strip_tags(stripslashes($_POST['qtrans-switch-use-flags']));
+            update_option('qtrans_switch', $options);
+        }
+
+        // Format options as valid HTML. Hey, why not.
+        $title = htmlspecialchars($options['qtrans-switch-title'], ENT_QUOTES);
+        $hide_title = htmlspecialchars($options['qtrans-switch-hide-title'], ENT_QUOTES);
+        $use_flags = htmlspecialchars($options['qtrans-switch-use-flags'], ENT_QUOTES);
+
+        // The HTML below is the control form for editing options.
+        ?>
+        <div>
+            <label for="qtrans-switch-title" style="line-height:35px;display:block;">Title: <input type="text" id="qtrans-switch-title" name="qtrans-switch-title" value="<?php echo $title; ?>" /></label>
+            <label for="qtrans-switch-hide-title" style="line-height:35px;display:block;">Hide Title: <input type="checkbox" id="qtrans-switch-hide-title" name="qtrans-switch-hide-title" <?php echo ($hide_title=='on')?'checked="checked"':''; ?>/></label>
+            <label for="qtrans-switch-use-flags" style="line-height:35px;display:block;">Use Flags: <input type="checkbox" id="qtrans-switch-use-flags" name="qtrans-switch-use-flags" <?php echo ($use_flags=='on')?'checked="checked"':''; ?>/></label>
+            <input type="hidden" name="qtrans-switch-submit" id="qtrans-switch-submit" value="1" />
+        </div>
+        <?php
+    }
+    
+    register_sidebar_widget('qTranslate Language Chooser', 'qtrans_widget_switch');
+    register_widget_control('qTranslate Language Chooser', 'qtrans_widget_switch_control');
+}
+
+/* END WIDGETS */
 // qtrans_init hooks in locale filter which comes before init action
 
 // Hooks (Actions)
 add_action('wp_head',                       'qtrans_header');
 add_action('edit_category_form',            'qtrans_modifyCategoryForm');
+add_action('plugins_loaded',                'qtrans_widget_init'); 
 
 // Hooks (execution time critical filters) 
 add_filter('the_content',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
