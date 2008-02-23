@@ -76,277 +76,280 @@ $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
 /* DEFAULT CONFIGURATION PART ENDS HERE */
 
 // qTranslage Javascript functions
-$q_config['js']['qtrans_replace_once'] = "
-    function qtrans_replace_once(s,r,t) {
-        for(var i=0;i<t.length;i++) {
-            if(t.substr(i,s.length)==s) {
-                return t.substr(0,i) + t.substr(i+s.length);
+function qtrans_initJS() {
+    global $q_config;
+    $q_config['js']['qtrans_replace_once'] = "
+        function qtrans_replace_once(s,r,t) {
+            for(var i=0;i<t.length;i++) {
+                if(t.substr(i,s.length)==s) {
+                    return t.substr(0,i) + t.substr(i+s.length);
+                }
             }
+            return t;
         }
-        return t;
-    }
-    "; // not used?
-$q_config['js']['qtrans_use'] = "
-    function qtrans_use(lang, text) {
-        var langregex = /\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\\1\]/gi;
-        var matches = null;
-        var result = text;
-        var matched = false;
-        var foundat = -1;
-        while ((matches = langregex.exec(text)) != null) {
-            matched = true;
-            if(matches[1]==lang) {
-                result = result.replace(matches[0],matches[2]);
-            } else {
-                result = result.replace(matches[0],'');
+        "; // not used?
+    $q_config['js']['qtrans_use'] = "
+        function qtrans_use(lang, text) {
+            var langregex = /\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\\1\]/gi;
+            var matches = null;
+            var result = text;
+            var matched = false;
+            var foundat = -1;
+            while ((matches = langregex.exec(text)) != null) {
+                matched = true;
+                if(matches[1]==lang) {
+                    result = result.replace(matches[0],matches[2]);
+                } else {
+                    result = result.replace(matches[0],'');
+                }
             }
+            if(!matched) return text;
+            return result;
         }
-        if(!matched) return text;
-        return result;
-    }
-    ";
-$q_config['js']['qtrans_integrate'] = "
-    function qtrans_integrate(lang, lang_text, text) {
-        var lang_texts = new Array();
-        var texts = new Array();
-        var moreregex = /<!--more.*?-->/i
-        var moreregex2 = /<!--more.*?-->[\\s\\n\\r]*$/i
-        var langregex = /\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\\1\]/gi;
-        var matches = null;
-        var result = '';
-        var more_count = 0;
-        var foundat = -1;
-        // split text and lang_text into arrays
-        while ((foundat = lang_text.search(moreregex))!=-1) {
-            lang_texts.push('[lang_'+lang+']'+lang_text.substr(0,foundat)+'[/lang_'+lang+']');
-            lang_text=lang_text.substr(foundat);
-            // remove more
-            if((matches = moreregex.exec(lang_text))!=null){
-                lang_text=lang_text.substr(matches[0].length);
+        ";
+    $q_config['js']['qtrans_integrate'] = "
+        function qtrans_integrate(lang, lang_text, text) {
+            var lang_texts = new Array();
+            var texts = new Array();
+            var moreregex = /<!--more.*?-->/i
+            var moreregex2 = /<!--more.*?-->[\\s\\n\\r]*$/i
+            var langregex = /\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\\1\]/gi;
+            var matches = null;
+            var result = '';
+            var more_count = 0;
+            var foundat = -1;
+            // split text and lang_text into arrays
+            while ((foundat = lang_text.search(moreregex))!=-1) {
+                lang_texts.push('[lang_'+lang+']'+lang_text.substr(0,foundat)+'[/lang_'+lang+']');
+                lang_text=lang_text.substr(foundat);
+                // remove more
+                if((matches = moreregex.exec(lang_text))!=null){
+                    lang_text=lang_text.substr(matches[0].length);
+                }
             }
-        }
-        lang_texts.push('[lang_'+lang+']'+lang_text+'[/lang_'+lang+']');
-        while ((foundat = text.search(moreregex))!=-1) {
-            texts.push(text.substr(0,foundat));
-            text=text.substr(foundat);
-            // remove more
-            if((matches = moreregex.exec(text))!=null){
-                text=text.substr(matches[0].length);
+            lang_texts.push('[lang_'+lang+']'+lang_text+'[/lang_'+lang+']');
+            while ((foundat = text.search(moreregex))!=-1) {
+                texts.push(text.substr(0,foundat));
+                text=text.substr(foundat);
+                // remove more
+                if((matches = moreregex.exec(text))!=null){
+                    text=text.substr(matches[0].length);
+                }
             }
-        }
-        texts.push(text);
-        
-        // remove old language content and static content (bad)
-        for(var i=0;i<texts.length;i++){
+            texts.push(text);
+            
+            // remove old language content and static content (bad)
+            for(var i=0;i<texts.length;i++){
+                result = '';
+                while ((matches = langregex.exec(texts[i])) != null) {
+                    if(matches[1]!=lang) {
+                        result = result + matches[0];
+                    }
+                }
+                texts[i] = result;
+            }
             result = '';
-            while ((matches = langregex.exec(texts[i])) != null) {
-                if(matches[1]!=lang) {
-                    result = result + matches[0];
-                }
+            
+            // merge lang_text into text
+            if(texts.length>lang_texts.length) 
+                more_count = texts.length;
+            else
+                more_count = lang_texts.length;
+            result = texts[0] + lang_texts[0];
+            for(var i=1;i<more_count;i++){
+                var lt='';
+                var t ='';
+                if(lang_texts[i]) 
+                    lt = lang_texts[i] ;
+                if(texts[i]) 
+                    t = texts[i] ;
+                result = result + '<!--more-->' + t +lt;
             }
-            texts[i] = result;
+            // remove useless more at the end
+            while((foundat=result.search(moreregex2))!=-1) {
+                result = result.substr(0,foundat);
+            }
+            return result;
         }
-        result = '';
-        
-        // merge lang_text into text
-        if(texts.length>lang_texts.length) 
-            more_count = texts.length;
-        else
-            more_count = lang_texts.length;
-        result = texts[0] + lang_texts[0];
-        for(var i=1;i<more_count;i++){
-            var lt='';
-            var t ='';
-            if(lang_texts[i]) 
-                lt = lang_texts[i] ;
-            if(texts[i]) 
-                t = texts[i] ;
-            result = result + '<!--more-->' + t +lt;
-        }
-        // remove useless more at the end
-        while((foundat=result.search(moreregex2))!=-1) {
-            result = result.substr(0,foundat);
-        }
-        return result;
-    }
-    ";
-$q_config['js']['qtrans_save'] = "
-    function qtrans_save(text) {
-        var ta = document.getElementById('content');
-    ";
-foreach($q_config['enabled_languages'] as $language)
+        ";
+    $q_config['js']['qtrans_save'] = "
+        function qtrans_save(text) {
+            var ta = document.getElementById('content');
+        ";
+    foreach($q_config['enabled_languages'] as $language)
+        $q_config['js']['qtrans_save'].= "
+            if(document.getElementById('qtrans_select_".$language."').className=='edButtonFore') {
+                ta.value = qtrans_integrate('".$language."',text,ta.value);
+            }
+            ";
     $q_config['js']['qtrans_save'].= "
-        if(document.getElementById('qtrans_select_".$language."').className=='edButtonFore') {
-            ta.value = qtrans_integrate('".$language."',text,ta.value);
+            return text;
         }
         ";
-$q_config['js']['qtrans_save'].= "
-        return text;
-    }
-    ";
-$q_config['js']['qtrans_integrate_category'] = "
-    function qtrans_integrate_category() {
-        var t = document.getElementById('cat_name');
-    ";
-foreach($q_config['enabled_languages'] as $language)
+    $q_config['js']['qtrans_integrate_category'] = "
+        function qtrans_integrate_category() {
+            var t = document.getElementById('cat_name');
+        ";
+    foreach($q_config['enabled_languages'] as $language)
+        $q_config['js']['qtrans_integrate_category'].= "
+            if(document.getElementById('qtrans_category_".$language."').value!='')
+                t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_category_".$language."').value,t.value);
+            ";
     $q_config['js']['qtrans_integrate_category'].= "
-        if(document.getElementById('qtrans_category_".$language."').value!='')
-            t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_category_".$language."').value,t.value);
+        }
         ";
-$q_config['js']['qtrans_integrate_category'].= "
-    }
-    ";
-$q_config['js']['qtrans_integrate_title'] = "
-    function qtrans_integrate_title() {
-        var t = document.getElementById('title');
-    ";
-foreach($q_config['enabled_languages'] as $language)
+    $q_config['js']['qtrans_integrate_title'] = "
+        function qtrans_integrate_title() {
+            var t = document.getElementById('title');
+        ";
+    foreach($q_config['enabled_languages'] as $language)
+        $q_config['js']['qtrans_integrate_title'].= "
+            if(document.getElementById('qtrans_title_".$language."').value!='')
+                t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_title_".$language."').value,t.value);
+            ";
     $q_config['js']['qtrans_integrate_title'].= "
-        if(document.getElementById('qtrans_title_".$language."').value!='')
-            t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_title_".$language."').value,t.value);
+        }
         ";
-$q_config['js']['qtrans_integrate_title'].= "
-    }
-    ";
-$q_config['js']['qtrans_assign'] = "
-    function qtrans_assign(id, text) {
-        if(typeof tinyMCE.getInstanceById != 'undefined')
-            var inst = tinyMCE.getInstanceById(id);
-        var ta = document.getElementById(id);
-        if(inst) {
-            tinyMCE.removeMCEControl(id);
-            if ( tinyMCE.isMSIE ) {
-                ta.value = wpautop(text);
-                tinyMCE.addMCEControl(ta, id);
-            } else {
-                htm = wpautop(text);
-                tinyMCE.addMCEControl(ta, id);
-                tinyMCE.getInstanceById(id).execCommand('mceSetContent', null, htm);
-            }
-        } else {
-            ta.value = wpautop(text);
-        }
-    }
-    ";
-$q_config['js']['qtrans_switch'] = "
-    function qtrans_switch(lang, id) {
-        var inst = tinyMCE.getInstanceById('qtrans_textarea_' + id);
-        var qt = document.getElementById('quicktags');
-        var vta = document.getElementById('qtrans_textarea_' + id);
-        var ta = document.getElementById(id);
-        var pdr = ta.parentNode;
-        
-        if(document.getElementById('qtrans_select_'+lang).className=='edButtonFore') {
+    $q_config['js']['qtrans_assign'] = "
+        function qtrans_assign(id, text) {
+            if(typeof tinyMCE.getInstanceById != 'undefined')
+                var inst = tinyMCE.getInstanceById(id);
+            var ta = document.getElementById(id);
             if(inst) {
-                inst.triggerSave(false, false);
-            }
-            return;
-        }
-    ";
-foreach($q_config['enabled_languages'] as $language)
-    $q_config['js']['qtrans_switch'].= "
-        if(document.getElementById('qtrans_select_".$language."').className=='edButtonFore') {
-            if(inst) {
-                inst.triggerSave(false, false);
-            }
-        }
-        document.getElementById('qtrans_select_".$language."').className='edButtonBack';
-        ";
-$q_config['js']['qtrans_switch'].= "
-        if(document.getElementById('qtrans_select_code').className=='edButtonFore') {
-        }
-        document.getElementById('qtrans_select_code').className='edButtonBack';
-        document.getElementById('qtrans_select_'+lang).className='edButtonFore';
-        
-        if(lang=='code') {
-            if(inst) {
-                if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
-                    // IE rejects the later overflow assignment so we skip this step.
-                    // Alternate code might be nice. Until then, IE reflows.
-                } else {
-                    // Lock the fieldset's height to prevent reflow/flicker
-                    pdr.style.height = pdr.clientHeight + 'px';
-                    pdr.style.overflow = 'hidden';
-                }
-
-                // Save the coords of the bottom right corner of the rich editor
-                var table = document.getElementById(inst.editorId + '_parent').getElementsByTagName('table')[0];
-                var y1 = table.offsetTop + table.offsetHeight;
-
-                if ( TinyMCE_AdvancedTheme._getCookie('TinyMCE_' + inst.editorId + '_height') == null ) {
-                    var expires = new Date();
-                    expires.setTime(expires.getTime() + 3600000 * 24 * 30);
-                    var offset = tinyMCE.isMSIE ? 1 : 2;
-                    TinyMCE_AdvancedTheme._setCookie('TinyMCE_' + inst.editorId + '_height', '' + (table.offsetHeight - offset), expires);
-                }
-
-                // Unload the rich editor
-                inst.triggerSave(false, false);
-                htm = inst.formElement.value;
-                tinyMCE.removeMCEControl('qtrans_textarea_'+id);
-                --tinyMCE.idCounter;
-
-                // Reveal Quicktags and textarea
-                qt.style.display = 'block';
-                vta.style.display = 'none';
-                ta.style.display = 'inline';
-
-                // Set the textarea height to match the rich editor
-                y2 = ta.offsetTop + ta.offsetHeight;
-                ta.style.height = (ta.clientHeight + y1 - y2) + 'px';
-
-                // Tweak the widths
-                ta.parentNode.style.paddingRight = '12px';
-
-                if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
-                } else {
-                    // Unlock the fieldset's height
-                    pdr.style.height = 'auto';
-                    pdr.style.overflow = 'display';
-                }
-            } else {
-            }
-        } else {
-            if(inst) {
-                qtrans_assign('qtrans_textarea_'+id,qtrans_use(lang,ta.value));
-            } else {
-                edCloseAllTags(); // :-(
-
-                if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
-                } else {
-                    // Lock the fieldset's height
-                    pdr.style.height = pdr.clientHeight + 'px';
-                    pdr.style.overflow = 'hidden';
-                }
-
-                // Hide Quicktags and textarea
-                qt.style.display = 'none';
-                vta.style.display = 'block';
-                ta.style.display = 'none';
-
-                // Tweak the widths
-                pdr.style.paddingRight = '0px';
-
-                // Load the rich editor with formatted html
+                tinyMCE.removeMCEControl(id);
                 if ( tinyMCE.isMSIE ) {
-                    vta.value = wpautop(qtrans_use(lang,ta.value));
-                    tinyMCE.addMCEControl(vta, 'qtrans_textarea_'+id);
+                    ta.value = wpautop(text);
+                    tinyMCE.addMCEControl(ta, id);
                 } else {
-                    htm = wpautop(qtrans_use(lang,ta.value));
-                    tinyMCE.addMCEControl(vta, 'qtrans_textarea_'+id);
-                    tinyMCE.getInstanceById('qtrans_textarea_'+id).execCommand('mceSetContent', null, htm);
+                    htm = wpautop(text);
+                    tinyMCE.addMCEControl(ta, id);
+                    tinyMCE.getInstanceById(id).execCommand('mceSetContent', null, htm);
                 }
+            } else {
+                ta.value = wpautop(text);
+            }
+        }
+        ";
+    $q_config['js']['qtrans_switch'] = "
+        function qtrans_switch(lang, id) {
+            var inst = tinyMCE.getInstanceById('qtrans_textarea_' + id);
+            var qt = document.getElementById('quicktags');
+            var vta = document.getElementById('qtrans_textarea_' + id);
+            var ta = document.getElementById(id);
+            var pdr = ta.parentNode;
+            
+            if(document.getElementById('qtrans_select_'+lang).className=='edButtonFore') {
+                if(inst) {
+                    inst.triggerSave(false, false);
+                }
+                return;
+            }
+        ";
+    foreach($q_config['enabled_languages'] as $language)
+        $q_config['js']['qtrans_switch'].= "
+            if(document.getElementById('qtrans_select_".$language."').className=='edButtonFore') {
+                if(inst) {
+                    inst.triggerSave(false, false);
+                }
+            }
+            document.getElementById('qtrans_select_".$language."').className='edButtonBack';
+            ";
+    $q_config['js']['qtrans_switch'].= "
+            if(document.getElementById('qtrans_select_code').className=='edButtonFore') {
+            }
+            document.getElementById('qtrans_select_code').className='edButtonBack';
+            document.getElementById('qtrans_select_'+lang).className='edButtonFore';
+            
+            if(lang=='code') {
+                if(inst) {
+                    if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
+                        // IE rejects the later overflow assignment so we skip this step.
+                        // Alternate code might be nice. Until then, IE reflows.
+                    } else {
+                        // Lock the fieldset's height to prevent reflow/flicker
+                        pdr.style.height = pdr.clientHeight + 'px';
+                        pdr.style.overflow = 'hidden';
+                    }
 
-                if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
+                    // Save the coords of the bottom right corner of the rich editor
+                    var table = document.getElementById(inst.editorId + '_parent').getElementsByTagName('table')[0];
+                    var y1 = table.offsetTop + table.offsetHeight;
+
+                    if ( TinyMCE_AdvancedTheme._getCookie('TinyMCE_' + inst.editorId + '_height') == null ) {
+                        var expires = new Date();
+                        expires.setTime(expires.getTime() + 3600000 * 24 * 30);
+                        var offset = tinyMCE.isMSIE ? 1 : 2;
+                        TinyMCE_AdvancedTheme._setCookie('TinyMCE_' + inst.editorId + '_height', '' + (table.offsetHeight - offset), expires);
+                    }
+
+                    // Unload the rich editor
+                    inst.triggerSave(false, false);
+                    htm = inst.formElement.value;
+                    tinyMCE.removeMCEControl('qtrans_textarea_'+id);
+                    --tinyMCE.idCounter;
+
+                    // Reveal Quicktags and textarea
+                    qt.style.display = 'block';
+                    vta.style.display = 'none';
+                    ta.style.display = 'inline';
+
+                    // Set the textarea height to match the rich editor
+                    y2 = ta.offsetTop + ta.offsetHeight;
+                    ta.style.height = (ta.clientHeight + y1 - y2) + 'px';
+
+                    // Tweak the widths
+                    ta.parentNode.style.paddingRight = '12px';
+
+                    if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
+                    } else {
+                        // Unlock the fieldset's height
+                        pdr.style.height = 'auto';
+                        pdr.style.overflow = 'display';
+                    }
                 } else {
-                    // Unlock the fieldset's height
-                    pdr.style.height = 'auto';
-                    pdr.style.overflow = 'display';
+                }
+            } else {
+                if(inst) {
+                    qtrans_assign('qtrans_textarea_'+id,qtrans_use(lang,ta.value));
+                } else {
+                    edCloseAllTags(); // :-(
+
+                    if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
+                    } else {
+                        // Lock the fieldset's height
+                        pdr.style.height = pdr.clientHeight + 'px';
+                        pdr.style.overflow = 'hidden';
+                    }
+
+                    // Hide Quicktags and textarea
+                    qt.style.display = 'none';
+                    vta.style.display = 'block';
+                    ta.style.display = 'none';
+
+                    // Tweak the widths
+                    pdr.style.paddingRight = '0px';
+
+                    // Load the rich editor with formatted html
+                    if ( tinyMCE.isMSIE ) {
+                        vta.value = wpautop(qtrans_use(lang,ta.value));
+                        tinyMCE.addMCEControl(vta, 'qtrans_textarea_'+id);
+                    } else {
+                        htm = wpautop(qtrans_use(lang,ta.value));
+                        tinyMCE.addMCEControl(vta, 'qtrans_textarea_'+id);
+                        tinyMCE.getInstanceById('qtrans_textarea_'+id).execCommand('mceSetContent', null, htm);
+                    }
+
+                    if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
+                    } else {
+                        // Unlock the fieldset's height
+                        pdr.style.height = 'auto';
+                        pdr.style.overflow = 'display';
+                    }
                 }
             }
         }
-    }
-    ";
+        ";
+}
 
 function qtrans_createEditorToolbarButton($language, $id){
     global $q_config;
@@ -631,7 +634,7 @@ function qtrans_use($lang, $text, $show_available=false) {
         foreach($available_languages as $language) {
             if($i==1) $language_list  = $end_seperator.$language_list;
             if($i>1) $language_list  = $normal_seperator.$language_list;
-            $language_list = "<a href=\"".qtrans_convertURL($clean_uri, $language)."\">".$q_config['language_name'][$language]."</a>".$language_list;
+            $language_list = "<a href=\"".qtrans_convertURL($_SERVER['REQUEST_URI'], $language)."\">".$q_config['language_name'][$language]."</a>".$language_list;
             $i++;
         }
     }
@@ -654,15 +657,17 @@ function qtrans_useDefaultLanguage($content) {
 }
 
 function qtrans_init() {
+    global $q_config;
     // check if it isn't already initialized
     if(defined('QTRANS_INIT')) return;
     define('QTRANS_INIT',true);
     
     // load configuration
     qtrans_loadConfig();
-    global $q_config;
-
-    $request_uri = $clean_uri;
+    // init Javascript functions
+    qtrans_initJS();
+    
+    $request_uri = $_SERVER['REQUEST_URI'];
     // set current language to default language (language detection comes later)
     $q_config['language'] = $q_config['default_language'];
     
@@ -714,7 +719,7 @@ function qtrans_init() {
         $request_uri = $url.'?'.substr($get_str,1);
     }
     // apply changes made by url handling
-    $clean_uri = $request_uri;
+    $_SERVER['REQUEST_URI'] = $request_uri;
     /* END URL Handling */
 }
 
@@ -867,7 +872,7 @@ function qtrans_widget_init() {
             echo $before_title . $title . $after_title;
         echo "<ul class=\"qtrans_language_chooser\">";
         foreach($q_config['enabled_languages'] as $language) {
-            echo '<li><a href="'.qtrans_convertURL($clean_uri, $language).'"';
+            echo '<li><a href="'.qtrans_convertURL($_SERVER['REQUEST_URI'], $language).'"';
             if($options['qtrans-switch-use-flags']=='on')
                 echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
             echo '><span>'.$q_config['language_name'][$language].'</span></a></li>';
@@ -1295,6 +1300,8 @@ add_filter('get_the_time',                  'qtrans_timeFromPostForCurrentLangua
 add_filter('the_time',                      'qtrans_timeFromPostForCurrentLanguage',0,2);
 add_filter('the_date',                      'qtrans_dateFromPostForCurrentLanguage',0,4);
 add_filter('locale',                        'qtrans_localeForCurrentLanguage',99);
+add_filter('wp_list_categories',            'qtrans_useDefaultLanguage',0);
+add_filter('wp_dropdown_cats',              'qtrans_useDefaultLanguage',0);
 
 // Hooks (execution time non-critical filters) 
 add_filter('the_editor',                    'qtrans_modifyRichEditor');
