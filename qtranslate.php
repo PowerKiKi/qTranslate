@@ -56,7 +56,7 @@ $q_config['not_available']['en'] = "Sorry, this entry is only available in %LANG
 $q_config['not_available']['zh'] = "对不起，此内容只适用于%LANG:，:和%。";
 
 // Date Configuration (uses strftime)
-$q_config['date_format']['en'] = '%A %B %e, %Y';
+$q_config['date_format']['en'] = '%A %B %e%q, %Y';
 $q_config['date_format']['de'] = '%A, der %e. %B %Y';
 $q_config['date_format']['zh'] = '%x %A';
 
@@ -228,6 +228,43 @@ function qtrans_initJS() {
             } else {
                 ta.value = wpautop(text);
             }
+        }
+        ";
+    $q_config['js']['qtrans_sendToEditor'] = "
+        function qtrans_sendToEditor(id) {
+			this.grabImageData(id);
+			var link = '';
+			var display = '';
+			var h = '';
+
+			link = jQuery('input[@type=radio][@name=\"link\"][@checked]','#uploadoptions').val();
+			displayEl = jQuery('input[@type=radio][@name=\"display\"][@checked]','#uploadoptions');
+			if ( displayEl )
+				display = jQuery(displayEl).val();
+			else if ( 1 == this.currentImage.isImage )
+				display = 'full';
+
+			if ( 'none' != link )
+				h += \"<a href='\" + ( 'file' == link ? ( this.currentImage.srcBase + this.currentImage.src ) : ( this.currentImage.page + \"' rel='attachment wp-att-\" + this.currentImage.ID ) ) + \"' title='\" + this.currentImage.title + \"'>\";
+			if ( display && 'title' != display )
+				h += \"<img src='\" + ( 'thumb' == display ? ( this.currentImage.thumbBase + this.currentImage.thumb ) : ( this.currentImage.srcBase + this.currentImage.src ) ) + \"' alt='\" + this.currentImage.title + \"' />\";
+			else
+				h += this.currentImage.title;
+			if ( 'none' != link )
+				h += \"</a>\";
+
+			var win = window.opener ? window.opener : window.dialogArguments;
+			if ( !win )
+				win = top;
+			tinyMCE = win.tinyMCE;
+			if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('content') ) {
+				tinyMCE.selectedInstance.getWin().focus();
+				tinyMCE.execCommand('mceInsertContent', false, h);
+			} else
+				win.edInsertContent(win.edCanvas, h);
+			if ( !this.ID )
+				this.cancelView();
+			return false;
         }
         ";
     $q_config['js']['qtrans_switch'] = "
@@ -421,6 +458,16 @@ function qtrans_insertCategoryInput($language){
     return $html;    
 }
 
+function qtrans_modifyUpload() {
+    global $q_config;
+    $content = "";
+    $content .="<script type=\"text/javascript\">\n// <![CDATA[\r\n";
+    $content .= $q_config['js']['qtrans_sendToEditor'];
+    $content .="addLoadEvent( function() { if(typeof(theFileList)!='undefined') { theFileList.sendToEditor = qtrans_sendToEditor; } });\n";
+    $content .="// ]]>\n</script>\n";
+    echo $content;
+}
+
 // Modifys TinyMCE to edit multilingual content
 function qtrans_modifyRichEditor($old_content) {
     global $q_config;
@@ -476,6 +523,7 @@ function qtrans_modifyRichEditor($old_content) {
     // make editor save the correct content
     $content_append .="var oldCallback = TinyMCE_wordpressPlugin.saveCallback;\n";
     $content_append .="TinyMCE_wordpressPlugin.saveCallback = function(el, c, body) { return qtrans_save(oldCallback(el, c, body)); };\n";
+    // hijack the image plugin
     $content_append .="// ]]>\n</script>\n";
 
     return $content.$old_content.$content_append;
@@ -553,6 +601,9 @@ function qtrans_saveConfig() {
     unset($q_config['language_name']['code']);
     unset($q_config['locale']['code']);
     
+    // sort enabled languages to prevent language tab position jumps
+    sort($q_config['enabled_languages']);
+    
     // save everything
     update_option('qtranslate_language_names', $q_config['language_name']);
     update_option('qtranslate_enabled_languages', $q_config['enabled_languages']);
@@ -563,6 +614,10 @@ function qtrans_saveConfig() {
     update_option('qtranslate_na_messages', $q_config['not_available']);
     update_option('qtranslate_date_formats', $q_config['date_format']);
     update_option('qtranslate_time_formats', $q_config['time_format']);
+    
+    // get Code-Language back
+    $q_config['language_name']['code'] = __('Code');
+    $q_config['locale']['code'] = "code";
 }
 
 function qtrans_getFirstLanguage($text) {
@@ -578,6 +633,17 @@ function qtrans_getFirstLanguage($text) {
     }
     // no enabled language, return empty string
     return '';
+}
+
+// Template function
+function _q($text) {
+    global $q_config;
+    echo qtrans_use($q_config['language'],$text);
+}
+
+function __q($text) {
+    global $q_config;
+    return qtrans_use($q_config['language'],$text);
 }
 
 function qtrans_use($lang, $text, $show_available=false) {
@@ -723,7 +789,7 @@ function qtrans_init() {
     /* END URL Handling */
 }
 
-function qtrans_convertURL($url, $lang='') {
+function qtrans_convertURL($url='', $lang='') {
     global $q_config;
     // invalid language
     if($lang=='') $lang = $q_config['language'];
@@ -732,11 +798,8 @@ function qtrans_convertURL($url, $lang='') {
     if($lang==$q_config['default_language']) return $url;
     if(strpos(get_option('permalink_structure'),'?')===false&&get_option('permalink_structure')!='') {
         // optimized urls
-        // remove home path
-        $url = substr($url, strlen(get_option('home')));
-        $url = ltrim($url, '/');
-        $url = '/'.$lang.'/'.$url;
-        $request_uri = get_option('home').$url;
+        if(preg_match('#^https?://[^/]+$#i',$url)) $url.='/';
+        $url = preg_replace('#^(https?://[^/]+)?(/.*)$#i', '$1/'.$lang.'$2', $url);
     } else {
         // default urls append language setting
         if(strpos($url,'?')===false) {
@@ -779,6 +842,17 @@ function qtrans_header(){
 
 /* BEGIN DATE FUNCTIONS */
 
+function qtrans_strftime($format, $date) {
+    // add date suffix ability (%s) to strftime
+    $day = intval(trim(strftime("%e",$date)));
+    $replace = 'th';
+    if($day==1||$day==21||$day==31) $replace = 'st';
+    if($day==2) $replace = 'nd';
+    if($day==3) $replace = 'rd';
+    $format = preg_replace("/([^%])%q/","$1".$replace,$format);
+    return strftime($format, $date);
+}
+
 function qtrans_date($date, $default = '', $format ='', $before = '', $after = '') {
     global $q_config;
     if($format==''&&isset($q_config['date_format'][$q_config['language']]))
@@ -789,7 +863,7 @@ function qtrans_date($date, $default = '', $format ='', $before = '', $after = '
     // use wordpress generated string if both are not set
     if($format=='') return $default;
     // return translated date
-    return $before.strftime($format, $date).$after;
+    return $before.qtrans_strftime($format, $date).$after;
 }
 
 function qtrans_dateFromPostForCurrentLanguage($old_date, $format ='', $before = '', $after = '') {
@@ -824,7 +898,7 @@ function qtrans_time($time, $default = '', $format ='') {
     // use wordpress generated string if both are not set
     if($format=='') return $default;
     // return translated date
-    return strftime($format, $time);
+    return qtrans_strftime($format, $time);
 }
 
 function qtrans_timeFromCommentForCurrentLanguage($old_date, $format ='', $gmt = false) {
@@ -965,7 +1039,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
         <td width="67%">
             <input type="text" name="language_date_format" id="language_date_format" value="<?php echo $language_date_format; ?>"/>
             <br />
-            <?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a>! (Example: %A %B %e, %Y)'); ?><br />
+            <?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a>! Use %q for day suffix (st,nd,rd,th). (Example: %A %B %e%q, %Y)'); ?><br />
         </td>
     </tr>
     <tr valign="top">
@@ -1286,6 +1360,7 @@ add_action('wp_head',                       'qtrans_header');
 add_action('edit_category_form',            'qtrans_modifyCategoryForm');
 add_action('plugins_loaded',                'qtrans_widget_init'); 
 add_action('admin_menu',                    'qtranslate_config_page');
+add_action('admin_print_scripts',           'qtrans_modifyUpload');
 
 // Hooks (execution time critical filters) 
 add_filter('the_content',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
@@ -1302,6 +1377,7 @@ add_filter('the_date',                      'qtrans_dateFromPostForCurrentLangua
 add_filter('locale',                        'qtrans_localeForCurrentLanguage',99);
 add_filter('wp_list_categories',            'qtrans_useDefaultLanguage',0);
 add_filter('wp_dropdown_cats',              'qtrans_useDefaultLanguage',0);
+add_filter('wp_title',                      'qtrans_useDefaultLanguage',0);
 
 // Hooks (execution time non-critical filters) 
 add_filter('the_editor',                    'qtrans_modifyRichEditor');
