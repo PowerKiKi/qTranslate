@@ -3,7 +3,7 @@ Contributors: chineseleper
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
 Requires at least: 2.3.3
 Tested up to: 2.3.3
-Stable tag: 1.0 RC1
+Stable tag: trunk
 
 Adds userfriendly multilingual content support into Wordpress.
 
