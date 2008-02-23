@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== qTranslate ===
 Contributors: chineseleper
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
 Requires at least: 2.3.3
