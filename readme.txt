@@ -3,7 +3,7 @@ Contributors: chineseleper
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
 Requires at least: 2.3.3
 Tested up to: 2.3.3
-Stable tag: 1.0_RC1
+Stable tag: 1.0 RC1
 
 Adds userfriendly multilingual content support into Wordpress.
 
@@ -12,9 +12,12 @@ Adds userfriendly multilingual content support into Wordpress.
 Writing multilingual content is already hard enough, why make the plugin even more complicated?
 
 qTranslate makes creation of multilingual content as easy as working with a single language.
- - No need to edit the plugin file to get your language working! - Use the comfortable Configuration Page
- - No more adding language tags into your text! - Let qTranslate manage them for you
- - No more problems with `<!--more-->` tags in multilingual content! - qTranslate will make them work the way you want it
+
+- No need to edit the plugin file to get your language working! - Use the comfortable Configuration Page
+- No more adding language tags into your text! - Let qTranslate manage them for you
+- No more problems with `<!--more-->` tags in multilingual content! - qTranslate will make them work the way you want it
+- Add you language in seconds! - Thanks to the comfortable Configuration Page
+- Comes with 3 languages already builtin! - English, German and Simplified Chinese
 
 qTranslate supports infinite languages, which can be easily added/modified/deleted via the comfortable Configuration Page.
 All you need to do is activate the plugin and start writing the content! Well, almost, you will need to get the .mo languages
@@ -42,7 +45,7 @@ Yes! But only if you access the Configuration page. It will alter the name field
 
 = Where do I get .mo files? =
 
-Try [http://codex.wordpress.org/WordPress_in_Your_Language].
+Try [this](http://codex.wordpress.org/WordPress_in_Your_Language).
 
 == Screenshots ==
 
