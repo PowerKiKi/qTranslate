@@ -1015,7 +1015,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
             <input type="text" name="language_na_message" id="language_na_message" value="<?php echo $language_na_message; ?>" style="width:90%"/>
             <br />
             <?php _e('Message to display if post is not available in the requested language. (Example: Sorry, this entry is only available in %LANG:, : and %.)'); ?><br />
-            <?php _e('%LANG:<normal_seperator>:<last_seperator>% generates a list of languages seperated by <normal_seperator> except for the last one, where <last_seperator> will be used instead.'); ?><br />
+            <?php _e('%LANG:&lt;normal_seperator&gt;:&lt;last_seperator&gt;% generates a list of languages seperated by &lt;normal_seperator&gt; except for the last one, where &lt;last_seperator&gt; will be used instead.'); ?><br />
         </td>
     </tr>
 <?php if($original_lang != $q_config['default_language']) { ?>
@@ -1034,9 +1034,9 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 }
 
 function qtranslate_conf() {
-    global $q_config;
+    global $q_config, $wpdb;
     
-    // init some needed strings
+    // init some needed variables
     $error = '';
     $original_lang = '';
     $language_code = '';
@@ -1047,6 +1047,24 @@ function qtranslate_conf() {
     $language_na_message = '';
     $language_flag = '';
     $language_default = '';
+    $altered_table = false;
+    
+    // check if category names can be longer than 55 characters
+    $fields = $wpdb->get_results("DESCRIBE $wpdb->terms");
+    foreach($fields as $field) {
+        if(strtolower($field->Field)=='name') {
+            // check field type
+            if(preg_match("/varchar\(([0-9]+)\)/i",$field->Type,$match)) {
+                // is varchar
+                if(intval($match[1])<255){
+                    // too small varchar, lets change it
+                    $wpdb->get_results("ALTER TABLE $wpdb->terms MODIFY `name` VARCHAR(255) NOT NULL DEFAULT ''");
+                    $altered_table = true;
+                }
+            }
+        }
+    }
+    print_r($results);
     
     // check for action
     if(isset($_POST['flag_location']))
@@ -1185,6 +1203,9 @@ function qtranslate_conf() {
 // Generate XHTML
 
     ?>
+<?php if ($altered_table) : ?>
+<div id="message" class="updated fade"><p><strong><?php _e('Your Database has been updated to support translated Categories.'); ?></strong></p></div>
+<?php endif; ?>
 <?php if ($everything_fine) : ?>
 <div id="message" class="updated fade"><p><strong><?php _e('Options saved.'); ?></strong></p></div>
 <?php endif; ?>
