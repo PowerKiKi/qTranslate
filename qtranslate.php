@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 RC1
+Version: 1.0 beta 1
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -232,39 +232,39 @@ function qtrans_initJS() {
         ";
     $q_config['js']['qtrans_sendToEditor'] = "
         function qtrans_sendToEditor(id) {
-			this.grabImageData(id);
-			var link = '';
-			var display = '';
-			var h = '';
+            theFileList.grabImageData(id);
+            var link = '';
+            var display = '';
+            var h = '';
 
-			link = jQuery('input[@type=radio][@name=\"link\"][@checked]','#uploadoptions').val();
-			displayEl = jQuery('input[@type=radio][@name=\"display\"][@checked]','#uploadoptions');
-			if ( displayEl )
-				display = jQuery(displayEl).val();
-			else if ( 1 == this.currentImage.isImage )
-				display = 'full';
+            link = jQuery('input[@type=radio][@name=\"link\"][@checked]','#uploadoptions').val();
+            displayEl = jQuery('input[@type=radio][@name=\"display\"][@checked]','#uploadoptions');
+            if ( displayEl )
+                display = jQuery(displayEl).val();
+            else if ( 1 == theFileList.currentImage.isImage )
+                display = 'full';
 
-			if ( 'none' != link )
-				h += \"<a href='\" + ( 'file' == link ? ( this.currentImage.srcBase + this.currentImage.src ) : ( this.currentImage.page + \"' rel='attachment wp-att-\" + this.currentImage.ID ) ) + \"' title='\" + this.currentImage.title + \"'>\";
-			if ( display && 'title' != display )
-				h += \"<img src='\" + ( 'thumb' == display ? ( this.currentImage.thumbBase + this.currentImage.thumb ) : ( this.currentImage.srcBase + this.currentImage.src ) ) + \"' alt='\" + this.currentImage.title + \"' />\";
-			else
-				h += this.currentImage.title;
-			if ( 'none' != link )
-				h += \"</a>\";
+            if ( 'none' != link )
+                h += \"<a href='\" + ( 'file' == link ? ( theFileList.currentImage.srcBase + theFileList.currentImage.src ) : ( theFileList.currentImage.page + \"' rel='attachment wp-att-\" + theFileList.currentImage.ID ) ) + \"' title='\" + theFileList.currentImage.title + \"'>\";
+            if ( display && 'title' != display )
+                h += \"<img src='\" + ( 'thumb' == display ? ( theFileList.currentImage.thumbBase + theFileList.currentImage.thumb ) : ( theFileList.currentImage.srcBase + theFileList.currentImage.src ) ) + \"' alt='\" + theFileList.currentImage.title + \"' />\";
+            else
+                h += theFileList.currentImage.title;
+            if ( 'none' != link )
+                h += \"</a>\";
 
-			var win = window.opener ? window.opener : window.dialogArguments;
-			if ( !win )
-				win = top;
-			tinyMCE = win.tinyMCE;
-			if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('content') ) {
-				tinyMCE.selectedInstance.getWin().focus();
-				tinyMCE.execCommand('mceInsertContent', false, h);
-			} else
-				win.edInsertContent(win.edCanvas, h);
-			if ( !this.ID )
-				this.cancelView();
-			return false;
+            var win = window.opener ? window.opener : window.dialogArguments;
+            if ( !win )
+                win = top;
+            tinyMCE = win.tinyMCE;
+            if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('qtrans_textarea_content') ) {
+                tinyMCE.selectedInstance.getWin().focus();
+                tinyMCE.execCommand('mceInsertContent', false, h);
+            } else
+                win.edInsertContent(win.edCanvas, h);
+            if ( !theFileList.ID )
+                theFileList.cancelView();
+            return false;
         }
         ";
     $q_config['js']['qtrans_switch'] = "
@@ -635,17 +635,6 @@ function qtrans_getFirstLanguage($text) {
     return '';
 }
 
-// Template function
-function _q($text) {
-    global $q_config;
-    echo qtrans_use($q_config['language'],$text);
-}
-
-function __q($text) {
-    global $q_config;
-    return qtrans_use($q_config['language'],$text);
-}
-
 function qtrans_use($lang, $text, $show_available=false) {
     global $q_config;
     $moreregex = '/<!--more.*?-->/i';
@@ -789,6 +778,11 @@ function qtrans_init() {
     /* END URL Handling */
 }
 
+function qtrans_convertBlogInfoURL($url, $what) {
+    if($what=='stylesheet_url') return $url;
+    return qtrans_convertURL($url);
+}
+
 function qtrans_convertURL($url='', $lang='') {
     global $q_config;
     // invalid language
@@ -799,9 +793,19 @@ function qtrans_convertURL($url='', $lang='') {
     if(strpos(get_option('permalink_structure'),'?')===false&&get_option('permalink_structure')!='') {
         // optimized urls
         if(preg_match('#^https?://[^/]+$#i',$url)) $url.='/';
+        // prevent multiple execution errors
+        if(preg_match('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i',$url, $match)) {
+            if(in_array(ltrim($match[2],'/'),$q_config['enabled_languages'])) {
+                $url = preg_replace('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i','$1$3',$url);
+            }
+        }
         $url = preg_replace('#^(https?://[^/]+)?(/.*)$#i', '$1/'.$lang.'$2', $url);
     } else {
         // default urls append language setting
+        // prevent multiple execution errors
+        $url = preg_replace('#\?lang=[^&]*#i','?',$url);
+        $url = preg_replace('#\?+#i','?',$url);
+        $url = preg_replace('#&lang=[^&]*#i','',$url);
         if(strpos($url,'?')===false) {
             // no get data, so time to set it
             $url.= '?lang='.$lang;
@@ -1360,10 +1364,11 @@ add_action('wp_head',                       'qtrans_header');
 add_action('edit_category_form',            'qtrans_modifyCategoryForm');
 add_action('plugins_loaded',                'qtrans_widget_init'); 
 add_action('admin_menu',                    'qtranslate_config_page');
-add_action('admin_print_scripts',           'qtrans_modifyUpload');
+add_action('admin_print_scripts',           'qtrans_modifyUpload',99);
 
 // Hooks (execution time critical filters) 
 add_filter('the_content',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
+add_filter('the_excerpt',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_title',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('the_category',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('sanitize_title',                'qtrans_useDefaultLanguage',0);
@@ -1375,9 +1380,22 @@ add_filter('get_the_time',                  'qtrans_timeFromPostForCurrentLangua
 add_filter('the_time',                      'qtrans_timeFromPostForCurrentLanguage',0,2);
 add_filter('the_date',                      'qtrans_dateFromPostForCurrentLanguage',0,4);
 add_filter('locale',                        'qtrans_localeForCurrentLanguage',99);
-add_filter('wp_list_categories',            'qtrans_useDefaultLanguage',0);
-add_filter('wp_dropdown_cats',              'qtrans_useDefaultLanguage',0);
-add_filter('wp_title',                      'qtrans_useDefaultLanguage',0);
+add_filter('list_cats',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('wp_list_categories',            'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('wp_dropdown_cats',              'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('wp_title',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('single_tag_title',              'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('single_cat_title',              'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('single_post_title',             'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('bloginfo',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('get_others_drafts',             'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('get_bloginfo_rss',              'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('get_wp_title_rss',              'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('wp_title_rss',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('the_title_rss',                 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('the_content_rss',               'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('gettext',                       'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('wp_dropdown_pages',             'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 
 // Hooks (execution time non-critical filters) 
 add_filter('the_editor',                    'qtrans_modifyRichEditor');
@@ -1395,5 +1413,11 @@ add_filter('year_link',                     'qtrans_convertURL');
 add_filter('category_feed_link',            'qtrans_convertURL');
 add_filter('category_link',                 'qtrans_convertURL');
 add_filter('tag_link',                      'qtrans_convertURL');
+add_filter('bloginfo_url',                  'qtrans_convertBlogInfoURL',10,2);
+add_filter('the_permalink',                 'qtrans_convertURL');
+add_filter('feed_link',                     'qtrans_convertURL');
+add_filter('post_comments_feed_link',       'qtrans_convertURL');
+add_filter('tag_feed_link',                 'qtrans_convertURL');
+add_filter('clean_url',                     'qtrans_convertURL');
 
 ?>
