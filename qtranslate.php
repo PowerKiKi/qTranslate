@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 1
+Version: 1.0 beta 2
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -90,7 +90,7 @@ function qtrans_initJS() {
         "; // not used?
     $q_config['js']['qtrans_use'] = "
         function qtrans_use(lang, text) {
-            var langregex = /\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\\1\]/gi;
+            var langregex = /\\[lang_([a-z]{2})\\]([\s\S]*?)\\[\\/lang_\\1\\]/gi;
             var matches = null;
             var result = text;
             var matched = false;
@@ -113,7 +113,7 @@ function qtrans_initJS() {
             var texts = new Array();
             var moreregex = /<!--more.*?-->/i
             var moreregex2 = /<!--more.*?-->[\\s\\n\\r]*$/i
-            var langregex = /\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\\1\]/gi;
+            var langregex = /\\[lang_([a-z]{2})\\]([\s\S]*?)\\[\\/lang_\\1\\]/gi;
             var matches = null;
             var result = '';
             var more_count = 0;
@@ -622,7 +622,7 @@ function qtrans_saveConfig() {
 
 function qtrans_getFirstLanguage($text) {
     global $q_config;
-    $langregex = '/\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\1\]/i';
+    $langregex = '/\[lang_([a-z]{2})\](.*?)\[\/lang_\1\]/is';
     preg_match_all($langregex,$text_block,$matches);
     // return empty string if no languages where found
     if(sizeof($matches[0])==0) return '';
@@ -638,9 +638,16 @@ function qtrans_getFirstLanguage($text) {
 function qtrans_use($lang, $text, $show_available=false) {
     global $q_config;
     $moreregex = '/<!--more.*?-->/i';
-    $langregex = '/\[lang_([a-z]{2})\]([^\[]*)\[\/lang_\1\]/i';
+    $langregex = '/\[lang_([a-z]{2})\](.*?)\[\/lang_\1\]/is';
     // return empty string if language is not enabled
     if(!in_array($lang, $q_config['enabled_languages'])) return "";
+    if(is_array($text)) {
+        // handle arrays recursively
+        for($i=0; $i<sizeof($text); $i++) {
+            $text[$i] = qtrans_use($lang,$text[$i],$show_available);
+        }
+        return $text;
+    }
     $text_blocks = preg_split($moreregex, $text);
     $available_languages = array();
     $result = $text;
@@ -780,6 +787,8 @@ function qtrans_init() {
 
 function qtrans_convertBlogInfoURL($url, $what) {
     if($what=='stylesheet_url') return $url;
+    if($what=='template_url') return $url;
+    if($what=='template_directory') return $url;
     return qtrans_convertURL($url);
 }
 
@@ -1396,6 +1405,7 @@ add_filter('the_title_rss',                 'qtrans_useCurrentLanguageIfNotFound
 add_filter('the_content_rss',               'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('gettext',                       'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_dropdown_pages',             'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('widget_text',                   'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 
 // Hooks (execution time non-critical filters) 
 add_filter('the_editor',                    'qtrans_modifyRichEditor');
