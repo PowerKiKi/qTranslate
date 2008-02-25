@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 2
+Version: 1.0 beta 3
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -412,7 +412,7 @@ function qtrans_insertTitleInput($language){
         var fsl = document.createElement('legend');
         var l = document.createTextNode('".__("Title")." (".$q_config['language_name'][$language].")');
         var t = document.getElementById('titlediv');
-        fsi.type = 'input';
+        fsi.type = 'text';
         fsi.id = 'qtrans_title_".$language."';
         fsi.tabIndex = '1';
         fsi.value = qtrans_use('".$language."', document.getElementById('title').value);
@@ -880,21 +880,37 @@ function qtrans_date($date, $default = '', $format ='', $before = '', $after = '
 }
 
 function qtrans_dateFromPostForCurrentLanguage($old_date, $format ='', $before = '', $after = '') {
-    global $post, $q_config;
+    global $post;
     // don't forward format because it's not strftime
     return qtrans_date(mysql2date('U',$post->post_date), $old_date, '', $before, $after);
 }
 
 function qtrans_dateFromCommentForCurrentLanguage($old_date, $format ='') {
-    global $comment, $q_config;
+    global $comment;
     // don't forward format because it's not strftime
     return qtrans_date(mysql2date('U',$comment->comment_date), $old_date);
 }
 
 function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
-    global $post, $q_config;
+    global $post;
     // don't forward format because it's not strftime
     return qtrans_date(mysql2date('U',$post->post_modified), $old_date);
+}
+
+// functions for template authors
+function qtrans_formatPostDateTime($format = '') {
+    global $post;
+    return qtrans_date(mysql2date('U',$post->post_date), '', $format, '', '');
+}
+
+function qtrans_formatCommentDateTime($format = '') {
+    global $comment;
+    return qtrans_date(mysql2date('U',$comment->comment_date), '', $format, '', '');
+}
+
+function qtrans_formatPostModifiedDateTime($format = '') {
+    global $post;
+    return qtrans_date(mysql2date('U',$post->post_modified), '', $format, '', '');
 }
 
 /* END DATE FUNCTIONS */
@@ -959,7 +975,10 @@ function qtrans_widget_init() {
             echo $before_title . $title . $after_title;
         echo "<ul class=\"qtrans_language_chooser\">";
         foreach($q_config['enabled_languages'] as $language) {
-            echo '<li><a href="'.qtrans_convertURL($_SERVER['REQUEST_URI'], $language).'"';
+            echo '<li';
+            if($lanuage == $q_config[$lanuage])
+                echo ' class="active"';
+            echo '><a href="'.qtrans_convertURL($_SERVER['REQUEST_URI'], $language).'"';
             if($options['qtrans-switch-use-flags']=='on')
                 echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
             echo '><span>'.$q_config['language_name'][$language].'</span></a></li>';
@@ -1378,6 +1397,7 @@ add_action('admin_print_scripts',           'qtrans_modifyUpload',99);
 // Hooks (execution time critical filters) 
 add_filter('the_content',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_excerpt',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
+add_filter('the_excerpt_rss',               'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_title',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('the_category',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('sanitize_title',                'qtrans_useDefaultLanguage',0);
@@ -1406,10 +1426,14 @@ add_filter('the_content_rss',               'qtrans_useCurrentLanguageIfNotFound
 add_filter('gettext',                       'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_dropdown_pages',             'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('widget_text',                   'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('category_description',          'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('bloginfo_rss',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('the_category_rss',              'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('category_name',                 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('pre_option_rss_language',       'qtrans_getLanguage',0);
 
 // Hooks (execution time non-critical filters) 
 add_filter('the_editor',                    'qtrans_modifyRichEditor');
-add_filter('attachment_link',               'qtrans_convertURL');
 add_filter('author_feed_link',              'qtrans_convertURL');
 add_filter('author_link',                   'qtrans_convertURL');
 add_filter('author_feed_link',              'qtrans_convertURL');

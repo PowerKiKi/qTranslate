@@ -27,28 +27,26 @@ on how to do to this.
 
 For more Information visit the [Plugin Homepage](http://www.qianqin.de/qtranslate/)
 
+Flags in flags directory are made by Luc Balemans and downloaded from FOTW Flags Of The World website at
+[http://flagspot.net/flags/](http://www.crwflags.com/FOTW/FLAGS/wflags.html)
+
 == Installation ==
+
+For more detailed instructions, take a look at the [Installation Guide](http://www.qianqin.de/qtranslate/installation-guide/)
 
 Installation of this plugin is fairly easy:
 
 1. Make sure you have the .mo files for all the languages you use.
-2. Download the plugin from [here](http://wordpress.org/extend/plugins/qtranslate/ "qTranslate").
-3. Extract all the files. 
-4. Upload everything (keeping the directory structure) to the `/wp-content/plugins/` directory.
-5. There should be a `/wp-content/plugins/qtranslate` directory now with `qtranslate.php` in it.
-6. Activate the plugin through the 'Plugins' menu in WordPress.
-7. Add the qTranslate Widget to let your visitors switch the language.
+1. Download the plugin from [here](http://wordpress.org/extend/plugins/qtranslate/ "qTranslate").
+1. Extract all the files. 
+1. Upload everything (keeping the directory structure) to the `/wp-content/plugins/` directory.
+1. There should be a `/wp-content/plugins/qtranslate` directory now with `qtranslate.php` in it.
+1. Activate the plugin through the 'Plugins' menu in WordPress.
+1. Add the qTranslate Widget to let your visitors switch the language.
 
 == Frequently Asked Questions ==
 
-= Does qTranslate change my database? =
-
-Yes! But only if you access the Configuration page. It will alter the name field for categories to hold
-255 characters instead of 55. It won't alter the database if you already changed it to a different type like text.
-
-= Where do I get .mo files? =
-
-Try [this](http://codex.wordpress.org/WordPress_in_Your_Language).
+The FAQ is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/faq/)
 
 == Screenshots ==
 
