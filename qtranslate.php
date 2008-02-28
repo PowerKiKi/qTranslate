@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 4
+Version: 1.0 beta 5
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -972,6 +972,22 @@ function qtrans_timeFromPostForCurrentLanguage($old_date, $format ='', $gmt = fa
 
 /* END TIME FUNCTIONS */
 
+// Language Select Code for non-Widget users
+function qtrans_generateLanguageSelectCode($useflags=false) {
+    global $q_config;
+    echo "<ul class=\"qtrans_language_chooser\">";
+    foreach($q_config['enabled_languages'] as $language) {
+        echo '<li';
+        if($lanuage == $q_config[$lanuage])
+            echo ' class="active"';
+        echo '><a href="'.qtrans_convertURL($_SERVER['REQUEST_URI'], $language).'"';
+        if($useflags)
+            echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
+        echo '><span>'.$q_config['language_name'][$language].'</span></a></li>';
+    }
+    echo "</ul><div class=\"qtrans_widget_end\"></div>";
+}
+
 /* BEGIN WIDGETS */
 
 function qtrans_widget_init() {
@@ -992,17 +1008,7 @@ function qtrans_widget_init() {
         echo $before_widget;
         if($options['qtrans-switch-hide-title']!='on')
             echo $before_title . $title . $after_title;
-        echo "<ul class=\"qtrans_language_chooser\">";
-        foreach($q_config['enabled_languages'] as $language) {
-            echo '<li';
-            if($lanuage == $q_config[$lanuage])
-                echo ' class="active"';
-            echo '><a href="'.qtrans_convertURL($_SERVER['REQUEST_URI'], $language).'"';
-            if($options['qtrans-switch-use-flags']=='on')
-                echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
-            echo '><span>'.$q_config['language_name'][$language].'</span></a></li>';
-        }
-        echo "</ul><div class=\"qtrans_widget_end\"></div>";
+        qtrans_generateLanguageSelectCode($options['qtrans-switch-use-flags']=='on');
         echo $after_widget;     
     }
     
