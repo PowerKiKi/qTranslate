@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 3
+Version: 1.0 beta 4
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -762,7 +762,7 @@ function qtrans_init() {
         list($url,$get_str) = explode('?',$request_uri,2);
         $gets = preg_split('/(\?|&)/',$get_str);
         foreach($gets as $key => $get) {
-            if(preg_match('/^lang=([a-z]{2})$/i',$request_uri,$matches)) {
+            if(preg_match('/^lang=([a-z]{2})$/i',$get,$matches)) {
                 // hurray, language setting found, need to validate it now
                 if(in_array($matches[1], $q_config['enabled_languages'])) {
                     // jackpot
@@ -789,6 +789,7 @@ function qtrans_convertBlogInfoURL($url, $what) {
     if($what=='stylesheet_url') return $url;
     if($what=='template_url') return $url;
     if($what=='template_directory') return $url;
+    if($what=='stylesheet_directory') return $url;
     return qtrans_convertURL($url);
 }
 
@@ -797,30 +798,47 @@ function qtrans_convertURL($url='', $lang='') {
     // invalid language
     if($lang=='') $lang = $q_config['language'];
     if(!in_array($lang, $q_config['enabled_languages'])) return "";
-    // clicking around in default language shouldn't change any urls
-    if($lang==$q_config['default_language']) return $url;
     if(strpos(get_option('permalink_structure'),'?')===false&&get_option('permalink_structure')!='') {
+        // clicking around in default language shouldn't change any urls
+        if($lang==$q_config['default_language']) return $url;
         // optimized urls
         if(preg_match('#^https?://[^/]+$#i',$url)) $url.='/';
+        // remove home path if set
+        $home_path = parse_url(get_option('home'));
+        if ( isset($home_path['path']) )
+            $home_path = $home_path['path'];
+        else
+            $home_path = '';
+        //echo "<!--".$home_path."-->";
+        $home_path = trim($home_path, '/');
+        if(strlen($home_path)>0) {
+            $home_path .= '/';
+            $url = preg_replace('#'.$home_path.'#','',$url,1);
+        }
         // prevent multiple execution errors
         if(preg_match('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i',$url, $match)) {
             if(in_array(ltrim($match[2],'/'),$q_config['enabled_languages'])) {
                 $url = preg_replace('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i','$1$3',$url);
             }
         }
-        $url = preg_replace('#^(https?://[^/]+)?(/.*)$#i', '$1/'.$lang.'$2', $url);
+        $url = preg_replace('#^(https?://[^/]+)?(/.*)$#i', '$1/'.$home_path.$lang.'$2', $url);
     } else {
         // default urls append language setting
         // prevent multiple execution errors
         $url = preg_replace('#\?lang=[^&]*#i','?',$url);
         $url = preg_replace('#\?+#i','?',$url);
+        $url = preg_replace('#(\?&)+#i','?',$url);
+        if(substr($url,-1,1)=='?') $url = substr($url,0,-1);
         $url = preg_replace('#&lang=[^&]*#i','',$url);
-        if(strpos($url,'?')===false) {
-            // no get data, so time to set it
-            $url.= '?lang='.$lang;
-        } else {
-            // append language setting
-            $url.= '&lang='.$lang;
+        // dont append default language
+        if($lang!=$q_config['default_language']) {
+            if(strpos($url,'?')===false) {
+                // no get data, so time to set it
+                $url.= '?lang='.$lang;
+            } else {
+                // append language setting
+                $url.= '&lang='.$lang;
+            }
         }
     }
     return $url;
@@ -899,18 +917,19 @@ function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
 
 // functions for template authors
 function qtrans_formatPostDateTime($format = '') {
-    global $post;
-    return qtrans_date(mysql2date('U',$post->post_date), '', $format, '', '');
+    global $post, $q_config;
+    echo $post->post_date;
+    return qtrans_date(mysql2date('U',$post->post_date), '', qtrans_use($q_config['language'],$format), '', '');
 }
 
 function qtrans_formatCommentDateTime($format = '') {
-    global $comment;
-    return qtrans_date(mysql2date('U',$comment->comment_date), '', $format, '', '');
+    global $comment, $q_config;
+    return qtrans_date(mysql2date('U',$comment->comment_date), '', qtrans_use($q_config['language'],$format), '', '');
 }
 
 function qtrans_formatPostModifiedDateTime($format = '') {
-    global $post;
-    return qtrans_date(mysql2date('U',$post->post_modified), '', $format, '', '');
+    global $post, $q_config;
+    return qtrans_date(mysql2date('U',$post->post_modified), '', qtrans_use($q_config['language'],$format), '', '');
 }
 
 /* END DATE FUNCTIONS */
@@ -931,21 +950,21 @@ function qtrans_time($time, $default = '', $format ='') {
 }
 
 function qtrans_timeFromCommentForCurrentLanguage($old_date, $format ='', $gmt = false) {
-    global $comment, $q_config;
+    global $comment;
     $comment_date = $gmt? $comment->comment_date_gmt : $comment->comment_date;
     // don't forward format because it's not strftime
     return qtrans_time(mysql2date('U',$comment_date), $old_date);
 }
 
 function qtrans_timeModifiedFromPostForCurrentLanguage($old_date, $format ='', $gmt = false) {
-    global $post, $q_config;
+    global $post;
     $post_date = $gmt? $post->post_modified_gmt : $post->post_modified;
     // don't forward format because it's not strftime
     return qtrans_time(mysql2date('U',$post_date), $old_date);
 }
 
 function qtrans_timeFromPostForCurrentLanguage($old_date, $format ='', $gmt = false) {
-    global $post, $q_config;
+    global $post;
     $post_date = $gmt? $post->post_date_gmt : $post->post_date;
     // don't forward format because it's not strftime
     return qtrans_time(mysql2date('U',$post_date), $old_date);

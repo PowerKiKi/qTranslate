@@ -4,6 +4,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 Requires at least: 2.3.3
 Tested up to: 2.3.3
 Stable tag: trunk
+Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
 Adds userfriendly multilingual content support into Wordpress.
 
