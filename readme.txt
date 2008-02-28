@@ -18,7 +18,7 @@ qTranslate makes creation of multilingual content as easy as working with a sing
 - No more adding language tags into your text! - Let qTranslate manage them for you
 - No more problems with `<!--more-->` tags in multilingual content! - qTranslate will make them work the way you want it
 - Add your own language in seconds! - Thanks to the comfortable Configuration Page
-- Comes with 3 languages already builtin! - English, German and Simplified Chinese
+- Comes with 4 languages already builtin! - English, German, Simplified Chinese and Finnish
 
 qTranslate supports infinite languages, which can be easily added/modified/deleted via the comfortable Configuration Page.
 All you need to do is activate the plugin and start writing the content! Well, almost, you will need to get the .mo languages

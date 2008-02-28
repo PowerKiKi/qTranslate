@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 5
+Version: 1.0 beta 6
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -29,6 +29,11 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+/*
+    Default Lanuage Contributers
+    en, de, zh by Qian Qin
+    fi by Tatu Siltanen
+*/
 
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
@@ -42,33 +47,42 @@ $q_config['default_language'] = 'en';
 $q_config['language_name']['de'] = "Deutsch";
 $q_config['language_name']['en'] = "English";
 $q_config['language_name']['zh'] = "中文";
+$q_config['language_name']['fi'] = "suomi";
 
 // Locales for languages
 // see locale -a for available locales
 $q_config['locale']['de'] = "de_DE";
 $q_config['locale']['en'] = "en_US";
 $q_config['locale']['zh'] = "zh_CN";
+$q_config['locale']['fi'] = "fi_FI";
 
 // Language not available messages
 // %LANG:<normal_seperator>:<last_seperator>% generates a list of languages seperated by <normal_seperator> except for the last one, where <last_seperator> will be used instead.
 $q_config['not_available']['de'] = "Leider ist der Eintrag nur auf %LANG:, : und % verfügbar.";
 $q_config['not_available']['en'] = "Sorry, this entry is only available in %LANG:, : and %.";
 $q_config['not_available']['zh'] = "对不起，此内容只适用于%LANG:，:和%。";
+$q_config['not_available']['fi'] = "Anteeksi, mutta tämä kirjoitus on saatavana ainoastaan näillä kielillä: %LANG:, : ja %.";
+
+// enable strftime usage
+$q_config['use_strftime'] = true;
 
 // Date Configuration (uses strftime)
 $q_config['date_format']['en'] = '%A %B %e%q, %Y';
 $q_config['date_format']['de'] = '%A, der %e. %B %Y';
 $q_config['date_format']['zh'] = '%x %A';
+$q_config['date_format']['fi'] = '%e.&m.%C';
 
 $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
 $q_config['time_format']['zh'] = '%I:%M%p';
+$q_config['time_format']['fi'] = '%H:%M';
 
 // Flag images configuration
 // Look in /flags/ directory for a huge list of flags for usage
 $q_config['flag']['en'] = 'gb.png';
 $q_config['flag']['de'] = 'de.png';
 $q_config['flag']['zh'] = 'cn.png';
+$q_config['flag']['fi'] = 'fi.png';
 
 // Location of flags (needs trailing slash!)
 $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
@@ -566,6 +580,7 @@ function qtrans_loadConfig() {
     $na_messages = get_option('qtranslate_na_messages');
     $date_formats = get_option('qtranslate_date_formats');
     $time_formats = get_option('qtranslate_time_formats');
+    $use_strftime = get_option('qtranslate_use_strftime');
     
     // default if not set
     if(!is_array($date_formats)) $date_formats = $q_config['date_format'];
@@ -577,6 +592,7 @@ function qtrans_loadConfig() {
     if(!is_array($enabled_languages)) $enabled_languages = $q_config['enabled_languages'];
     if($default_language=='') $default_language = $q_config['default_language'];
     if($flag_location=='') $flag_location = $q_config['flag_location'];
+    if($use_strftime=='0') $use_strftime = false; else $use_strftime = true;
     
     // overwrite default values with loaded values
     $q_config['date_format'] = $date_formats;
@@ -588,6 +604,7 @@ function qtrans_loadConfig() {
     $q_config['enabled_languages'] = $enabled_languages;
     $q_config['default_language'] = $default_language;
     $q_config['flag_location'] = $flag_location;
+    $q_config['use_strftime'] = $use_strftime;
     
     // Add Code (used only in Editor)
     $q_config['language_name']['code'] = __('Code');
@@ -614,6 +631,10 @@ function qtrans_saveConfig() {
     update_option('qtranslate_na_messages', $q_config['not_available']);
     update_option('qtranslate_date_formats', $q_config['date_format']);
     update_option('qtranslate_time_formats', $q_config['time_format']);
+    if($q_config['use_strftime'])
+        update_option('qtranslate_use_strftime', '1');
+    else
+        update_option('qtranslate_use_strftime', '0');
     
     // get Code-Language back
     $q_config['language_name']['code'] = __('Code');
@@ -894,25 +915,33 @@ function qtrans_date($date, $default = '', $format ='', $before = '', $after = '
     // use wordpress generated string if both are not set
     if($format=='') return $default;
     // return translated date
-    return $before.qtrans_strftime($format, $date).$after;
+    if($q_config['use_strftime'])
+        return $before.qtrans_strftime($format, $date).$after;
+    return $before.date($format, $date).$after;
 }
 
 function qtrans_dateFromPostForCurrentLanguage($old_date, $format ='', $before = '', $after = '') {
-    global $post;
+    global $post, $q_config;
     // don't forward format because it's not strftime
-    return qtrans_date(mysql2date('U',$post->post_date), $old_date, '', $before, $after);
+    if($q_config['use_strftime'])
+        return qtrans_date(mysql2date('U',$post->post_date), $old_date, '', $before, $after);
+    return qtrans_date(mysql2date('U',$post->post_date), $old_date, $format, $before, $after);
 }
 
 function qtrans_dateFromCommentForCurrentLanguage($old_date, $format ='') {
-    global $comment;
+    global $comment, $q_config;
     // don't forward format because it's not strftime
-    return qtrans_date(mysql2date('U',$comment->comment_date), $old_date);
+    if($q_config['use_strftime'])
+        return qtrans_date(mysql2date('U',$comment->comment_date), $old_date);
+    return qtrans_date(mysql2date('U',$comment->comment_date), $old_date, $format);
 }
 
 function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
-    global $post;
+    global $post, $q_config;
     // don't forward format because it's not strftime
-    return qtrans_date(mysql2date('U',$post->post_modified), $old_date);
+    if($q_config['use_strftime'])
+        return qtrans_date(mysql2date('U',$post->post_modified), $old_date);
+    return qtrans_date(mysql2date('U',$post->post_modified), $old_date, $format);
 }
 
 // functions for template authors
@@ -946,28 +975,36 @@ function qtrans_time($time, $default = '', $format ='') {
     // use wordpress generated string if both are not set
     if($format=='') return $default;
     // return translated date
-    return qtrans_strftime($format, $time);
+    if($q_config['use_strftime'])
+        return $before.qtrans_strftime($format, $date).$after;
+    return $before.date($format, $date).$after;
 }
 
-function qtrans_timeFromCommentForCurrentLanguage($old_date, $format ='', $gmt = false) {
-    global $comment;
+function qtrans_timeFromCommentForCurrentLanguage($old_date, $format = '', $gmt = false) {
+    global $comment, $q_config;
     $comment_date = $gmt? $comment->comment_date_gmt : $comment->comment_date;
     // don't forward format because it's not strftime
-    return qtrans_time(mysql2date('U',$comment_date), $old_date);
+    if($q_config['use_strftime'])
+        return qtrans_time(mysql2date('U',$comment_date), $old_date);
+    return qtrans_time(mysql2date('U',$comment_date), $old_date, $format);
 }
 
-function qtrans_timeModifiedFromPostForCurrentLanguage($old_date, $format ='', $gmt = false) {
-    global $post;
+function qtrans_timeModifiedFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
+    global $post, $q_config;
     $post_date = $gmt? $post->post_modified_gmt : $post->post_modified;
     // don't forward format because it's not strftime
-    return qtrans_time(mysql2date('U',$post_date), $old_date);
+    if($q_config['use_strftime'])
+        return qtrans_time(mysql2date('U',$post_date), $old_date);
+    return qtrans_time(mysql2date('U',$post_date), $old_date, $format);
 }
 
-function qtrans_timeFromPostForCurrentLanguage($old_date, $format ='', $gmt = false) {
-    global $post;
+function qtrans_timeFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
+    global $post, $q_config;
     $post_date = $gmt? $post->post_date_gmt : $post->post_date;
     // don't forward format because it's not strftime
-    return qtrans_time(mysql2date('U',$post_date), $old_date);
+    if($q_config['use_strftime'])
+        return qtrans_time(mysql2date('U',$post_date), $old_date);
+    return qtrans_time(mysql2date('U',$post_date), $old_date, $format);
 }
 
 /* END TIME FUNCTIONS */
@@ -1096,7 +1133,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
         <td width="67%">
             <input type="text" name="language_date_format" id="language_date_format" value="<?php echo $language_date_format; ?>"/>
             <br />
-            <?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a>! Use %q for day suffix (st,nd,rd,th). (Example: %A %B %e%q, %Y)'); ?><br />
+            <?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a> by default! Use %q for day suffix (st,nd,rd,th). (Example: %A %B %e%q, %Y)'); ?><br />
         </td>
     </tr>
     <tr valign="top">
@@ -1106,7 +1143,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
         <td width="67%">
             <input type="text" name="language_time_format" id="language_time_format" value="<?php echo $language_time_format; ?>"/>
             <br />
-            <?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a>! (Example: %I:%M %p)'); ?><br />
+            <?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a> by default! (Example: %I:%M %p)'); ?><br />
         </td>
     </tr>
     <tr valign="top">
@@ -1204,8 +1241,18 @@ function qtranslate_conf() {
     print_r($results);
     
     // check for action
-    if(isset($_POST['flag_location']))
+    if(isset($_POST['flag_location'])) {
         update_option('qtranslate_flag_location', $_POST['flag_location']);
+        $q_config['flag_location'] = $_POST['flag_location'];
+        if(isset($_POST['use_strftime'])) {
+            update_option('qtranslate_use_strftime', '1');
+            $q_config['use_strftime'] = true;
+        } else {
+            update_option('qtranslate_use_strftime', '0');
+            $q_config['use_strftime'] = false;
+        }
+    }
+    echo "<!--".$q_config['use_strftime']."-->";
     if(isset($_POST['original_lang'])) {
         // validate form input
         if($_POST['language_na_message']=='')           $error = 'The Language must have a Not-Available Message!';
@@ -1370,6 +1417,14 @@ function qtranslate_conf() {
                 <input type="text" name="flag_location" id="flag_location" value="<?php echo $q_config['flag_location']; ?>" style="width:95%"/>
                 <br/>
                 <?php _e('Relative path to the flag images, with trailing slash. (Default: wp-content/plugins/qtranslate/flags/)'); ?>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row"><?php _e('Use strftime:');?></th>
+            <td>
+                <label for="use_strftime"><input type="checkbox" name="use_strftime" id="use_strftime" value="1"<?php echo ($q_config['use_strftime'])?' checked="checked"':''; ?>/> Use strftime instead of date</label>
+                <br/>
+                <?php _e('qTranslate uses strftime instead of date to support more languages. If this behaviour is unwanted, it can be disabled here and all date/time functions will accept date strings instead.'); ?>
             </td>
         </tr>
     </table>
