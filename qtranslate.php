@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 7
+Version: 1.0 beta 8
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -30,7 +30,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /*
-    Default Lanuage Contributers
+    Default Language Contributers
     en, de, zh by Qian Qin
     fi by Tatu Siltanen
 */
@@ -1038,7 +1038,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
             echo '<ul class="qtrans_language_chooser" id="'.$id.'">';
             foreach($q_config['enabled_languages'] as $language) {
                 echo '<li';
-                if($lanuage == $q_config[$lanuage])
+                if($language == $q_config[$language])
                     echo ' class="active"';
                 echo '><a href="'.qtrans_convertURL($_SERVER['REQUEST_URI'], $language).'"';
                 if($style=='image')
@@ -1066,7 +1066,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
             echo '<ul class="qtrans_language_chooser" id="'.$id.'">';
             foreach($q_config['enabled_languages'] as $language) {
                 echo '<li';
-                if($lanuage == $q_config[$lanuage])
+                if($language == $q_config[$language])
                     echo ' class="active"';
                 echo '><a href="'.qtrans_convertURL($_SERVER['REQUEST_URI'], $language).'"';
                 echo ' class="qtrans_flag_'.$language.' qtrans_flag_and_text"';
