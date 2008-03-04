@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 8
+Version: 1.0 beta 9
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -846,7 +846,6 @@ function qtrans_convertURL($url='', $lang='') {
             $home_path = $home_path['path'];
         else
             $home_path = '';
-        //echo "<!--".$home_path."-->";
         $home_path = trim($home_path, '/');
         if(strlen($home_path)>0) {
             $home_path .= '/';
@@ -964,7 +963,6 @@ function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
 // functions for template authors
 function qtrans_formatPostDateTime($format = '') {
     global $post, $q_config;
-    echo $post->post_date;
     return qtrans_date(mysql2date('U',$post->post_date), '', qtrans_use($q_config['language'],$format), '', '');
 }
 
@@ -1309,7 +1307,6 @@ function qtranslate_conf() {
             $q_config['use_strftime'] = false;
         }
     }
-    echo "<!--".$q_config['use_strftime']."-->";
     if(isset($_POST['original_lang'])) {
         // validate form input
         if($_POST['language_na_message']=='')           $error = 'The Language must have a Not-Available Message!';
