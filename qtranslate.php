@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 9
+Version: 1.0 beta 10
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
@@ -865,7 +865,9 @@ function qtrans_convertURL($url='', $lang='') {
         $url = preg_replace('#\?+#i','?',$url);
         $url = preg_replace('#(\?&)+#i','?',$url);
         if(substr($url,-1,1)=='?') $url = substr($url,0,-1);
+        $url = preg_replace('#\&*$#i','',$url);
         $url = preg_replace('#&lang=[^&]*#i','',$url);
+
         // dont append default language
         if($lang!=$q_config['default_language']) {
             if(strpos($url,'?')===false) {
@@ -1094,7 +1096,7 @@ function qtrans_widget_init() {
          // $after_title and $after_widget variables in your output.
         echo $before_widget;
         if($options['qtrans-switch-hide-title']!='on')
-            echo $before_title . $title . $after_title;
+            echo $before_title . qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($title) . $after_title;
         qtrans_generateLanguageSelectCode($options['qtrans-switch-type']);
         echo $after_widget;     
     }
