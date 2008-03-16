@@ -3,10 +3,10 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 beta 10
+Version: 1.0 RC1
 Author: Qian Qin
 Author URI: http://www.qianqin.de
-Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget
+Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
 */
 /*
     Flags in flags directory are made by Luc Balemans and downloaded from
@@ -31,7 +31,8 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 */
 /*
     Default Language Contributers
-    en, de, zh by Qian Qin
+    en, de by Qian Qin
+    zh by Junyan Chen
     fi by Tatu Siltanen
 */
 
@@ -86,6 +87,9 @@ $q_config['flag']['fi'] = 'fi.png';
 
 // Location of flags (needs trailing slash!)
 $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
+
+// Don't convert URLs to this file types
+$q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi';
 
 /* DEFAULT CONFIGURATION PART ENDS HERE */
 
@@ -597,8 +601,10 @@ function qtrans_loadConfig() {
     $date_formats = get_option('qtranslate_date_formats');
     $time_formats = get_option('qtranslate_time_formats');
     $use_strftime = get_option('qtranslate_use_strftime');
+    $ignore_file_types = get_option('qtranslate_ignore_file_types');
     
     // default if not set
+    if(!is_array($ignore_file_types)) $ignore_file_types = $q_config['ignore_file_types'];
     if(!is_array($date_formats)) $date_formats = $q_config['date_format'];
     if(!is_array($time_formats)) $time_formats = $q_config['time_format'];
     if(!is_array($na_messages)) $na_messages = $q_config['not_available'];
@@ -621,6 +627,7 @@ function qtrans_loadConfig() {
     $q_config['default_language'] = $default_language;
     $q_config['flag_location'] = $flag_location;
     $q_config['use_strftime'] = $use_strftime;
+    $q_config['ignore_file_types'] = $ignore_file_types;
     
     // Add Code (used only in Editor)
     $q_config['language_name']['code'] = __('Code');
@@ -647,6 +654,7 @@ function qtrans_saveConfig() {
     update_option('qtranslate_na_messages', $q_config['not_available']);
     update_option('qtranslate_date_formats', $q_config['date_format']);
     update_option('qtranslate_time_formats', $q_config['time_format']);
+    update_option('qtranslate_ignore_file_types', $q_config['ignore_file_types']);
     if($q_config['use_strftime'])
         update_option('qtranslate_use_strftime', '1');
     else
@@ -832,9 +840,24 @@ function qtrans_convertBlogInfoURL($url, $what) {
 
 function qtrans_convertURL($url='', $lang='') {
     global $q_config;
+    
     // invalid language
+    if($url=='') $url = $_SERVER['REQUEST_URI'];
     if($lang=='') $lang = $q_config['language'];
     if(!in_array($lang, $q_config['enabled_languages'])) return "";
+    
+    // check if it's an external link
+    if(parse_url($url,PHP_URL_HOST)!=''&&substr($url,0,strlen(get_option('home')))!=get_option('home')) {
+        return $url;
+    }
+
+    // check if its a link to an ignored file type
+    $ignore_file_types = preg_split('/\s*,\s*/', strtolower($q_config['ignore_file_types']));
+    $pathinfo = pathinfo(parse_url($url, PHP_URL_PATH));
+    if(in_array(strtolower($pathinfo['extension']), $ignore_file_types)) {
+        return $url;
+    }
+    
     if(strpos(get_option('permalink_structure'),'?')===false&&get_option('permalink_structure')!='') {
         // clicking around in default language shouldn't change any urls
         if($lang==$q_config['default_language']) return $url;
@@ -1301,6 +1324,7 @@ function qtranslate_conf() {
     if(isset($_POST['flag_location'])) {
         update_option('qtranslate_flag_location', $_POST['flag_location']);
         $q_config['flag_location'] = $_POST['flag_location'];
+        $q_config['ignore_file_types'] = $_POST['ignore_file_types'];
         if(isset($_POST['use_strftime'])) {
             update_option('qtranslate_use_strftime', '1');
             $q_config['use_strftime'] = true;
@@ -1476,6 +1500,14 @@ function qtranslate_conf() {
             </td>
         </tr>
         <tr valign="top">
+            <th scope="row"><?php _e('Ignore Links:');?></th>
+            <td>
+                <input type="text" name="ignore_file_types" id="ignore_file_types" value="<?php echo $q_config['ignore_file_types']; ?>" style="width:95%"/>
+                <br/>
+                <?php _e('Don\'t convert Links to files of the given file types. (Default: gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi)'); ?>
+            </td>
+        </tr>
+        <tr valign="top">
             <th scope="row"><?php _e('Use strftime:');?></th>
             <td>
                 <label for="use_strftime"><input type="checkbox" name="use_strftime" id="use_strftime" value="1"<?php echo ($q_config['use_strftime'])?' checked="checked"':''; ?>/> Use strftime instead of date</label>
@@ -1536,6 +1568,7 @@ add_filter('the_excerpt',                   'qtrans_useCurrentLanguageIfNotFound
 add_filter('the_excerpt_rss',               'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_title',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('the_category',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
+add_filter('the_tags',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('sanitize_title',                'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',              'qtrans_dateFromCommentForCurrentLanguage',0,2);
 add_filter('get_comment_time',              'qtrans_timeFromCommentForCurrentLanguage',0,3);
@@ -1566,6 +1599,7 @@ add_filter('category_description',          'qtrans_useCurrentLanguageIfNotFound
 add_filter('bloginfo_rss',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('the_category_rss',              'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('category_name',                 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('wp_generate_tag_cloud',         'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('pre_option_rss_language',       'qtrans_getLanguage',0);
 
 // Hooks (execution time non-critical filters) 
@@ -1574,7 +1608,6 @@ add_filter('author_feed_link',              'qtrans_convertURL');
 add_filter('author_link',                   'qtrans_convertURL');
 add_filter('author_feed_link',              'qtrans_convertURL');
 add_filter('day_link',                      'qtrans_convertURL');
-add_filter('get_comment_author_link',       'qtrans_convertURL');
 add_filter('get_comment_author_url_link',   'qtrans_convertURL');
 add_filter('month_link',                    'qtrans_convertURL');
 add_filter('page_link',                     'qtrans_convertURL');
