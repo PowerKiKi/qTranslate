@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0 RC1
+Version: 1.0.1
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
@@ -89,7 +89,7 @@ $q_config['flag']['fi'] = 'fi.png';
 $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
 
 // Don't convert URLs to this file types
-$q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi';
+$q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js';
 
 /* DEFAULT CONFIGURATION PART ENDS HERE */
 
@@ -847,13 +847,14 @@ function qtrans_convertURL($url='', $lang='') {
     if(!in_array($lang, $q_config['enabled_languages'])) return "";
     
     // check if it's an external link
-    if(parse_url($url,PHP_URL_HOST)!=''&&substr($url,0,strlen(get_option('home')))!=get_option('home')) {
+    $urlinfo = parse_url($url);
+    if($urlinfo['host']!=''&&substr($url,0,strlen(get_option('home')))!=get_option('home')) {
         return $url;
     }
 
     // check if its a link to an ignored file type
     $ignore_file_types = preg_split('/\s*,\s*/', strtolower($q_config['ignore_file_types']));
-    $pathinfo = pathinfo(parse_url($url, PHP_URL_PATH));
+    $pathinfo = pathinfo($urlinfo['path']);
     if(in_array(strtolower($pathinfo['extension']), $ignore_file_types)) {
         return $url;
     }
@@ -1504,7 +1505,7 @@ function qtranslate_conf() {
             <td>
                 <input type="text" name="ignore_file_types" id="ignore_file_types" value="<?php echo $q_config['ignore_file_types']; ?>" style="width:95%"/>
                 <br/>
-                <?php _e('Don\'t convert Links to files of the given file types. (Default: gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi)'); ?>
+                <?php _e('Don\'t convert Links to files of the given file types. (Default: gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js)'); ?>
             </td>
         </tr>
         <tr valign="top">
