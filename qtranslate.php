@@ -684,6 +684,7 @@ function qtrans_use($lang, $text, $show_available=false) {
     global $q_config;
     $moreregex = '/<!--more.*?-->/i';
     $langregex = '/\[lang_([a-z]{2})\](.*?)\[\/lang_\1\]/is';
+    $emptylangregex = '/\[lang_([a-z]{2})\]\[\/lang_\1\]/is';
     // return empty string if language is not enabled
     if(!in_array($lang, $q_config['enabled_languages'])) return "";
     if(is_array($text)) {
@@ -693,6 +694,9 @@ function qtrans_use($lang, $text, $show_available=false) {
         }
         return $text;
     }
+    // remove any empty tags
+    $text = preg_replace($emptylangregex, '', $text);    
+    
     $text_blocks = preg_split($moreregex, $text);
     $available_languages = array();
     $result = $text;
@@ -1305,7 +1309,12 @@ function qtranslate_conf() {
     $altered_table = false;
     
     // check if category names can be longer than 55 characters
-    $fields = $wpdb->get_results("DESCRIBE $wpdb->terms");
+    if($wpdb->terms != '') {
+        $category_table_name = $wpdb->terms;
+    } else {
+        $category_table_name = $wpdb->categories;
+    }
+    $fields = $wpdb->get_results("DESCRIBE ".$category_table_name);
     foreach($fields as $field) {
         if(strtolower($field->Field)=='name') {
             // check field type
@@ -1319,7 +1328,6 @@ function qtranslate_conf() {
             }
         }
     }
-    print_r($results);
     
     // check for action
     if(isset($_POST['flag_location'])) {
