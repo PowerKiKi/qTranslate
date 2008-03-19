@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0.1
+Version: 1.0.2b
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
@@ -689,8 +689,8 @@ function qtrans_use($lang, $text, $show_available=false) {
     if(!in_array($lang, $q_config['enabled_languages'])) return "";
     if(is_array($text)) {
         // handle arrays recursively
-        for($i=0; $i<sizeof($text); $i++) {
-            $text[$i] = qtrans_use($lang,$text[$i],$show_available);
+        foreach($text as $key => $t) {
+            $text[$key] = qtrans_use($lang,$text[$key],$show_available);
         }
         return $text;
     }
@@ -1610,6 +1610,18 @@ add_filter('the_category_rss',              'qtrans_useCurrentLanguageIfNotFound
 add_filter('category_name',                 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_generate_tag_cloud',         'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('pre_option_rss_language',       'qtrans_getLanguage',0);
+
+// Compability with Default Widgets
+add_filter('option_widget_pages',           'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_archives',        'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_meta',            'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_calendar',        'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_text',            'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_categories',      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_recent_entries',  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_recent_comments', 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_rss',             'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('option_widget_tag_cloud',       'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 
 // Hooks (execution time non-critical filters) 
 add_filter('the_editor',                    'qtrans_modifyRichEditor');
