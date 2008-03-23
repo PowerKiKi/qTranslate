@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0.2b
+Version: 1.0.2
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
@@ -34,6 +34,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
     en, de by Qian Qin
     zh by Junyan Chen
     fi by Tatu Siltanen
+    fr by Damien Choizit
 */
 
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
@@ -49,6 +50,7 @@ $q_config['language_name']['de'] = "Deutsch";
 $q_config['language_name']['en'] = "English";
 $q_config['language_name']['zh'] = "中文";
 $q_config['language_name']['fi'] = "suomi";
+$q_config['language_name']['fr'] = "Français";
 
 // Locales for languages
 // see locale -a for available locales
@@ -56,6 +58,7 @@ $q_config['locale']['de'] = "de_DE";
 $q_config['locale']['en'] = "en_US";
 $q_config['locale']['zh'] = "zh_CN";
 $q_config['locale']['fi'] = "fi_FI";
+$q_config['locale']['fr'] = "fr_FR";
 
 // Language not available messages
 // %LANG:<normal_seperator>:<last_seperator>% generates a list of languages seperated by <normal_seperator> except for the last one, where <last_seperator> will be used instead.
@@ -63,6 +66,7 @@ $q_config['not_available']['de'] = "Leider ist der Eintrag nur auf %LANG:, : und
 $q_config['not_available']['en'] = "Sorry, this entry is only available in %LANG:, : and %.";
 $q_config['not_available']['zh'] = "对不起，此内容只适用于%LANG:，:和%。";
 $q_config['not_available']['fi'] = "Anteeksi, mutta tämä kirjoitus on saatavana ainoastaan näillä kielillä: %LANG:, : ja %.";
+$q_config['not_available']['fr'] = "Désolé, cet article n'est pas disponible en %LANG:, : et %.";
 
 // enable strftime usage
 $q_config['use_strftime'] = true;
@@ -72,11 +76,13 @@ $q_config['date_format']['en'] = '%A %B %e%q, %Y';
 $q_config['date_format']['de'] = '%A, der %e. %B %Y';
 $q_config['date_format']['zh'] = '%x %A';
 $q_config['date_format']['fi'] = '%e.&m.%C';
+$q_config['date_format']['fr'] = '%A %e %B %Y';
 
 $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
 $q_config['time_format']['zh'] = '%I:%M%p';
 $q_config['time_format']['fi'] = '%H:%M';
+$q_config['time_format']['fr'] = '%H:%M';
 
 // Flag images configuration
 // Look in /flags/ directory for a huge list of flags for usage
@@ -84,6 +90,7 @@ $q_config['flag']['en'] = 'gb.png';
 $q_config['flag']['de'] = 'de.png';
 $q_config['flag']['zh'] = 'cn.png';
 $q_config['flag']['fi'] = 'fi.png';
+$q_config['flag']['fr'] = 'fr.png';
 
 // Location of flags (needs trailing slash!)
 $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
