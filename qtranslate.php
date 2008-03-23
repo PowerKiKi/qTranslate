@@ -876,8 +876,8 @@ function qtrans_convertURL($url='', $lang='') {
             $home_path = '';
         $home_path = trim($home_path, '/');
         if(strlen($home_path)>0) {
+            $url = preg_replace('#^((https?://[^/]+/?)?.*)'.$home_path.'/?(.*)$#','$1$3',$url);
             $home_path .= '/';
-            $url = preg_replace('#'.$home_path.'#','',$url,1);
         }
         // prevent multiple execution errors
         if(preg_match('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i',$url, $match)) {
@@ -1564,12 +1564,38 @@ function qtranslate_conf() {
 
 // qtrans_init hooks in locale filter which comes before init action
 
+function qtrans_optionFilter($do='enable') {
+    $options = array(   'option_widget_pages',
+                        'option_widget_archives',
+                        'option_widget_meta',
+                        'option_widget_calendar',
+                        'option_widget_text',
+                        'option_widget_categories',
+                        'option_widget_recent_entries',
+                        'option_widget_recent_comments',
+                        'option_widget_rss',
+                        'option_widget_tag_cloud'
+                    );
+    foreach($options as $option) {
+        if($do!='disable') {
+            add_filter($option, 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+        } else {
+            remove_filter($option, 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
+        }
+    }
+}
+
+function qtrans_removeOptionFilters() {
+    return qtrans_optionFilter('disable');
+}
+
 // Hooks (Actions)
 add_action('wp_head',                       'qtrans_header');
 add_action('edit_category_form',            'qtrans_modifyCategoryForm');
 add_action('plugins_loaded',                'qtrans_widget_init'); 
 add_action('admin_menu',                    'qtranslate_config_page');
 add_action('admin_print_scripts',           'qtrans_modifyUpload',99);
+add_action('admin_head',                    'qtrans_removeOptionFilters');
 
 // Hooks (execution time critical filters) 
 add_filter('the_content',                   'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
@@ -1612,16 +1638,7 @@ add_filter('wp_generate_tag_cloud',         'qtrans_useCurrentLanguageIfNotFound
 add_filter('pre_option_rss_language',       'qtrans_getLanguage',0);
 
 // Compability with Default Widgets
-add_filter('option_widget_pages',           'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_archives',        'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_meta',            'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_calendar',        'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_text',            'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_categories',      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_recent_entries',  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_recent_comments', 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_rss',             'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('option_widget_tag_cloud',       'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+qtrans_optionFilter();
 
 // Hooks (execution time non-critical filters) 
 add_filter('the_editor',                    'qtrans_modifyRichEditor');
