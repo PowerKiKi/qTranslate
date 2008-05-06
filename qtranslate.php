@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.0.2
+Version: 1.0.3
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
@@ -512,6 +512,12 @@ function qtrans_modifyUpload() {
 // Modifys TinyMCE to edit multilingual content
 function qtrans_modifyRichEditor($old_content) {
     global $q_config;
+    if($GLOBALS['wp_version']!="2.3.3") {
+        if($_REQUEST['qtranslateincompatiblemessage']!="shown") {
+            echo '<p class="updated">'.__("This version of qTranslate is not fully compatible with your Wordpress version. To prevent Wordpress from malfunctioning, the qTranslate Editor has been disabled.").'</p>';
+        }
+        return $old_content;
+    }
     // don't do anything to the editor if it's not rich
     if(!user_can_richedit()) return $old_content;
     preg_match("/<textarea[^>]*id='([^']+)'/",$old_content,$matches);
@@ -792,7 +798,7 @@ function qtrans_init() {
     /* BEGIN URL Handling */
     if(strpos(get_option('permalink_structure'),'?')===false&&get_option('permalink_structure')!='') {
         // optimized urls
-        $home_path = parse_url(get_option('home'));
+        $home_path = qtrans_parseURL(get_option('home'));
         if ( isset($home_path['path']) )
             $home_path = $home_path['path'];
         else
@@ -841,6 +847,23 @@ function qtrans_init() {
     /* END URL Handling */
 }
 
+function qtrans_parseURL($url) {
+    $r  = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?';
+    $r .= '(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
+
+    preg_match ( $r, $url, $out );
+    $result = array(
+        "scheme" => $out[1],
+        "host" => $out[4].(($out[5]=='')?'':':'.$out[5]),
+        "user" => $out[2],
+        "pass" => $out[3],
+        "path" => $out[6],
+        "query" => $out[7],
+        "fragment" => $out[8]
+        );
+    return $result;
+}
+
 function qtrans_convertBlogInfoURL($url, $what) {
     if($what=='stylesheet_url') return $url;
     if($what=='template_url') return $url;
@@ -858,7 +881,7 @@ function qtrans_convertURL($url='', $lang='') {
     if(!in_array($lang, $q_config['enabled_languages'])) return "";
     
     // check if it's an external link
-    $urlinfo = parse_url($url);
+    $urlinfo = qtrans_parseURL($url);
     if($urlinfo['host']!=''&&substr($url,0,strlen(get_option('home')))!=get_option('home')) {
         return $url;
     }
@@ -876,7 +899,7 @@ function qtrans_convertURL($url='', $lang='') {
         // optimized urls
         if(preg_match('#^https?://[^/]+$#i',$url)) $url.='/';
         // remove home path if set
-        $home_path = parse_url(get_option('home'));
+        $home_path = qtrans_parseURL(get_option('home'));
         if ( isset($home_path['path']) )
             $home_path = $home_path['path'];
         else
