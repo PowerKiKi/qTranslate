@@ -59,7 +59,7 @@ function qtrans_adminHeader() {
     echo ".edButton { cursor:pointer; display:block; float:right; height:20px; margin:5px 8px 0px 0px; padding:5px 5px 1px }\n";
     echo ".qtrans_title_input { border:0pt none; font-size:1.7em; outline-color:invert; outline-style:none; outline-width:medium; padding:0pt; width:100%; }\n";
     echo ".qtrans_title_wrap { border-color:#CCCCCC; border-style:solid; border-width:1px; padding:2px 3px; }\n";
-    echo "#qtrans_textarea_content { border:0pt none; line-height:150%; outline-color:invert; outline-style:none; outline-width:medium; padding:0pt }\n";
+    echo "#qtrans_textarea_content { border:0pt none; line-height:150%; outline-color:invert; outline-style:none; outline-width:medium; padding:0pt; margin:0pt; width:100% }\n";
     echo "</style>\n";
     return qtrans_optionFilter('disable');
 }

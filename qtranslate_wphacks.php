@@ -46,7 +46,7 @@ function qtrans_modifyRichEditor($old_content) {
     
     // create editing field for selected languages
     $old_content = substr($old_content,0,26)
-        ."<textarea id='qtrans_textarea_".$id."' name='qtrans_textarea_".$id."' tabindex='2' rows='".$rows."' cols='".$cols."'></textarea>"
+        ."<textarea id='qtrans_textarea_".$id."' name='qtrans_textarea_".$id."' tabindex='2' rows='".$rows."' cols='".$cols."' style='display:none; color:#fff'></textarea>"
         .substr($old_content,26);
     
     // do some crazy js to alter the admin view
@@ -62,9 +62,14 @@ function qtrans_modifyRichEditor($old_content) {
 
     // insert language and code buttons
     $content .= qtrans_createEditorToolbarButton('code', $id);
-    foreach($q_config['enabled_languages'] as $language) {
-        $content .= qtrans_createEditorToolbarButton($language, $id);
+    $el = $q_config['enabled_languages'];
+    sort($el);
+    foreach($el as $language) {
         $content .= qtrans_insertTitleInput($language);
+    }
+    rsort($el);
+    foreach($el as $language) {
+        $content .= qtrans_createEditorToolbarButton($language, $id);
     }
     
     // remove old buttons
@@ -84,11 +89,10 @@ function qtrans_modifyRichEditor($old_content) {
     // show default language tab
     $content_append .="document.getElementById('content').style.display='none';\n";
     $content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='edButton active';\n";
-    $content_append .="qtrans_assign('qtrans_textarea_".$id."',qtrans_use('".$q_config['default_language']."',document.getElementById('content').value));\n";
     // make editor save the correct content
-    //$content_append .="var oldCallback = TinyMCE_wordpressPlugin.saveCallback;\n";
-    //$content_append .="TinyMCE_wordpressPlugin.saveCallback = function(el, c, body) { return qtrans_save(oldCallback(el, c, body)); };\n";
-    // hijack the image plugin
+    $content_append .= $q_config['js']['qtrans_saveCallback'];
+    // show default language
+    $content_append .="switchEditors.go('".$q_config['default_language']."');\n";
     
     $content_append .="// ]]>\n</script>\n";
     return $content.$old_content.$content_append;
@@ -172,7 +176,7 @@ function qtrans_createEditorToolbarButton($language, $id){
         var l = document.createTextNode('".$q_config['language_name'][$language]."');
         ls.id = 'qtrans_select_".$language."';
         ls.className = 'edButton';
-        ls.onclick = function() { qtrans_switch('".$language."','".$id."'); };
+        ls.onclick = function() { switchEditors.go('".$language."','".$id."'); };
         ls.appendChild(l);
         bc.insertBefore(ls,mb);
         ";

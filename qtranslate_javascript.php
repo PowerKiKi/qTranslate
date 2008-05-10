@@ -132,22 +132,29 @@ function qtrans_initJS() {
         
     $q_config['js']['qtrans_assign'] = "
         function qtrans_assign(id, text) {
-            if(typeof tinyMCE.getInstanceById != 'undefined')
-                var inst = tinyMCE.getInstanceById(id);
+            var inst = tinyMCE.get(id);
             var ta = document.getElementById(id);
             if(inst) {
-                tinyMCE.removeMCEControl(id);
-                if ( tinyMCE.isMSIE ) {
-                    ta.value = wpautop(text);
-                    tinyMCE.addMCEControl(ta, id);
-                } else {
-                    htm = wpautop(text);
-                    tinyMCE.addMCEControl(ta, id);
-                    tinyMCE.getInstanceById(id).execCommand('mceSetContent', null, htm);
-                }
+                htm = switchEditors.wpautop(text);
+                inst.execCommand('mceSetContent', null, htm);
             } else {
-                ta.value = wpautop(text);
+                ta.value = switchEditors.wpautop(text);
             }
+        }
+        ";
+        
+    $q_config['js']['qtrans_saveCallback'] = "
+        switchEditors.saveCallback = function(el, content, body) {
+
+            document.getElementById(el).style.color = '#fff';
+            if ( tinyMCE.activeEditor.isHidden() ) 
+                content = document.getElementById(el).value;
+            else
+                content = this.pre_wpautop(content);
+                
+            qtrans_save(content);
+            
+            return content;
         }
         ";
         
@@ -156,11 +163,21 @@ function qtrans_initJS() {
         // Activate tinyMCE if it's the user's default editor
         if ( ( 'undefined' == typeof wpTinyMCEConfig ) || 'tinymce' == wpTinyMCEConfig.defaultEditor ) {
             document.getElementById('editorcontainer').style.padding = '0px';
+            document.getElementById('qtrans_textarea_content').style.display = 'block';
             tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
         } else {
+        ";
+    foreach($q_config['enabled_languages'] as $language)
+        $q_config['js']['qtrans_disable_old_editor'].= "
+            document.getElementById('qtrans_select_".$language."').className='edButton';
+            ";
+    $q_config['js']['qtrans_disable_old_editor'].= "
             var H;
             if ( H = tinymce.util.Cookie.getHash('TinyMCE_content_size') )
                 document.getElementById('qtrans_textarea_content').style.height = H.ch - 30 + 'px';
+            document.getElementById('qtrans_select_code').className='edButton active';
+            document.getElementById('qtrans_textarea_content').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
             }
         };
         ";
@@ -204,16 +221,16 @@ function qtrans_initJS() {
         ";
         
     $q_config['js']['qtrans_switch'] = "
-        function qtrans_switch(lang, id) {
-            var inst = tinyMCE.getInstanceById('qtrans_textarea_' + id);
+        switchEditors.go = function(lang, id) {
+            var inst = tinyMCE.get('qtrans_textarea_' + id);
             var qt = document.getElementById('quicktags');
             var vta = document.getElementById('qtrans_textarea_' + id);
             var ta = document.getElementById(id);
-            var pdr = ta.parentNode;
+            var pdr = document.getElementById('editorcontainer');
             
             if(document.getElementById('qtrans_select_'+lang).className=='edButton active') {
                 if(inst) {
-                    inst.triggerSave(false, false);
+                    tinyMCE.triggerSave();
                 }
                 return;
             }
@@ -222,7 +239,7 @@ function qtrans_initJS() {
         $q_config['js']['qtrans_switch'].= "
             if(document.getElementById('qtrans_select_".$language."').className=='edButton active') {
                 if(inst) {
-                    inst.triggerSave(false, false);
+                    tinyMCE.triggerSave();
                 }
             }
             document.getElementById('qtrans_select_".$language."').className='edButton';
@@ -235,90 +252,55 @@ function qtrans_initJS() {
             
             if(lang=='code') {
                 if(inst) {
-                    if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
-                        // IE rejects the later overflow assignment so we skip this step.
-                        // Alternate code might be nice. Until then, IE reflows.
-                    } else {
-                        // Lock the fieldset's height to prevent reflow/flicker
-                        pdr.style.height = pdr.clientHeight + 'px';
-                        pdr.style.overflow = 'hidden';
-                    }
+            
+                    ta.style.height = inst.getContentAreaContainer().offsetHeight + 6 + 'px';
 
-                    // Save the coords of the bottom right corner of the rich editor
-                    var table = document.getElementById(inst.editorId + '_parent').getElementsByTagName('table')[0];
-                    var y1 = table.offsetTop + table.offsetHeight;
-
-                    if ( TinyMCE_AdvancedTheme._getCookie('TinyMCE_' + inst.editorId + '_height') == null ) {
-                        var expires = new Date();
-                        expires.setTime(expires.getTime() + 3600000 * 24 * 30);
-                        var offset = tinyMCE.isMSIE ? 1 : 2;
-                        TinyMCE_AdvancedTheme._setCookie('TinyMCE_' + inst.editorId + '_height', '' + (table.offsetHeight - offset), expires);
-                    }
-
-                    // Unload the rich editor
-                    inst.triggerSave(false, false);
-                    htm = inst.formElement.value;
-                    tinyMCE.removeMCEControl('qtrans_textarea_'+id);
-                    --tinyMCE.idCounter;
-
-                    // Reveal Quicktags and textarea
-                    qt.style.display = 'block';
+                    inst.hide();
                     vta.style.display = 'none';
-                    ta.style.display = 'inline';
+                    ta.style.display = 'block';
+                    qt.style.display = 'block';
 
-                    // Set the textarea height to match the rich editor
-                    y2 = ta.offsetTop + ta.offsetHeight;
-                    ta.style.height = (ta.clientHeight + y1 - y2) + 'px';
-
-                    // Tweak the widths
-                    ta.parentNode.style.paddingRight = '12px';
-
-                    if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
+                    if ( tinymce.isIE6 ) {
+                        ta.style.width = '98%%';
+                        pdr.style.padding = '0px';
+                        ta.style.padding = '6px';
                     } else {
-                        // Unlock the fieldset's height
-                        pdr.style.height = 'auto';
-                        pdr.style.overflow = 'display';
+                        ta.style.width = '100%%';
+                        pdr.style.padding = '6px';
                     }
+
+                    ta.style.color = '';
+                    this.wpSetDefaultEditor('html');
+
                 } else {
                 }
             } else {
-                if(inst) {
+                if(inst && vta.style.display!='none') {
                     qtrans_assign('qtrans_textarea_'+id,qtrans_use(lang,ta.value));
                 } else {
+                    ta.style.color = '#fff';
+
                     edCloseAllTags(); // :-(
 
-                    if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
-                    } else {
-                        // Lock the fieldset's height
-                        pdr.style.height = pdr.clientHeight + 'px';
-                        pdr.style.overflow = 'hidden';
-                    }
-
-                    // Hide Quicktags and textarea
                     qt.style.display = 'none';
-                    vta.style.display = 'block';
+                    pdr.style.padding = '0px';
+                    ta.style.padding = '0px';
+
+                    vta.value = this.wpautop(qtrans_use(lang,ta.value));
+
                     ta.style.display = 'none';
+                    vta.style.display = 'block';
 
-                    // Tweak the widths
-                    pdr.style.paddingRight = '0px';
-
-                    // Load the rich editor with formatted html
-                    if ( tinyMCE.isMSIE ) {
-                        vta.value = wpautop(qtrans_use(lang,ta.value));
-                        tinyMCE.addMCEControl(vta, 'qtrans_textarea_'+id);
+                    if ( inst ) {
+                        inst.execCommand('mceSetContent', false, vta.value);
+                        inst.show();
                     } else {
-                        htm = wpautop(qtrans_use(lang,ta.value));
-                        tinyMCE.addMCEControl(vta, 'qtrans_textarea_'+id);
-                        tinyMCE.getInstanceById('qtrans_textarea_'+id).execCommand('mceSetContent', null, htm);
+                        tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_'+id);
+                        inst = tinyMCE.get('qtrans_textarea_' + id);
                     }
 
-                    if ( tinyMCE.isMSIE && !tinyMCE.isOpera ) {
-                    } else {
-                        // Unlock the fieldset's height
-                        pdr.style.height = 'auto';
-                        pdr.style.overflow = 'display';
-                    }
                 }
+                this.wpSetDefaultEditor('tinymce');
             }
         }
         ";
