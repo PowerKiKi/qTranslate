@@ -46,7 +46,7 @@ function qtrans_modifyRichEditor($old_content) {
     
     // create editing field for selected languages
     $old_content = substr($old_content,0,26)
-        ."<textarea id='qtrans_textarea_".$id."' name='qtrans_textarea_".$id."' tabindex='2' rows='".$rows."' cols='".$cols."' style='display:none; color:#fff'></textarea>"
+        ."<textarea id='qtrans_textarea_".$id."' name='qtrans_textarea_".$id."' tabindex='2' rows='".$rows."' cols='".$cols."' style='display:none'></textarea>"
         .substr($old_content,26);
     
     // do some crazy js to alter the admin view
@@ -92,7 +92,8 @@ function qtrans_modifyRichEditor($old_content) {
     // make editor save the correct content
     $content_append .= $q_config['js']['qtrans_saveCallback'];
     // show default language
-    $content_append .="switchEditors.go('".$q_config['default_language']."');\n";
+    $content_append .="var ta = document.getElementById('".$id."');\n";
+    $content_append .="qtrans_assign('qtrans_textarea_".$id."',qtrans_use('".$q_config['default_language']."',ta.value));\n";
     
     $content_append .="// ]]>\n</script>\n";
     return $content.$old_content.$content_append;

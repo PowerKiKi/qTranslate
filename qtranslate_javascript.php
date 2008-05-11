@@ -275,7 +275,7 @@ function qtrans_initJS() {
                 } else {
                 }
             } else {
-                if(inst && vta.style.display!='none') {
+                if(inst && qt.style.display=='none' && !inst.isHidden()) {
                     qtrans_assign('qtrans_textarea_'+id,qtrans_use(lang,ta.value));
                 } else {
                     ta.style.color = '#fff';

@@ -8,7 +8,6 @@ function qtrans_header(){
     global $q_config;
     echo "\n<meta http-equiv=\"Content-Language\" content=\"".$q_config['locale'][$q_config['language']]."\" />\n";
     echo "<style type=\"text/css\" media=\"screen\">\n";
-    echo ".edButton { cursor:pointer; display:block; float:right; height:20px; margin:5px 8px 0px 0px; padding:5px 5px 1px }\n";
     echo ".qtrans_flag span { display:none }\n";
     echo ".qtrans_flag { height:12px; width:18px; display:block }\n";
     echo ".qtrans_flag_and_text { padding-left:20px }\n";
