@@ -1,5 +1,22 @@
 <?php // encoding: utf-8
 
+/*  Copyright 2008  Qian Qin  (email : mail@qianqin.de)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 /* qTranslate Core Functions */
 
 function qtrans_init() {
@@ -151,12 +168,12 @@ function qtrans_saveConfig() {
 /* BEGIN DATE FUNCTIONS */
 
 function qtrans_strftime($format, $date) {
-    // add date suffix ability (%s) to strftime
+    // add date suffix ability (%q) to strftime
     $day = intval(trim(strftime("%e",$date)));
     $replace = 'th';
     if($day==1||$day==21||$day==31) $replace = 'st';
-    if($day==2) $replace = 'nd';
-    if($day==3) $replace = 'rd';
+    if($day==2||$day==22) $replace = 'nd';
+    if($day==3||$day==23) $replace = 'rd';
     $format = preg_replace("/([^%])%q/","$1".$replace,$format);
     return strftime($format, $date);
 }

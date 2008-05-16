@@ -37,12 +37,22 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
     fr by Damien Choizit
 */
 /*
-    Functions for Developers
-    ========================
+    Functions for Developers and Template Authors
+    =============================================
     
+    __(string $str)
+        returns translated string, which will be first parsed by qTranslate and then by Gettext
+    _e(string $str)
+        returns nothing, echos translated string, which will be first parsed by qTranslate and then by Gettext
     qtrans_getLanguage()
-        returns currently selected language. 
-    TODO: Add function descriptions
+        returns currently selected language.
+    qtrans_strftime(string $format, int $date)
+        returns formatted time using strftime syntax format. Use %q for date suffix (th, st, nd, rd)
+    qtrans_convertURL(string $url, string $lang)
+        returns an converted URL for the selected language or the current language, if $lang is omitted.
+    qtrans_generateLanguageSelectCode(string $style, string $id)
+        returns nothing, generates HTML lanuage selection code for the current page. $style can be either image, text, both or dropdown.
+    
 */
 
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
