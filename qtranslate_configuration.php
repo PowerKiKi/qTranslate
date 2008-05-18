@@ -28,7 +28,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
     global $q_config;
 ?>
 <input type="hidden" name="original_lang" value="<?php echo $original_lang; ?>" />
-<table class="editform" width="100%" cellspacing="2" cellpadding="5">
+<table class="form-table" width="100%" cellspacing="2" cellpadding="5">
     <tr valign="top">
         <th width="33%">
             <label for="language_code"><?php _e('Language Code:'); ?></label>
@@ -347,10 +347,10 @@ function qtranslate_conf() {
 <div class="wrap">
 <h2><?php _e('qTranslate Configuration'); ?></h2>
 <form action="<?php echo $clean_uri;?>" method="post" id="qtranslate-conf">
-<p><?php printf(__('For help on how to configure qTranslate correctly, visit the <a href="%1$s">qTranslate Website</a>.'), 'http://www.qianqin.de/qtranslate/'); ?></p>
-    <table class="optiontable">
+<div class="tablenav"><?php printf(__('For help on how to configure qTranslate correctly, visit the <a href="%1$s">qTranslate Website</a>.'), 'http://www.qianqin.de/qtranslate/'); ?></div>
+    <table class="form-table">
         <tr valign="top">
-            <th scope="row"><?php _e('Flag Image Path:');?></th>
+            <th scope="row"><?php _e('Flag Image Path');?></th>
             <td>
                 <input type="text" name="flag_location" id="flag_location" value="<?php echo $q_config['flag_location']; ?>" style="width:95%"/>
                 <br/>
@@ -358,7 +358,7 @@ function qtranslate_conf() {
             </td>
         </tr>
         <tr valign="top">
-            <th scope="row"><?php _e('Ignore Links:');?></th>
+            <th scope="row"><?php _e('Ignore Links');?></th>
             <td>
                 <input type="text" name="ignore_file_types" id="ignore_file_types" value="<?php echo $q_config['ignore_file_types']; ?>" style="width:95%"/>
                 <br/>
@@ -366,7 +366,7 @@ function qtranslate_conf() {
             </td>
         </tr>
         <tr valign="top">
-            <th scope="row"><?php _e('Use strftime:');?></th>
+            <th scope="row"><?php _e('Use strftime');?></th>
             <td>
                 <label for="use_strftime"><input type="checkbox" name="use_strftime" id="use_strftime" value="1"<?php echo ($q_config['use_strftime'])?' checked="checked"':''; ?>/> Use strftime instead of date</label>
                 <br/>
@@ -375,10 +375,12 @@ function qtranslate_conf() {
         </tr>
     </table>
 <p class="submit"><input type="submit" name="submit" value="<?php _e('Update options &raquo;'); ?>" /></p>
+<br class="clear" />
 </form>
 </div>
 <div class="wrap">
 <h2><?php _e('Languages'); ?></h2>
+<br class="clear"/>
 <table class="widefat">
     <thead>
         <tr>
@@ -397,6 +399,7 @@ function qtranslate_conf() {
     </tr>
 <?php }} ?>
 </table>
+<br class="clear" />
 </div>
 <div class="wrap">
 <h2><?php _e('Add new Language'); ?></h2>

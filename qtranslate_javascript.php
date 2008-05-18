@@ -134,6 +134,32 @@ function qtrans_initJS() {
         }
         ";
         
+    $q_config['js']['qtrans_integrate_tag'] = "
+        function qtrans_integrate_tag() {
+            var t = document.getElementById('name');
+        ";
+    foreach($q_config['enabled_languages'] as $language)
+        $q_config['js']['qtrans_integrate_tag'].= "
+            if(document.getElementById('qtrans_tag_".$language."').value!='')
+                t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_tag_".$language."').value,t.value);
+            ";
+    $q_config['js']['qtrans_integrate_tag'].= "
+        }
+        ";
+        
+    $q_config['js']['qtrans_integrate_link_category'] = "
+        function qtrans_integrate_link_category() {
+            var t = document.getElementById('name');
+        ";
+    foreach($q_config['enabled_languages'] as $language)
+        $q_config['js']['qtrans_integrate_link_category'].= "
+            if(document.getElementById('qtrans_link_category_".$language."').value!='')
+                t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_link_category_".$language."').value,t.value);
+            ";
+    $q_config['js']['qtrans_integrate_link_category'].= "
+        }
+        ";
+        
     $q_config['js']['qtrans_integrate_title'] = "
         function qtrans_integrate_title() {
             var t = document.getElementById('title');

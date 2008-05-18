@@ -36,6 +36,38 @@ function qtrans_modifyCategoryForm($category) {
     echo "// ]]>\n</script>\n";
 }
 
+function qtrans_modifyTagForm($tag) {
+    global $q_config;
+    echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
+    // include needed js functions
+    echo $q_config['js']['qtrans_integrate'];
+    echo $q_config['js']['qtrans_use'];
+    echo $q_config['js']['qtrans_integrate_tag'];
+    // create input fields for each language
+    foreach($q_config['enabled_languages'] as $language) {
+        echo qtrans_insertTagInput($language);
+    }
+    // hide real category text
+    echo "document.getElementById('name').parentNode.parentNode.style.display='none';\n";
+    echo "// ]]>\n</script>\n";
+}
+
+function qtrans_modifyLinkCategoryForm($category) {
+    global $q_config;
+    echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
+    // include needed js functions
+    echo $q_config['js']['qtrans_integrate'];
+    echo $q_config['js']['qtrans_use'];
+    echo $q_config['js']['qtrans_integrate_link_category'];
+    // create input fields for each language
+    foreach($q_config['enabled_languages'] as $language) {
+        echo qtrans_insertLinkCategoryInput($language);
+    }
+    // hide real category text
+    echo "document.getElementById('name').parentNode.parentNode.style.display='none';\n";
+    echo "// ]]>\n</script>\n";
+}
+
 // Modifys TinyMCE to edit multilingual content
 function qtrans_modifyRichEditor($old_content) {
     global $q_config;
@@ -134,7 +166,7 @@ function qtrans_insertCategoryInput($language){
         var tr = document.createElement('tr');
         var th = document.createElement('th');
         var ll = document.createElement('label');
-        var l = document.createTextNode('".$q_config['language_name'][$language]." ".__("Category name:")."');
+        var l = document.createTextNode('".$q_config['language_name'][$language]." ".__("Category name")."');
         var td = document.createElement('td');
         var i = document.createElement('input');
         var ins = document.getElementById('cat_name').parentNode.parentNode;
@@ -142,6 +174,62 @@ function qtrans_insertCategoryInput($language){
         i.id = i.name = ll.htmlFor ='qtrans_category_".$language."';
         i.value = qtrans_use('".$language."', document.getElementById('cat_name').value);
         i.onchange = qtrans_integrate_category;
+        td.width = '67%';
+        th.width = '33%';
+        th.scope = 'row';
+        th.vAlign = 'top';
+        ll.appendChild(l);
+        th.appendChild(ll);
+        tr.appendChild(th);
+        td.appendChild(i);
+        tr.appendChild(td);
+        ins.parentNode.insertBefore(tr,ins);
+        ";
+    return $html;    
+}
+
+function qtrans_insertTagInput($language){
+    global $q_config;
+    $html ="
+        var tr = document.createElement('tr');
+        var th = document.createElement('th');
+        var ll = document.createElement('label');
+        var l = document.createTextNode('".$q_config['language_name'][$language]." ".__("Tag name")."');
+        var td = document.createElement('td');
+        var i = document.createElement('input');
+        var ins = document.getElementById('name').parentNode.parentNode;
+        i.type = 'text';
+        i.id = i.name = ll.htmlFor ='qtrans_tag_".$language."';
+        i.value = qtrans_use('".$language."', document.getElementById('name').value);
+        i.onchange = qtrans_integrate_tag;
+        td.width = '67%';
+        th.width = '33%';
+        th.scope = 'row';
+        th.vAlign = 'top';
+        ll.appendChild(l);
+        th.appendChild(ll);
+        tr.appendChild(th);
+        td.appendChild(i);
+        tr.appendChild(td);
+        ins.parentNode.insertBefore(tr,ins);
+        ";
+    return $html;    
+}
+
+function qtrans_insertLinkCategoryInput($language){
+    global $q_config;
+    $html ="
+        var tr = document.createElement('tr');
+        var th = document.createElement('th');
+        var ll = document.createElement('label');
+        var l = document.createTextNode('".$q_config['language_name'][$language]." ".__("Category name")."');
+        var td = document.createElement('td');
+        var i = document.createElement('input');
+        var ins = document.getElementById('name').parentNode.parentNode;
+        i.type = 'text';
+        i.id = i.name = ll.htmlFor ='qtrans_link_category_".$language."';
+        i.value = qtrans_use('".$language."', document.getElementById('name').value);
+        i.onchange = qtrans_integrate_link_category;
         td.width = '67%';
         th.width = '33%';
         th.scope = 'row';
