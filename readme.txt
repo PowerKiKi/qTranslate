@@ -3,7 +3,7 @@ Contributors: chineseleper
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
 Requires at least: 2.5.1
 Tested up to: 2.5.1
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
 Adds userfriendly multilingual content support into Wordpress.
@@ -48,6 +48,10 @@ Installation of this plugin is fairly easy:
 == Frequently Asked Questions ==
 
 The FAQ is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/faq/)
+
+== Support Forum ==
+
+The Support Forum is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/forum/)
 
 == Screenshots ==
 
