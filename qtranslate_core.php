@@ -371,7 +371,7 @@ function qtrans_convertURL($url='', $lang='') {
 function qtrans_getFirstLanguage($text) {
     global $q_config;
     $langregex = '/\[lang_([a-z]{2})\](.*?)\[\/lang_\1\]/is';
-    preg_match_all($langregex,$text_block,$matches);
+    preg_match_all($langregex,$text,$matches);
     // return empty string if no languages where found
     if(sizeof($matches[0])==0) return '';
     // find first language

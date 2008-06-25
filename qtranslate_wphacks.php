@@ -130,6 +130,7 @@ function qtrans_modifyRichEditor($old_content) {
     
     // hide old title bar
     $content .= "document.getElementById('titlediv').style.display='none';\n";
+    
 
     $content .="// ]]>\n</script>\n";
     
@@ -253,6 +254,8 @@ function qtrans_insertTitleInput($language){
         var l = document.createTextNode('".__("Title")." (".$q_config['language_name'][$language].")');
         var tw = document.createElement('div');
         var ti = document.createElement('input');
+        var slug = document.getElementById('edit-slug-box');
+
         
         ti.type = 'text';
         ti.id = 'qtrans_title_".$language."';
@@ -268,7 +271,10 @@ function qtrans_insertTitleInput($language){
         h.appendChild(l);
         tw.appendChild(ti);
         qtd.appendChild(h);
-        qtd.appendChild(tw);
+        qtd.appendChild(tw);";
+    if($q_config['default_language'] == $language)
+        $html.="if(slug) qtd.appendChild(slug);";
+    $html.="
         td.parentNode.insertBefore(qtd,td);
         
         ";

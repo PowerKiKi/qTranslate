@@ -96,7 +96,6 @@ add_filter('the_excerpt',                   'qtrans_useCurrentLanguageIfNotFound
 add_filter('the_excerpt_rss',               'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_title',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('the_category',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
-add_filter('the_tags',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('sanitize_title',                'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',              'qtrans_dateFromCommentForCurrentLanguage',0,2);
 add_filter('get_comment_time',              'qtrans_timeFromCommentForCurrentLanguage',0,3);
@@ -111,7 +110,6 @@ add_filter('get_tags',                      'qtrans_convertGetTheTags',0);
 add_filter('tag_rows',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('cat_rows',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('list_cats',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('the_tags',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_list_categories',            'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_dropdown_cats',              'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_title',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
@@ -134,6 +132,8 @@ add_filter('the_category_rss',              'qtrans_useCurrentLanguageIfNotFound
 add_filter('category_name',                 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_tag_cloud',                  'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_generate_tag_cloud',         'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('term_links-post_tag',           'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('wp_list_bookmarks',             'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('pre_option_rss_language',       'qtrans_getLanguage',0);
 
 // Compability with Default Widgets

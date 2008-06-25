@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. Inspired by <a href="http://fredfred.net/skriker/index.php/polyglot">Polyglot</a> from Martin Chlupac.
-Version: 1.1.0
+Version: 1.1.1
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
@@ -35,23 +35,8 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
     zh by Junyan Chen
     fi by Tatu Siltanen
     fr by Damien Choizit
-*/
-/*
-    Functions for Developers and Template Authors
-    =============================================
-    
-    __(string $str)
-        returns translated string, which will be first parsed by qTranslate and then by Gettext
-    _e(string $str)
-        returns nothing, echos translated string, which will be first parsed by qTranslate and then by Gettext
-    qtrans_getLanguage()
-        returns currently selected language.
-    qtrans_strftime(string $format, int $date)
-        returns formatted time using strftime syntax format. Use %q for date suffix (th, st, nd, rd)
-    qtrans_convertURL(string $url, string $lang)
-        returns an converted URL for the selected language or the current language, if $lang is omitted.
-    qtrans_generateLanguageSelectCode(string $style, string $id)
-        returns nothing, generates HTML lanuage selection code for the current page. $style can be either image, text, both or dropdown.
+    nl by RobV
+    se by bear3556
     
 */
 
@@ -69,6 +54,8 @@ $q_config['language_name']['en'] = "English";
 $q_config['language_name']['zh'] = "中文";
 $q_config['language_name']['fi'] = "suomi";
 $q_config['language_name']['fr'] = "Français";
+$q_config['language_name']['nl'] = "Nederlands";
+$q_config['language_name']['se'] = "Svenska";
 
 // Locales for languages
 // see locale -a for available locales
@@ -77,6 +64,8 @@ $q_config['locale']['en'] = "en_US";
 $q_config['locale']['zh'] = "zh_CN";
 $q_config['locale']['fi'] = "fi_FI";
 $q_config['locale']['fr'] = "fr_FR";
+$q_config['locale']['nl'] = "nl_NL";
+$q_config['locale']['se'] = "sv_SE";
 
 // Language not available messages
 // %LANG:<normal_seperator>:<last_seperator>% generates a list of languages seperated by <normal_seperator> except for the last one, where <last_seperator> will be used instead.
@@ -84,7 +73,9 @@ $q_config['not_available']['de'] = "Leider ist der Eintrag nur auf %LANG:, : und
 $q_config['not_available']['en'] = "Sorry, this entry is only available in %LANG:, : and %.";
 $q_config['not_available']['zh'] = "对不起，此内容只适用于%LANG:，:和%。";
 $q_config['not_available']['fi'] = "Anteeksi, mutta tämä kirjoitus on saatavana ainoastaan näillä kielillä: %LANG:, : ja %.";
-$q_config['not_available']['fr'] = "Désolé, cet article n'est pas disponible en %LANG:, : et %.";
+$q_config['not_available']['fr'] = "Désolé, cet article est seulement disponible en %LANG:, : et %.";
+$q_config['not_available']['nl'] = "Onze verontschuldigingen, dit bericht is alleen beschikbaar in %LANG:, : en %.";
+$q_config['not_available']['se'] = "Tyvärr är denna artikel enbart tillgänglig på %LANG:, : och %.";
 
 // enable strftime usage
 $q_config['use_strftime'] = true;
@@ -95,12 +86,16 @@ $q_config['date_format']['de'] = '%A, der %e. %B %Y';
 $q_config['date_format']['zh'] = '%x %A';
 $q_config['date_format']['fi'] = '%e.&m.%C';
 $q_config['date_format']['fr'] = '%A %e %B %Y';
+$q_config['date_format']['nl'] = '%d/%m/%y';
+$q_config['date_format']['se'] = '%d/%m/%y';
 
 $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
 $q_config['time_format']['zh'] = '%I:%M%p';
 $q_config['time_format']['fi'] = '%H:%M';
 $q_config['time_format']['fr'] = '%H:%M';
+$q_config['time_format']['nl'] = '%H:%M';
+$q_config['time_format']['se'] = '%H:%M';
 
 // Flag images configuration
 // Look in /flags/ directory for a huge list of flags for usage
@@ -109,6 +104,8 @@ $q_config['flag']['de'] = 'de.png';
 $q_config['flag']['zh'] = 'cn.png';
 $q_config['flag']['fi'] = 'fi.png';
 $q_config['flag']['fr'] = 'fr.png';
+$q_config['flag']['nl'] = 'nl.png';
+$q_config['flag']['se'] = 'se.png';
 
 // Location of flags (needs trailing slash!)
 $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
