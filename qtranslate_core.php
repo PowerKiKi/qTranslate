@@ -349,9 +349,10 @@ function qtrans_convertURL($url='', $lang='') {
         // prevent multiple execution errors
         $url = preg_replace('#\?lang=[^&]*#i','?',$url);
         $url = preg_replace('#\?+#i','?',$url);
+        $url = preg_replace('#(&+amp;)+#i','&amp;',$url);
         $url = preg_replace('#\?(&amp;)+#i','?',$url);
         if(substr($url,-1,1)=='?') $url = substr($url,0,-1);
-        $url = preg_replace('#(&amp;)*$#i','',$url);
+        $url = preg_replace('#(&amp;|&)*$#i','',$url);
         $url = preg_replace('#&amp;lang=[^&]*#i','',$url);
 
         // dont append default language
