@@ -107,7 +107,9 @@ add_filter('the_date',                      'qtrans_dateFromPostForCurrentLangua
 add_filter('locale',                        'qtrans_localeForCurrentLanguage',99);
 add_filter('get_the_tags',                  'qtrans_convertGetTheTags',0);
 add_filter('get_tags',                      'qtrans_convertGetTheTags',0);
+add_filter('term_name',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('tag_rows',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('cat_row',                       'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('cat_rows',                      'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('list_cats',                     'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_list_categories',            'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
