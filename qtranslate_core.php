@@ -334,7 +334,7 @@ function qtrans_convertURL($url='', $lang='') {
             $home_path = '';
         $home_path = trim($home_path, '/');
         if(strlen($home_path)>0) {
-            $url = preg_replace('#^((https?://[^/]+/?)?.*)'.$home_path.'/?(.*)$#','$1$3',$url);
+            $url = preg_replace('#^((https?://[^/]+/?)?.*?)'.$home_path.'/?(.*)$#','$1$3',$url);
             $home_path .= '/';
         }
         // prevent multiple execution errors
@@ -382,6 +382,31 @@ function qtrans_getFirstLanguage($text) {
     }
     // no enabled language, return empty string
     return '';
+}
+
+function qtrans_getEnabledLanguages($text) {
+    global $q_config;
+    $moreregex = '/<!--more.*?-->/i';
+    $langregex = '/\[lang_([a-z]{2})\](.*?)\[\/lang_\1\]/is';
+    $emptylangregex = '/\[lang_([a-z]{2})\]\[\/lang_\1\]/is';
+    // remove any empty tags
+    $text = preg_replace($emptylangregex, '', $text);    
+    
+    $text_blocks = preg_split($moreregex, $text);
+    $available_languages = array();
+    $result = $text;
+    $content_available = false;
+    foreach($text_blocks as $text_block) {
+        preg_match_all($langregex,$text_block,$matches);
+        if(sizeof($matches[0])>0) {
+            for($i=0;$i<sizeof($matches[0]);$i++){
+                if(in_array($matches[1][$i], $q_config['enabled_languages']))
+                    if(trim($matches[2][$i])!=""&&!in_array($matches[1][$i], $available_languages))
+                        $available_languages[] = $matches[1][$i];
+            }
+        }
+    }
+    return $available_languages;
 }
 
 function qtrans_use($lang, $text, $show_available=false) {

@@ -37,6 +37,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
     fr by Damien Choizit
     nl by RobV
     se by bear3556
+    it by Lorenzo De Tomasi
     
 */
 
@@ -56,6 +57,7 @@ $q_config['language_name']['fi'] = "suomi";
 $q_config['language_name']['fr'] = "Français";
 $q_config['language_name']['nl'] = "Nederlands";
 $q_config['language_name']['se'] = "Svenska";
+$q_config['language_name']['it'] = "Italiano";
 
 // Locales for languages
 // see locale -a for available locales
@@ -66,6 +68,7 @@ $q_config['locale']['fi'] = "fi_FI";
 $q_config['locale']['fr'] = "fr_FR";
 $q_config['locale']['nl'] = "nl_NL";
 $q_config['locale']['se'] = "sv_SE";
+$q_config['locale']['it'] = "it_IT";
 
 // Language not available messages
 // %LANG:<normal_seperator>:<last_seperator>% generates a list of languages seperated by <normal_seperator> except for the last one, where <last_seperator> will be used instead.
@@ -76,6 +79,7 @@ $q_config['not_available']['fi'] = "Anteeksi, mutta tämä kirjoitus on saatavan
 $q_config['not_available']['fr'] = "Désolé, cet article est seulement disponible en %LANG:, : et %.";
 $q_config['not_available']['nl'] = "Onze verontschuldigingen, dit bericht is alleen beschikbaar in %LANG:, : en %.";
 $q_config['not_available']['se'] = "Tyvärr är denna artikel enbart tillgänglig på %LANG:, : och %.";
+$q_config['not_available']['it'] = "Ci spiace, ma questo articolo è disponibile soltanto in %LANG:, : e %.";
 
 // enable strftime usage
 $q_config['use_strftime'] = true;
@@ -88,6 +92,7 @@ $q_config['date_format']['fi'] = '%e.&m.%C';
 $q_config['date_format']['fr'] = '%A %e %B %Y';
 $q_config['date_format']['nl'] = '%d/%m/%y';
 $q_config['date_format']['se'] = '%d/%m/%y';
+$q_config['date_format']['it'] = '%e %B %Y';
 
 $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
@@ -96,6 +101,7 @@ $q_config['time_format']['fi'] = '%H:%M';
 $q_config['time_format']['fr'] = '%H:%M';
 $q_config['time_format']['nl'] = '%H:%M';
 $q_config['time_format']['se'] = '%H:%M';
+$q_config['time_format']['it'] = '%H:%M';
 
 // Flag images configuration
 // Look in /flags/ directory for a huge list of flags for usage
@@ -106,6 +112,7 @@ $q_config['flag']['fi'] = 'fi.png';
 $q_config['flag']['fr'] = 'fr.png';
 $q_config['flag']['nl'] = 'nl.png';
 $q_config['flag']['se'] = 'se.png';
+$q_config['flag']['it'] = 'it.png';
 
 // Location of flags (needs trailing slash!)
 $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
