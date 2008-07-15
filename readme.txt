@@ -1,9 +1,9 @@
 === qTranslate ===
 Contributors: chineseleper
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
-Requires at least: 2.5.1
-Tested up to: 2.5.1
-Stable tag: 1.1.1
+Requires at least: 2.6
+Tested up to: 2.6
+Stable tag: 1.1.2
 Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
 Adds userfriendly multilingual content support into Wordpress.
@@ -18,7 +18,7 @@ qTranslate makes creation of multilingual content as easy as working with a sing
 - No more adding language tags into your text! - Let qTranslate manage them for you
 - No more problems with `<!--more-->` tags in multilingual content! - qTranslate will make them work the way you want it
 - Add your own language in seconds! - Thanks to the comfortable Configuration Page
-- Comes with 5 languages already builtin! - English, German, Simplified Chinese and a lot of others
+- Comes with a lot of languages already builtin! - English, German, Simplified Chinese and a lot of others
 
 qTranslate supports infinite languages, which can be easily added/modified/deleted via the comfortable Configuration Page.
 All you need to do is activate the plugin and start writing the content! Well, almost, you will need to get the .mo languages
@@ -48,9 +48,6 @@ Installation of this plugin is fairly easy:
 == Frequently Asked Questions ==
 
 The FAQ is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/faq/)
-
-== Support Forum ==
-
 The Support Forum is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/forum/)
 
 == Screenshots ==
