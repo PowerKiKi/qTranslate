@@ -240,44 +240,6 @@ function qtrans_initJS() {
         };
         ";
         
-    $q_config['js']['qtrans_sendToEditor'] = "
-        function qtrans_sendToEditor(id) {
-            theFileList.grabImageData(id);
-            var link = '';
-            var display = '';
-            var h = '';
-
-            link = jQuery('input[@type=radio][@name=\"link\"][@checked]','#uploadoptions').val();
-            displayEl = jQuery('input[@type=radio][@name=\"display\"][@checked]','#uploadoptions');
-            if ( displayEl )
-                display = jQuery(displayEl).val();
-            else if ( 1 == theFileList.currentImage.isImage )
-                display = 'full';
-
-            if ( 'none' != link )
-                h += \"<a href='\" + ( 'file' == link ? ( theFileList.currentImage.srcBase + theFileList.currentImage.src ) : ( theFileList.currentImage.page + \"' rel='attachment wp-att-\" + theFileList.currentImage.ID ) ) + \"' title='\" + theFileList.currentImage.title + \"'>\";
-            if ( display && 'title' != display )
-                h += \"<img src='\" + ( 'thumb' == display ? ( theFileList.currentImage.thumbBase + theFileList.currentImage.thumb ) : ( theFileList.currentImage.srcBase + theFileList.currentImage.src ) ) + \"' alt='\" + theFileList.currentImage.title + \"' />\";
-            else
-                h += theFileList.currentImage.title;
-            if ( 'none' != link )
-                h += \"</a>\";
-
-            var win = window.opener ? window.opener : window.dialogArguments;
-            if ( !win )
-                win = top;
-            tinyMCE = win.tinyMCE;
-            if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('qtrans_textarea_content') ) {
-                tinyMCE.selectedInstance.getWin().focus();
-                tinyMCE.execCommand('mceInsertContent', false, h);
-            } else
-                win.edInsertContent(win.edCanvas, h);
-            if ( !theFileList.ID )
-                theFileList.cancelView();
-            return false;
-        }
-        ";
-        
     $q_config['js']['qtrans_tinyMCEOverload'] = "
 
         tinyMCE.get2 = tinyMCE.get;

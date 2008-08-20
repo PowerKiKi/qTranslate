@@ -141,8 +141,6 @@ function qtrans_modifyRichEditor($old_content) {
     $content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='edButton active';\n";
     // make editor save the correct content
     $content_append .= $q_config['js']['qtrans_saveCallback'];
-    // make media buttons send content to the correct field
-    //$content_append .= $q_config['js']['qtrans_send_to_Editor'];
     // make tinyMCE get the correct data
     $content_append .= $q_config['js']['qtrans_tinyMCEOverload'];
     // show default language
