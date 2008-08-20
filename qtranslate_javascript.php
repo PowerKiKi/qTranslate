@@ -219,7 +219,8 @@ function qtrans_initJS() {
         wpEditorInit = function() {
         // Activate tinyMCE if it's the user's default editor
         if ( ( 'undefined' == typeof wpTinyMCEConfig ) || 'tinymce' == wpTinyMCEConfig.defaultEditor ) {
-            document.getElementById('editorcontainer').style.padding = '0px';
+            if(document.getElementById('editorcontainer'))
+                document.getElementById('editorcontainer').style.padding = '0px';
             document.getElementById('qtrans_textarea_content').style.display = 'block';
             tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
         } else {
@@ -274,6 +275,16 @@ function qtrans_initJS() {
             if ( !theFileList.ID )
                 theFileList.cancelView();
             return false;
+        }
+        ";
+        
+    $q_config['js']['qtrans_tinyMCEOverload'] = "
+
+        tinyMCE.get2 = tinyMCE.get;
+        tinyMCE.get = function(id) {
+            if(id=='content')
+                return this.get2('qtrans_textarea_content');
+            return this.get2(id);
         }
         ";
         

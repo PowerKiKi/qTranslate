@@ -71,7 +71,7 @@ function qtrans_modifyLinkCategoryForm($category) {
 // Modifys TinyMCE to edit multilingual content
 function qtrans_modifyRichEditor($old_content) {
     global $q_config;
-    if($GLOBALS['wp_version']!="2.6") {
+    if($GLOBALS['wp_version']!="2.6.1") {
         if($_REQUEST['qtranslateincompatiblemessage']!="shown") {
             echo '<p class="updated">'.__("This version of qTranslate is not fully compatible with your Wordpress version. To prevent Wordpress from malfunctioning, the qTranslate Editor has been disabled.").'</p>';
         }
@@ -142,7 +142,9 @@ function qtrans_modifyRichEditor($old_content) {
     // make editor save the correct content
     $content_append .= $q_config['js']['qtrans_saveCallback'];
     // make media buttons send content to the correct field
-    $content_append .= $q_config['js']['qtrans_send_to_Editor'];
+    //$content_append .= $q_config['js']['qtrans_send_to_Editor'];
+    // make tinyMCE get the correct data
+    $content_append .= $q_config['js']['qtrans_tinyMCEOverload'];
     // show default language
     $content_append .="var ta = document.getElementById('".$id."');\n";
     $content_append .="qtrans_assign('qtrans_textarea_".$id."',qtrans_use('".$q_config['default_language']."',ta.value));\n";
