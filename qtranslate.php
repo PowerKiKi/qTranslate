@@ -106,7 +106,11 @@ $qt_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
 $qt_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js';
 
 /* DEFAULT CONFIGURATION PART ENDS HERE */
-   
+
+if(defined('WP_ADMIN')) {
+	include_once('qtranslate_admin.php');
+}
+
 function qt_init() {
 	global $qt_config, $qt_state;
 	
@@ -155,8 +159,13 @@ function qt_get_locale($locale) {
 	return $qt_config['locale'][$qt_state['language']];
 }
 
-function qt_admin_langselect() {
+function qt_admin_menu() {
 	global $menu, $submenu, $qt_config;
+	
+	/* Configuration Page */
+	add_options_page(__('Language Management'), __('Languages'), 8, __FILE__, 'qt_admin_language_management');
+	
+	/* Language Switcher for Admin */
 	
 	// don't display menu if there is only 1 language active
 	if(sizeof($qt_config['enabled_languages']) <= 1) return;
@@ -169,10 +178,10 @@ function qt_admin_langselect() {
 		$menu[] = array(__($qt_config['language_name'][$language]), 'read', '?lang='.$language, '', $class, 'menu-language-'.$language, get_option('home').'/'.$qt_config['flag_location'].$qt_config['flag'][$language]);
 		$submenu['?lang='.$language][] = array(sprintf(__('Switch to %s'), __($qt_config['language_name'][$language])), 'read', '?lang='.$language);
 	}
+	$menu[] = array( '', 'read', '', '', 'wp-menu-separator-last' );
 }
 
-
-add_action('_admin_menu',	'qt_admin_langselect');
+add_action('_admin_menu',	'qt_admin_menu');
 
 add_filter('locale',	'qt_get_locale',99);
 

@@ -19,6 +19,26 @@
 
 /* qTranslate Management Interface */
 
+function qt_admin_language_management() {
+	$title = __('Language Management');
+?>
+<div class="wrap">
+<h2><?php echo wp_specialchars( $title ); ?></h2> 
+
+<form method="post" action="options.php">
+
+<p class="submit">
+<input type="submit" name="Submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+</p>
+</form>
+
+</div>
+
+
+<?php
+}
+
+
 function qtranslate_config_page() {
     if ( function_exists('add_submenu_page') )
         add_submenu_page('plugins.php', __('qTranslate Configuration'), __('qTranslate Configuration'), 'manage_options', 'qtranslate-config', 'qtranslate_conf');
