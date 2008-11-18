@@ -163,7 +163,7 @@ function qt_admin_menu() {
 	global $menu, $submenu, $qt_config;
 	
 	/* Configuration Page */
-	add_options_page(__('Language Management'), __('Languages'), 8, __FILE__, 'qt_admin_language_management');
+	add_options_page(__('Language Management'), __('Languages'), 8, 'qtranslate', 'qt_admin_language_management');
 	
 	/* Language Switcher for Admin */
 	
@@ -172,17 +172,14 @@ function qt_admin_menu() {
 	
 	// generate menu with flags for every enabled language
 	foreach($qt_config['enabled_languages'] as $id => $language) {
-		$class = '';
-		if(0 == $id) $class = 'menu-top-first';
-		if(sizeof($qt_config['enabled_languages']) == $id + 1) $class = 'menu-top-last';
-		$menu[] = array(__($qt_config['language_name'][$language]), 'read', '?lang='.$language, '', $class, 'menu-language-'.$language, get_option('home').'/'.$qt_config['flag_location'].$qt_config['flag'][$language]);
-		$submenu['?lang='.$language][] = array(sprintf(__('Switch to %s'), __($qt_config['language_name'][$language])), 'read', '?lang='.$language);
+		$menu[] = array(__($qt_config['language_name'][$language]), 'read', '?lang='.$language, '', 'menu-top', 'menu-language-'.$language, get_option('home').'/'.$qt_config['flag_location'].$qt_config['flag'][$language]);
 	}
 	$menu[] = array( '', 'read', '', '', 'wp-menu-separator-last' );
 }
 
 add_action('_admin_menu',	'qt_admin_menu');
 
-add_filter('locale',	'qt_get_locale',99);
+add_filter('locale',	'qt_get_locale', 99);
+add_filter('manage_language_columns',	'qt_admin_manage_language_columns', 0);
 
 ?>
