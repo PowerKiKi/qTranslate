@@ -1,8 +1,8 @@
 === qTranslate ===
 Contributors: chineseleper
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
-Requires at least: 2.6.3
-Tested up to: 2.6.3
+Requires at least: 2.6.5
+Tested up to: 2.6.5
 Stable tag: 1.1.5
 Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
