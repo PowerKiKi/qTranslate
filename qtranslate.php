@@ -45,8 +45,8 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 */
 
 // qTranslate Editor will only activated for the given version of Wordpress.
-// Can be changed to use with other versions but might cause problems or data loss!
-define('QT_SUPPORTED_WP_VERSION', '2.7-almost-beta-9300');
+// Can be changed to use with other versions but might cause problems and/or data loss!
+define('QT_SUPPORTED_WP_VERSION', '2.7-beta3-9909');
 
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
@@ -108,8 +108,15 @@ $qt_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,d
 /* DEFAULT CONFIGURATION PART ENDS HERE */
 
 if(defined('WP_ADMIN')) {
-	include_once('qtranslate_admin.php');
+	// files only needed for backend
+	require_once('qtranslate_admin.php');
+	require_once('qtranslate_wphacks.php');
+} else {
+	// files only needed for frontend
 }
+// files needed for both
+require_once('qtranslate_javascript.php');
+
 
 function qt_init() {
 	global $qt_config, $qt_state;
@@ -143,6 +150,9 @@ function qt_init() {
 				setcookie('qt_admin_language', $qt_state['language'], time()+60*60*24*30);
 			}
 	}
+	
+	// load Javascript
+	qt_initJS();
 }
 
 function qt_get_locale($locale) {
@@ -159,27 +169,34 @@ function qt_get_locale($locale) {
 	return $qt_config['locale'][$qt_state['language']];
 }
 
-function qt_admin_menu() {
-	global $menu, $submenu, $qt_config;
-	
-	/* Configuration Page */
-	add_options_page(__('Language Management'), __('Languages'), 8, 'qtranslate', 'qt_admin_language_management');
-	
-	/* Language Switcher for Admin */
-	
-	// don't display menu if there is only 1 language active
-	if(sizeof($qt_config['enabled_languages']) <= 1) return;
-	
-	// generate menu with flags for every enabled language
-	foreach($qt_config['enabled_languages'] as $id => $language) {
-		$menu[] = array(__($qt_config['language_name'][$language]), 'read', '?lang='.$language, '', 'menu-top', 'menu-language-'.$language, get_option('home').'/'.$qt_config['flag_location'].$qt_config['flag'][$language]);
-	}
-	$menu[] = array( '', 'read', '', '', 'wp-menu-separator-last' );
+function qt_parseURL($url) {
+    $r  = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?';
+    $r .= '(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
+
+    preg_match ( $r, $url, $out );
+    $result = array(
+        "scheme" => $out[1],
+        "host" => $out[4].(($out[5]=='')?'':':'.$out[5]),
+        "user" => $out[2],
+        "pass" => $out[3],
+        "path" => $out[6],
+        "query" => $out[7],
+        "fragment" => $out[8]
+        );
+    return $result;
 }
 
-add_action('_admin_menu',	'qt_admin_menu');
+function qt_getLanguage() {
+    global $qt_state;
+    return $qt_state['language'];
+}
 
-add_filter('locale',	'qt_get_locale', 99);
-add_filter('manage_language_columns',	'qt_admin_manage_language_columns', 0);
+// Filters and Hooks
+add_action('_admin_menu',					'qt_admin_menu');
+
+add_action('admin_head',                    'qt_admin_header');
+add_filter('the_editor',					'qt_modify_tiny_mce');
+add_filter('locale',						'qt_get_locale', 99);
+add_filter('manage_language_columns',		'qt_admin_manage_language_columns', 0);
 
 ?>

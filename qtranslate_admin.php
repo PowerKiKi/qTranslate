@@ -17,12 +17,37 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-/* qTranslate Management Interface */
-
-function qt_get_default_language() {
-	global $qt_config;
-	return $qt_config['default_language'];
+/* qTranslate Administration Interface */
+function qt_admin_menu() {
+	global $menu, $submenu, $qt_config;
+	
+	/* Configuration Page */
+	add_options_page(__('Language Management'), __('Languages'), 8, 'qtranslate', 'qt_admin_language_management');
+	
+	/* Language Switcher for Admin */
+	
+	// don't display menu if there is only 1 language active
+	if(sizeof($qt_config['enabled_languages']) <= 1) return;
+	
+	// generate menu with flags for every enabled language
+	foreach($qt_config['enabled_languages'] as $id => $language) {
+		$menu[] = array(__($qt_config['language_name'][$language]), 'read', '?lang='.$language, '', 'menu-top', 'menu-language-'.$language, get_option('home').'/'.$qt_config['flag_location'].$qt_config['flag'][$language]);
+	}
+	$menu[] = array( '', 'read', '', '', 'wp-menu-separator-last' );
 }
+
+function qt_admin_header() {
+    echo "<style type=\"text/css\" media=\"screen\">\n";
+    echo ".edButton { cursor:pointer; display:block; float:right; height:20px; margin:5px 8px 0px 0px; padding:5px 5px 1px }\n";
+    echo ".qt_title_input { -moz-border-radius-bottomleft:6px; -moz-border-radius-bottomright:6px; -moz-border-radius-topleft:6px; -moz-border-radius-topright:6px;";
+	echo " border-style:solid; border-width:1px; font-size:1.7em; outline-color:-moz-use-text-color; outline-style:none; outline-width:medium; padding:3px 4px;";
+	echo " width:100%; border-color:#DFDFDF; background-color:#FFFFFF; }\n";
+    echo ".qt_title_wrap { border:0 none; padding:0; }\n";
+    echo "#qt_textarea_content { border:0pt none; line-height:150%; outline-color:invert; outline-style:none; outline-width:medium; padding:0pt; margin:0pt; width:100% }\n";
+    echo "</style>\n";
+    return;
+}
+
 
 function qt_admin_manage_language_columns($columns) {
 	return array(
@@ -32,6 +57,23 @@ function qt_admin_manage_language_columns($columns) {
 				'status2' => '',
 				'status3' => ''
 				);
+}
+
+function qt_insertDropDownElement($language, $url, $id){
+    global $q_config;
+    $html ="
+        var sb = document.getElementById('qtrans_select_".$id."');
+        var o = document.createElement('option');
+        var l = document.createTextNode('".$q_config['language_name'][$language]."');
+        ";
+    if($q_config['language']==$language)
+        $html .= "o.selected = 'selected';";
+    $html .= "
+        o.value = '".$url."';
+        o.appendChild(l);
+        sb.appendChild(o);
+        ";
+    return $html;    
 }
 
 function qt_admin_language_management() {

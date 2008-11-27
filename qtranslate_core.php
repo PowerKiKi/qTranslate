@@ -19,6 +19,11 @@
 
 /* qTranslate Core Functions */
 
+function qt_get_default_language() {
+	global $qt_config;
+	return $qt_config['default_language'];
+}
+
 function qtrans_init() {
     global $q_config;
     // check if it isn't already initialized
@@ -28,7 +33,6 @@ function qtrans_init() {
     // load configuration
     qtrans_loadConfig();
     // init Javascript functions
-    qtrans_initJS();
     
     $request_uri = $_SERVER['REQUEST_URI'];
     // set current language to default language (language detection comes later)

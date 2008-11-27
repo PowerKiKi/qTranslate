@@ -18,10 +18,10 @@
 */
 
 // qTranslate Javascript functions
-function qtrans_initJS() {
-    global $q_config;
-    $q_config['js']['qtrans_use'] = "
-        function qtrans_use(lang, text) {
+function qt_initJS() {
+    global $qt_config, $qt_state, $qt_script;
+    $qt_script['qt_use'] = "
+        function qt_use(lang, text) {
             var langregex = /\\[lang_([a-z]{2})\\]([\s\S]*?)\\[\\/lang_\\1\\]/gi;
             var matches = null;
             var result = text;
@@ -40,8 +40,8 @@ function qtrans_initJS() {
         }
         ";
         
-    $q_config['js']['qtrans_integrate'] = "
-        function qtrans_integrate(lang, lang_text, text) {
+    $qt_script['qt_integrate'] = "
+        function qt_integrate(lang, lang_text, text) {
             var lang_texts = new Array();
             var texts = new Array();
             var moreregex = /<!--more.*?-->/i
@@ -106,75 +106,75 @@ function qtrans_initJS() {
         }
         ";
         
-    $q_config['js']['qtrans_save'] = "
-        function qtrans_save(text) {
+    $qt_script['qt_save'] = "
+        function qt_save(text) {
             var ta = document.getElementById('content');
         ";
-    foreach($q_config['enabled_languages'] as $language)
-        $q_config['js']['qtrans_save'].= "
-            if(document.getElementById('qtrans_select_".$language."').className=='edButton active') {
-                ta.value = qtrans_integrate('".$language."',text,ta.value);
+    foreach($qt_config['enabled_languages'] as $language)
+        $qt_script['qt_save'].= "
+            if(document.getElementById('qt_select_".$language."').className=='edButton active') {
+                ta.value = qt_integrate('".$language."',text,ta.value);
             }
             ";
-    $q_config['js']['qtrans_save'].= "
+    $qt_script['qt_save'].= "
             return text;
         }
         ";
         
-    $q_config['js']['qtrans_integrate_category'] = "
-        function qtrans_integrate_category() {
+    $qt_script['qt_integrate_category'] = "
+        function qt_integrate_category() {
             var t = document.getElementById('cat_name');
         ";
-    foreach($q_config['enabled_languages'] as $language)
-        $q_config['js']['qtrans_integrate_category'].= "
-            if(document.getElementById('qtrans_category_".$language."').value!='')
-                t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_category_".$language."').value,t.value);
+    foreach($qt_config['enabled_languages'] as $language)
+        $qt_script['qt_integrate_category'].= "
+            if(document.getElementById('qt_category_".$language."').value!='')
+                t.value = qt_integrate('".$language."',document.getElementById('qt_category_".$language."').value,t.value);
             ";
-    $q_config['js']['qtrans_integrate_category'].= "
+    $qt_script['qt_integrate_category'].= "
         }
         ";
         
-    $q_config['js']['qtrans_integrate_tag'] = "
-        function qtrans_integrate_tag() {
+    $qt_script['qt_integrate_tag'] = "
+        function qt_integrate_tag() {
             var t = document.getElementById('name');
         ";
-    foreach($q_config['enabled_languages'] as $language)
-        $q_config['js']['qtrans_integrate_tag'].= "
-            if(document.getElementById('qtrans_tag_".$language."').value!='')
-                t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_tag_".$language."').value,t.value);
+    foreach($qt_config['enabled_languages'] as $language)
+        $qt_script['qt_integrate_tag'].= "
+            if(document.getElementById('qt_tag_".$language."').value!='')
+                t.value = qt_integrate('".$language."',document.getElementById('qt_tag_".$language."').value,t.value);
             ";
-    $q_config['js']['qtrans_integrate_tag'].= "
+    $qt_script['qt_integrate_tag'].= "
         }
         ";
         
-    $q_config['js']['qtrans_integrate_link_category'] = "
-        function qtrans_integrate_link_category() {
+    $qt_script['qt_integrate_link_category'] = "
+        function qt_integrate_link_category() {
             var t = document.getElementById('name');
         ";
-    foreach($q_config['enabled_languages'] as $language)
-        $q_config['js']['qtrans_integrate_link_category'].= "
-            if(document.getElementById('qtrans_link_category_".$language."').value!='')
-                t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_link_category_".$language."').value,t.value);
+    foreach($qt_config['enabled_languages'] as $language)
+        $qt_script['qt_integrate_link_category'].= "
+            if(document.getElementById('qt_link_category_".$language."').value!='')
+                t.value = qt_integrate('".$language."',document.getElementById('qt_link_category_".$language."').value,t.value);
             ";
-    $q_config['js']['qtrans_integrate_link_category'].= "
+    $qt_script['qt_integrate_link_category'].= "
         }
         ";
         
-    $q_config['js']['qtrans_integrate_title'] = "
-        function qtrans_integrate_title() {
+    $qt_script['qt_integrate_title'] = "
+        function qt_integrate_title() {
             var t = document.getElementById('title');
         ";
-    foreach($q_config['enabled_languages'] as $language)
-        $q_config['js']['qtrans_integrate_title'].= "
-            if(document.getElementById('qtrans_title_".$language."').value!='')
-                t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_title_".$language."').value,t.value);
+    foreach($qt_config['enabled_languages'] as $language)
+        $qt_script['qt_integrate_title'].= "
+            if(document.getElementById('qt_title_".$language."').value!='')
+                t.value = qt_integrate('".$language."',document.getElementById('qt_title_".$language."').value,t.value);
             ";
-    $q_config['js']['qtrans_integrate_title'].= "
+    $qt_script['qt_integrate_title'].= "
         }
         ";
         
-    $q_config['js']['qtrans_assign'] = "
-        function qtrans_assign(id, text) {
+    $qt_script['qt_assign'] = "
+        function qt_assign(id, text) {
             var inst = tinyMCE.get(id);
             var ta = document.getElementById(id);
             if(inst) {
@@ -186,7 +186,7 @@ function qtrans_initJS() {
         }
         ";
         
-    $q_config['js']['qtrans_saveCallback'] = "
+    $qt_script['qt_saveCallback'] = "
         switchEditors.saveCallback = function(el, content, body) {
 
             document.getElementById(el).style.color = '#fff';
@@ -195,19 +195,19 @@ function qtrans_initJS() {
             else
                 content = this.pre_wpautop(content);
                 
-            qtrans_save(content);
+            qt_save(content);
             
             return content;
         }
         ";
         
-    $q_config['js']['qtrans_send_to_Editor'] = "
+    $qt_script['qt_send_to_Editor'] = "
         send_to_editor = function(h) {
             var win = window.opener ? window.opener : window.dialogArguments;
             if ( !win )
                 win = top;
             tinyMCE = win.tinyMCE;
-            if ( typeof tinyMCE != 'undefined' && ( ed = tinyMCE.getInstanceById('qtrans_textarea_content') ) && !ed.isHidden() ) {
+            if ( typeof tinyMCE != 'undefined' && ( ed = tinyMCE.getInstanceById('qt_textarea_content') ) && !ed.isHidden() ) {
                 tinyMCE.selectedInstance.getWin().focus();
                 tinyMCE.execCommand('mceInsertContent', false, h);
             } else
@@ -215,70 +215,70 @@ function qtrans_initJS() {
         }
         ";
         
-    $q_config['js']['qtrans_disable_old_editor'] = "
+    $qt_script['qt_disable_old_editor'] = "
         wpEditorInit = function() {
         // Activate tinyMCE if it's the user's default editor
         if ( ( 'undefined' == typeof wpTinyMCEConfig ) || 'tinymce' == wpTinyMCEConfig.defaultEditor ) {
             if(document.getElementById('editorcontainer'))
                 document.getElementById('editorcontainer').style.padding = '0px';
-            document.getElementById('qtrans_textarea_content').style.display = 'block';
-            tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
+            document.getElementById('qt_textarea_content').style.display = 'block';
+            tinyMCE.execCommand('mceAddControl', false, 'qt_textarea_content');
         } else {
         ";
-    foreach($q_config['enabled_languages'] as $language)
-        $q_config['js']['qtrans_disable_old_editor'].= "
-            document.getElementById('qtrans_select_".$language."').className='edButton';
+    foreach($qt_config['enabled_languages'] as $language)
+        $qt_script['qt_disable_old_editor'].= "
+            document.getElementById('qt_select_".$language."').className='edButton';
             ";
-    $q_config['js']['qtrans_disable_old_editor'].= "
+    $qt_script['qt_disable_old_editor'].= "
             var H;
             if ( H = tinymce.util.Cookie.getHash('TinyMCE_content_size') )
-                document.getElementById('qtrans_textarea_content').style.height = H.ch - 30 + 'px';
-            document.getElementById('qtrans_select_code').className='edButton active';
-            document.getElementById('qtrans_textarea_content').style.display = 'none';
+                document.getElementById('qt_textarea_content').style.height = H.ch - 30 + 'px';
+            document.getElementById('qt_select_code').className='edButton active';
+            document.getElementById('qt_textarea_content').style.display = 'none';
             document.getElementById('content').style.display = 'block';
             }
         };
         ";
         
-    $q_config['js']['qtrans_tinyMCEOverload'] = "
+    $qt_script['qt_tinyMCEOverload'] = "
 
         tinyMCE.get2 = tinyMCE.get;
         tinyMCE.get = function(id) {
             if(id=='content')
-                return this.get2('qtrans_textarea_content');
+                return this.get2('qt_textarea_content');
             return this.get2(id);
         }
         ";
         
-    $q_config['js']['qtrans_switch'] = "
+    $qt_script['qt_switch'] = "
         switchEditors.go = function(lang, id) {
-            var inst = tinyMCE.get('qtrans_textarea_' + id);
+            var inst = tinyMCE.get('qt_textarea_' + id);
             var qt = document.getElementById('quicktags');
-            var vta = document.getElementById('qtrans_textarea_' + id);
+            var vta = document.getElementById('qt_textarea_' + id);
             var ta = document.getElementById(id);
             var pdr = document.getElementById('editorcontainer');
             
-            if(document.getElementById('qtrans_select_'+lang).className=='edButton active') {
+            if(document.getElementById('qt_select_'+lang).className=='edButton active') {
                 if(inst) {
                     tinyMCE.triggerSave();
                 }
                 return;
             }
         ";
-    foreach($q_config['enabled_languages'] as $language)
-        $q_config['js']['qtrans_switch'].= "
-            if(document.getElementById('qtrans_select_".$language."').className=='edButton active') {
+    foreach($qt_config['enabled_languages'] as $language)
+        $qt_script['qt_switch'].= "
+            if(document.getElementById('qt_select_".$language."').className=='edButton active') {
                 if(inst) {
                     tinyMCE.triggerSave();
                 }
             }
-            document.getElementById('qtrans_select_".$language."').className='edButton';
+            document.getElementById('qt_select_".$language."').className='edButton';
             ";
-    $q_config['js']['qtrans_switch'].= "
-            if(document.getElementById('qtrans_select_code').className=='edButton active') {
+    $qt_script['qt_switch'].= "
+            if(document.getElementById('qt_select_code').className=='edButton active') {
             }
-            document.getElementById('qtrans_select_code').className='edButton';
-            document.getElementById('qtrans_select_'+lang).className='edButton active';
+            document.getElementById('qt_select_code').className='edButton';
+            document.getElementById('qt_select_'+lang).className='edButton active';
             
             if(lang=='code') {
                 if(inst) {
@@ -306,7 +306,7 @@ function qtrans_initJS() {
                 }
             } else {
                 if(inst && qt.style.display=='none' && !inst.isHidden()) {
-                    qtrans_assign('qtrans_textarea_'+id,qtrans_use(lang,ta.value));
+                    qt_assign('qt_textarea_'+id,qt_use(lang,ta.value));
                 } else {
                     ta.style.color = '#fff';
 
@@ -316,7 +316,7 @@ function qtrans_initJS() {
                     pdr.style.padding = '0px';
                     ta.style.padding = '0px';
 
-                    vta.value = this.wpautop(qtrans_use(lang,ta.value));
+                    vta.value = this.wpautop(qt_use(lang,ta.value));
 
                     ta.style.display = 'none';
                     vta.style.display = 'block';
@@ -325,8 +325,8 @@ function qtrans_initJS() {
                         inst.execCommand('mceSetContent', false, vta.value);
                         inst.show();
                     } else {
-                        tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_'+id);
-                        inst = tinyMCE.get('qtrans_textarea_' + id);
+                        tinyMCE.execCommand('mceAddControl', false, 'qt_textarea_'+id);
+                        inst = tinyMCE.get('qt_textarea_' + id);
                     }
 
                 }
