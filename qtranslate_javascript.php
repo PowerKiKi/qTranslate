@@ -44,7 +44,7 @@ function qtrans_initJS() {
 		";
 
 	$q_config['js']['qtrans_is_array'] = "
-		function qtrans_isArray(obj) {
+		qtrans_isArray = function(obj) {
 		   if (obj.constructor.toString().indexOf('Array') == -1)
 			  return false;
 		   else
@@ -53,7 +53,7 @@ function qtrans_initJS() {
 		";
 
 	$q_config['js']['qtrans_split'] = "
-		function qtrans_split(text) {
+		qtrans_split = function(text) {
 			var split_regex = /(<!--.*?-->)/gi;
 			var lang_begin_regex = /<!--:([a-z]{2})-->/gi;
 			var lang_end_regex = /<!--:-->/gi;
@@ -93,14 +93,14 @@ function qtrans_initJS() {
 		";
 
 	$q_config['js']['qtrans_use'] = "
-		function qtrans_use(lang, text) {
+		qtrans_use = function(lang, text) {
 			var result = qtrans_split(text);
 			return result[lang];
 		}
 		";
 		
 	$q_config['js']['qtrans_integrate'] = "
-		function qtrans_integrate(lang, lang_text, text) {
+		qtrans_integrate = function(lang, lang_text, text) {
 			var texts = qtrans_split(text);
 			var moreregex = /<!--more-->/i;
 			var text = '';
@@ -136,74 +136,8 @@ function qtrans_initJS() {
 		}
 		";
 		
-/*	$q_config['js']['qtrans_integrate'] = "
-		function qtrans_integrate(lang, lang_text, text) {
-			var lang_texts = new Array();
-			var texts = new Array();
-			var moreregex = /<!--more.*?-->/i
-			var moreregex2 = /<!--more.*?-->[\\s\\n\\r]*$/i
-			var langregex = /\\[lang_([a-z]{2})\\]([\s\S]*?)\\[\\/lang_\\1\\]/gi;
-			var matches = null;
-			var result = '';
-			var more_count = 0;
-			var foundat = -1;
-			// split text and lang_text into arrays
-			while ((foundat = lang_text.search(moreregex))!=-1) {
-				lang_texts.push('[lang_'+lang+']'+lang_text.substr(0,foundat)+'[/lang_'+lang+']');
-				lang_text=lang_text.substr(foundat);
-				// remove more
-				if((matches = moreregex.exec(lang_text))!=null){
-					lang_text=lang_text.substr(matches[0].length);
-				}
-			}
-			lang_texts.push('[lang_'+lang+']'+lang_text+'[/lang_'+lang+']');
-			while ((foundat = text.search(moreregex))!=-1) {
-				texts.push(text.substr(0,foundat));
-				text=text.substr(foundat);
-				// remove more
-				if((matches = moreregex.exec(text))!=null){
-					text=text.substr(matches[0].length);
-				}
-			}
-			texts.push(text);
-			
-			// remove old language content and static content (bad)
-			for(var i=0;i<texts.length;i++){
-				result = '';
-				while ((matches = langregex.exec(texts[i])) != null) {
-					if(matches[1]!=lang) {
-						result = result + matches[0];
-					}
-				}
-				texts[i] = result;
-			}
-			result = '';
-			
-			// merge lang_text into text
-			if(texts.length>lang_texts.length) 
-				more_count = texts.length;
-			else
-				more_count = lang_texts.length;
-			result = texts[0] + lang_texts[0];
-			for(var i=1;i<more_count;i++){
-				var lt='';
-				var t ='';
-				if(lang_texts[i]) 
-					lt = lang_texts[i] ;
-				if(texts[i]) 
-					t = texts[i] ;
-				result = result + '<!--more-->' + t +lt;
-			}
-			// remove useless more at the end
-			while((foundat=result.search(moreregex2))!=-1) {
-				result = result.substr(0,foundat);
-			}
-			return result;
-		}
-		";*/
-		
 	$q_config['js']['qtrans_save'] = "
-		function qtrans_save(text) {
+		qtrans_save = function(text) {
 			var ta = document.getElementById('content');
 		";
 	foreach($q_config['enabled_languages'] as $language)
@@ -218,7 +152,7 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_integrate_category'] = "
-		function qtrans_integrate_category() {
+		qtrans_integrate_category = function() {
 			var t = document.getElementById('cat_name');
 		";
 	foreach($q_config['enabled_languages'] as $language)
@@ -231,7 +165,7 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_integrate_tag'] = "
-		function qtrans_integrate_tag() {
+		qtrans_integrate_tag = function() {
 			var t = document.getElementById('name');
 		";
 	foreach($q_config['enabled_languages'] as $language)
@@ -244,7 +178,7 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_integrate_link_category'] = "
-		function qtrans_integrate_link_category() {
+		qtrans_integrate_link_category = function() {
 			var t = document.getElementById('name');
 		";
 	foreach($q_config['enabled_languages'] as $language)
@@ -257,7 +191,7 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_integrate_title'] = "
-		function qtrans_integrate_title() {
+		qtrans_integrate_title = function() {
 			var t = document.getElementById('title');
 		";
 	foreach($q_config['enabled_languages'] as $language)
@@ -270,7 +204,7 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_assign'] = "
-		function qtrans_assign(id, text) {
+		qtrans_assign = function(id, text) {
 			var inst = tinyMCE.get(id);
 			var ta = document.getElementById(id);
 			if(inst) {
@@ -329,6 +263,10 @@ function qtrans_initJS() {
 				try {
 					this.I('quicktags').style.display = 'none';
 				} catch(e){};
+				try {
+					tinyMCE.execCommand('mceRemoveControl', false, 'content');
+				} catch(e){};
+				document.getElementById('content').style.display = 'none';
 				document.getElementById('qtrans_textarea_content').style.display = 'block';
 				tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
 			}

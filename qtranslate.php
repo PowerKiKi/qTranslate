@@ -47,7 +47,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 
 // qTranslate Editor will only activated for the given version of Wordpress.
 // Can be changed to use with other versions but might cause problems and/or data loss!
-define('QT_SUPPORTED_WP_VERSION', '2.7-almost-rc-9965');
+define('QT_SUPPORTED_WP_VERSION', '2.7');
 
 // enable the use of following languages
 $q_config['enabled_languages'] = array('en', 'de', 'zh');
