@@ -145,12 +145,12 @@ $q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,di
 /* DEFAULT CONFIGURATION PART ENDS HERE */
 
 // Load qTranslate
-require_once("qtranslate_javascript.php");
-require_once("qtranslate_utils.php");
-require_once("qtranslate_core.php");
-require_once("qtranslate_wphacks.php");
-require_once("qtranslate_widget.php");
-require_once("qtranslate_configuration.php");
-require_once("qtranslate_hooks.php");
+require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_javascript.php");
+require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_utils.php");
+require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_core.php");
+require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_wphacks.php");
+require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_widget.php");
+require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_configuration.php");
+require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_hooks.php");
 
 ?>
