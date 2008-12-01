@@ -33,11 +33,45 @@ function qtrans_init() {
 	// extract url information
 	$url_info = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
 	
+	// set test cookie
+	setcookie('qtrans_cookie_test', 'qTranslate Cookie Test', 0, $url_info['home'], $url_info['host']);
+	
 	// check cookies for admin
-	if(defined('WP_ADMIN') && !empty($_COOKIE['qtrans_admin_language']) && qtrans_isEnabled($_COOKIE['qtrans_admin_language'])) {
-		$q_config['language'] = $_COOKIE['qtrans_admin_language'];
+	if(defined('WP_ADMIN')) {
+		if(!empty($_COOKIE['qtrans_admin_language']) && qtrans_isEnabled($_COOKIE['qtrans_admin_language'])) {
+			$q_config['language'] = $_COOKIE['qtrans_admin_language'];
+		} else {
+			$q_config['language'] = $url_info['language'];
+			setcookie('qtrans_admin_language', $q_config['language'], time()+60*60*24*30);
+		}
 	} else {
 		$q_config['language'] = $url_info['language'];
+	}
+	
+	// detect language and forward if needed
+	if($url_info['redirect'] && $url_info['language'] == $q_config['default_language']) {
+		$prefered_languages = array();
+		if(preg_match_all("#([^;,]+)(;[^,0-9]*([0-9\.]+)[^,]*)?#i",$_SERVER["HTTP_ACCEPT_LANGUAGE"], $matches, PREG_SET_ORDER)) {
+			foreach($matches as $match) {
+				$prefered_languages[$match[1]] = floatval($match[3]);
+				if($match[3]==NULL) $prefered_languages[$match[1]] = 1.0;
+			}
+			arsort($prefered_languages, SORT_NUMERIC);
+			foreach($prefered_languages as $language => $priority) {
+				if(qtrans_isEnabled($language)) {
+					if($language == $q_config['default_language']) break;
+					$target = qtrans_convertURL(get_option('home'),$language);
+					header("Location: ".$target);
+					exit;
+				}
+			}
+		}
+	}
+	
+	if($_COOKIE['qtrans_cookie_test']) {
+		$q_config['cookie_enabled'] = true;
+	} else  {
+		$q_config['cookie_enabled'] = false;
 	}
 	
 	// remove traces of language
@@ -69,7 +103,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 					if(qtrans_isEnabled($match[1])) {
 						// found language information
 						$result['language'] = $match[1];
-						$result['url'] = substr($url, 3);
+						$result['url'] = $home['path'].substr($url, 3);
 					}
 				}
 			}
@@ -91,10 +125,9 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 	if(isset($_GET['lang']) && qtrans_isEnabled($_GET['lang'])) {
 		// language override given
 		$result['language'] = $_GET['lang'];
-		$result['url'] = preg_replace("(&|\?)lang=".$result['language']."&?","$1",$result['url']);
-	}
-	
-	if(!empty($referer['host'])) {
+		$result['url'] = preg_replace("#(&|\?)lang=".$result['language']."&?#i","$1",$result['url']);
+	} elseif(!empty($referer['host']) && $home['host'] == $result['host'] && $home['path'] == $result['url']) {
+		// check if activating language detection is possible
 		if(preg_match("#^([a-z]{2}).#i",$referer['host'],$match)) {
 			if(qtrans_isEnabled($match[1])) {
 				// found language information
