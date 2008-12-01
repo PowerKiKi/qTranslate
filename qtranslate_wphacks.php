@@ -75,7 +75,8 @@ function qtrans_modifyRichEditor($old_content) {
 	if($GLOBALS['wp_version'] != QT_SUPPORTED_WP_VERSION) {
 		if($_REQUEST['qtranslateincompatiblemessage']!="shown") {
 			echo '<p class="updated" id="qtrans_imsg">'.__('This version of qTranslate has not been tested with your Wordpress version. To prevent Wordpress from malfunctioning, '
-			.'the qTranslate Editor has been disabled. You can active the editor by <a href="javascript:qtrans_editorInit();" title="Activate qTranslate" id="qtrans_imsg_link">clicking here</a> (may cause <b>data loss</b>!).').'</p>';
+			.'the qTranslate Editor has been disabled. You can reenable it by <a href="javascript:qtrans_editorInit();" title="Activate qTranslate" id="qtrans_imsg_link">clicking here</a> (may cause <b>data loss</b>!). '
+			.'To remove this message, please update qTranslate to the <a href="http://www.qianqin.de/qtranslate/download/">corresponding version</a>.').'</p>';
 		}
 		$init_editor = false;
 	}

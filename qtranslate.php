@@ -55,6 +55,22 @@ $q_config['enabled_languages'] = array('en', 'de', 'zh');
 // sets default language
 $q_config['default_language'] = 'en';
 
+// sets default url mode 
+// 0 - post-questionmark
+// 1 - pre-path
+// 2 - pre-domain
+$q_config['url_mode'] = 2;
+
+// pre-Domain Endings
+$q_config['pre_domain']['de'] = "de";
+$q_config['pre_domain']['en'] = "en";
+$q_config['pre_domain']['zh'] = "zh";
+$q_config['pre_domain']['fi'] = "fs";
+$q_config['pre_domain']['fr'] = "fr";
+$q_config['pre_domain']['nl'] = "nl";
+$q_config['pre_domain']['se'] = "se";
+$q_config['pre_domain']['it'] = "it";
+
 // Names for languages in the corresponding language, add more if needed
 $q_config['language_name']['de'] = "Deutsch";
 $q_config['language_name']['en'] = "English";

@@ -30,54 +30,84 @@ function qtrans_init() {
 	// init Javascript functions
 	qtrans_initJS();
 	
-	$request_uri = $_SERVER['REQUEST_URI'];
+	// extract url information
+	$url_info = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
 	
-	// check cookies
-	if(defined('WP_ADMIN') && !empty($_COOKIE['qtrans_admin_language']) && in_array($_COOKIE['qtrans_admin_language'], $q_config['enabled_languages'])) {
+	// check cookies for admin
+	if(defined('WP_ADMIN') && !empty($_COOKIE['qtrans_admin_language']) && qtrans_isEnabled($_COOKIE['qtrans_admin_language'])) {
 		$q_config['language'] = $_COOKIE['qtrans_admin_language'];
 	} else {
-		$q_config['language'] = $q_config['default_language'];
+		$q_config['language'] = $url_info['language'];
 	}
+	
+	// remove traces of language
+	unset($_GET['lang']);
+	$_SERVER['REQUEST_URI'] = $url_info['url'];
+	$_SERVER["HTTP_HOST"] = $url_info['host'];
+}
 
-	/* BEGIN URL Handling */
-	$permalink_structure = get_option('permalink_structure');
-	if(preg_match('#%LANG%#i',$permalink_structure)) {
-		// optimized urls
-		$home_path = qtrans_parseURL(get_option('home'));
-		if ( isset($home_path['path']) )
-			$home_path = $home_path['path'];
-		else
-			$home_path = '';
-		$home_path = trim($home_path, '/');
-		$request_uri = ltrim($request_uri, '/');
-		// get URI without home-path and slash
-		if($home_path != '')
-			$request_uri = substr($request_uri,strlen($home_path)+1);
-		if(preg_match('/^([a-z]{2})\/.*$/i',$request_uri, $matches)) {
-			if(in_array($matches[1], $q_config['enabled_languages'])) {
-				// jackpot
-				$q_config['language'] = $matches[1];
-				// remove language setting to not confuse Wordpress
-				$request_uri = substr($request_uri,3);
+// returns cleaned string and language information
+function qtrans_extractURL($url, $host = '', $referer = '') {
+	global $q_config;
+	$home = qtrans_parseURL(get_option('home'));
+	$referer = qtrans_parseURL($referer);
+	$result = array();
+	$result['language'] = $q_config['default_language'];
+	$result['url'] = $url;
+	$result['host'] = $host;
+	$result['redirect'] = false;
+	
+	$home['path'] = trailingslashit($home['path']);
+	
+	switch($q_config['url_mode']) {
+		case 1:
+			// pre url
+			$url = substr($url, strlen($home['path']));
+			if($url) {
+				// might have language information
+				if(preg_match("#^([a-z]{2})/#i",$url,$match)) {
+					if(qtrans_isEnabled($match[1])) {
+						// found language information
+						$result['language'] = $match[1];
+						$result['url'] = substr($url, 3);
+					}
+				}
+			}
+			break;
+		case 2:
+			// pre domain
+			if($host) {
+				if(preg_match("#^([a-z]{2}).#i",$host,$match)) {
+					if(qtrans_isEnabled($match[1])) {
+						// found language information
+						$result['language'] = $match[1];
+						$result['host'] = substr($host, 3);
+					}
+				}
+			}
+			break;
+	}
+	
+	if(isset($_GET['lang']) && qtrans_isEnabled($_GET['lang'])) {
+		// language override given
+		$result['language'] = $_GET['lang'];
+		$result['url'] = preg_replace("(&|\?)lang=".$result['language']."&?","$1",$result['url']);
+	}
+	
+	if(!empty($referer['host'])) {
+		if(preg_match("#^([a-z]{2}).#i",$referer['host'],$match)) {
+			if(qtrans_isEnabled($match[1])) {
+				// found language information
+				$referer['host'] = substr($referer['host'], 3);
 			}
 		}
-		// rebuild request_uri
-		if($home_path!='') $home_path.='/';
-		$request_uri = '/'.$home_path.$request_uri;
-	} 
-	// check if language override is set
-	if(!empty($_GET['lang'])) {
-		// language modifier detected
-		if(in_array($_GET['lang'], $q_config['enabled_languages'])) {
-			$q_config['language'] = $_GET['lang'];
-			if(defined('WP_ADMIN'))
-				setcookie('qt_admin_language', $q_config['language'], time()+60*60*24*30);
+		if($referer['host']!=$result['host'] || !qtrans_startsWith($referer['path'], $home['path'])) {
+			// user coming from external link
+			$result['redirect'] = true;
 		}
-		$request_uri = preg_replace('/(&|\?)lang=[a-z]{2}&?/i','$1',$request_uri);
 	}
-	// apply changes made by url handling
-	$_SERVER['REQUEST_URI'] = $request_uri;
-	/* END URL Handling */
+	
+	return $result;
 }
 
 // loads config via get_option and defaults to values set on top
@@ -96,8 +126,11 @@ function qtrans_loadConfig() {
 	$time_formats = get_option('qtranslate_time_formats');
 	$use_strftime = get_option('qtranslate_use_strftime');
 	$ignore_file_types = get_option('qtranslate_ignore_file_types');
+	$url_mode = get_option('qtranslate_url_mode');
+	$pre_domain = get_option('qtranslate_pre_domain');
 	
 	// default if not set
+	if(!is_array($pre_domain)) $pre_domain = $q_config['pre_domain'];
 	if(!is_array($ignore_file_types)) $ignore_file_types = $q_config['ignore_file_types'];
 	if(!is_array($date_formats)) $date_formats = $q_config['date_format'];
 	if(!is_array($time_formats)) $time_formats = $q_config['time_format'];
@@ -106,7 +139,8 @@ function qtrans_loadConfig() {
 	if(!is_array($flags)) $flags = $q_config['flag'];
 	if(!is_array($language_names)) $language_names = $q_config['language_name'];
 	if(!is_array($enabled_languages)) $enabled_languages = $q_config['enabled_languages'];
-	if($default_language=='') $default_language = $q_config['default_language'];
+	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
+	if(empty($default_language)) $default_language = $q_config['default_language'];
 	if($flag_location=='') $flag_location = $q_config['flag_location'];
 	if($use_strftime=='0') $use_strftime = false; else $use_strftime = true;
 	
@@ -122,6 +156,8 @@ function qtrans_loadConfig() {
 	$q_config['flag_location'] = $flag_location;
 	$q_config['use_strftime'] = $use_strftime;
 	$q_config['ignore_file_types'] = $ignore_file_types;
+	$q_config['url_mode'] = $url_mode;
+	$q_config['pre_domain'] = $pre_domain;
 	
 	// Add Code (used only in Editor)
 	$q_config['language_name']['code'] = __('Code');
@@ -139,6 +175,8 @@ function qtrans_saveConfig() {
 	sort($q_config['enabled_languages']);
 	
 	// save everything
+	update_option('qtranslate_url_mode', $q_config['url_mode']);
+	update_option('qtranslate_pre_domain', $q_config['pre_domain']);
 	update_option('qtranslate_language_names', $q_config['language_name']);
 	update_option('qtranslate_enabled_languages', $q_config['enabled_languages']);
 	update_option('qtranslate_default_language', $q_config['default_language']);
@@ -297,7 +335,7 @@ function qtrans_convertURL($url='', $lang='') {
 	// invalid language
 	if($url=='') $url = $_SERVER['REQUEST_URI'];
 	if($lang=='') $lang = $q_config['language'];
-	if(!in_array($lang, $q_config['enabled_languages'])) return "";
+	if(!qtrans_isEnabled($lang)) return "";
 	
 	// check if it's an external link
 	$urlinfo = qtrans_parseURL($url);
@@ -333,7 +371,7 @@ function qtrans_convertURL($url='', $lang='') {
 		}
 		// prevent multiple execution errors
 		if(preg_match('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i',$url, $match)) {
-			if(in_array(ltrim($match[2],'/'),$q_config['enabled_languages'])) {
+			if(qtrans_isEnabled(ltrim($match[2],'/'))) {
 				$url = preg_replace('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i','$1$3',$url);
 			}
 		}
@@ -380,7 +418,7 @@ function qtrans_split($text) {
 	foreach($blocks as $block) {
 		# detect language tags
 		if(preg_match("#<!--:([a-z]{2})-->#ism", $block, $matches)) {
-			if(in_array($matches[1], $q_config['enabled_languages'])) {
+			if(qtrans_isEnabled($matches[1])) {
 				$current_language = $matches[1];
 			} else {
 				$current_language = "invalid";
@@ -408,8 +446,8 @@ function qtrans_split($text) {
 
 function qtrans_use($lang, $text, $show_available=false) {
 	global $q_config;
-	// return empty string if language is not enabled
-	if(!in_array($lang, $q_config['enabled_languages'])) return $text;
+	// return full string if language is not enabled
+	if(!qtrans_isEnabled($lang)) return $text;
 	if(is_array($text)) {
 		// handle arrays recursively
 		foreach($text as $key => $t) {

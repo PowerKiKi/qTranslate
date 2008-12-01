@@ -58,4 +58,15 @@ function qtrans_getLanguage() {
     return $q_config['language'];
 }
 
+function qtrans_isEnabled($lang) {
+	global $q_config;
+	return in_array($lang, $q_config['enabled_languages']);
+}
+
+function qtrans_startsWith($s, $n) {
+	if(strlen($n)>strlen($s)) return false;
+	if($n == substr($s,0,strlen($n))) return true;
+	return false;
+}
+
 ?>
