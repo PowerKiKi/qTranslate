@@ -142,9 +142,7 @@ function qtrans_initJS() {
 		";
 	foreach($q_config['enabled_languages'] as $language)
 		$q_config['js']['qtrans_save'].= "
-			if(document.getElementById('qtrans_select_".$language."').className=='edButton active') {
-				ta.value = qtrans_integrate('".$language."',text,ta.value);
-			}
+			ta.value = qtrans_integrate(qtrans_get_active_language(),text,ta.value);
 			";
 	$q_config['js']['qtrans_save'].= "
 			return text;
@@ -244,27 +242,21 @@ function qtrans_initJS() {
 	$q_config['js']['qtrans_disable_old_editor'] = "
 		switchEditors.edInit = function() {
 			var h = tinymce.util.Cookie.getHash('TinyMCE_content_size');
-			// Activate TinyMCE if it's the user's default editor
-			if ( getUserSetting( 'editor' ) == 'html' ) { ";
-		foreach($q_config['enabled_languages'] as $language)
-			$q_config['js']['qtrans_disable_old_editor'].= "
-				document.getElementById('qtrans_select_".$language."').className='edButton';
-				";
-		$q_config['js']['qtrans_disable_old_editor'].= "
+			
+			try {
+				tinyMCE.execCommand('mceRemoveControl', false, 'content');
+			} catch(e){};
+			
+			if ( getUserSetting( 'editor' ) == 'html' ) {
 				var H;
 				if ( H = tinymce.util.Cookie.getHash('TinyMCE_content_size') ) {
 					document.getElementById('qtrans_textarea_content').style.height = H.ch - 30 + 'px';
-					document.getElementById('content').style.height = H.ch - 30 + 'px';
 				}
-				document.getElementById('qtrans_select_code').className='edButton active';
-				document.getElementById('qtrans_textarea_content').style.display = 'none';
-				document.getElementById('content').style.display = 'block';
+				document.getElementById('qtrans_textarea_content').style.display = 'block';
 			} else {
+				// Activate TinyMCE if it's the user's default editor
 				try {
 					this.I('quicktags').style.display = 'none';
-				} catch(e){};
-				try {
-					tinyMCE.execCommand('mceRemoveControl', false, 'content');
 				} catch(e){};
 				document.getElementById('content').style.display = 'none';
 				document.getElementById('qtrans_textarea_content').style.display = 'block';
@@ -274,7 +266,7 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_tinyMCEOverload'] = "
-
+	
 		tinyMCE.get2 = tinyMCE.get;
 		tinyMCE.get = function(id) {
 			if(id=='content')
@@ -283,64 +275,76 @@ function qtrans_initJS() {
 		}
 		";
 		
+	$q_config['js']['qtrans_get_active_language'] = "
+	
+		qtrans_get_active_language = function() {
+	";
+	foreach($q_config['enabled_languages'] as $language)
+		$q_config['js']['qtrans_get_active_language'].= "
+				if(document.getElementById('qtrans_select_".$language."').className=='edButton active')
+					return '".$language."';
+			";
+	$q_config['js']['qtrans_get_active_language'].= "
+		}
+		";
+		
 	$q_config['js']['qtrans_switch'] = "
-		switchEditors.go = function(lang, id) {
+		switchEditors.go = function(id, lang) {
 			var inst = tinyMCE.get('qtrans_textarea_' + id);
 			var qt = document.getElementById('quicktags');
 			var vta = document.getElementById('qtrans_textarea_' + id);
 			var ta = document.getElementById(id);
 			var pdr = document.getElementById('editorcontainer');
 			
-			if(document.getElementById('qtrans_select_'+lang).className=='edButton active') {
-				if(inst) {
-					tinyMCE.triggerSave();
-				}
+			// update merged content
+			if(inst && ! inst.isHidden()) {
+				tinyMCE.triggerSave();
+			} else {
+				qtrans_save(vta.value);
+			}
+			
+			// check if language is already active
+			if(lang!='tinymce' && lang!='html' && document.getElementById('qtrans_select_'+lang).className=='edButton active') {
 				return;
 			}
-		";
-	foreach($q_config['enabled_languages'] as $language)
-		$q_config['js']['qtrans_switch'].= "
-			if(document.getElementById('qtrans_select_".$language."').className=='edButton active') {
-				if(inst) {
-					tinyMCE.triggerSave();
-				}
-			}
-			document.getElementById('qtrans_select_".$language."').className='edButton';
-			";
-	$q_config['js']['qtrans_switch'].= "
-			if(document.getElementById('qtrans_select_code').className=='edButton active') {
-			}
-			document.getElementById('qtrans_select_code').className='edButton';
-			document.getElementById('qtrans_select_'+lang).className='edButton active';
 			
-			if(lang=='code') {
+			if(lang!='tinymce' && lang!='html') {
+				document.getElementById('qtrans_select_'+qtrans_get_active_language()).className='edButton';
+				document.getElementById('qtrans_select_'+lang).className='edButton active';
+			}
+			
+			if(lang=='html') {
 				if ( ! inst || inst.isHidden() )
 					return false;
-				ta.style.height = inst.getContentAreaContainer().offsetHeight + 6 + 'px';
+				vta.style.height = inst.getContentAreaContainer().offsetHeight + 6 + 'px';
 				inst.hide();
-				vta.style.display = 'none';
-				ta.style.display = 'block';
+				//vta.style.display = 'none';
+				//ta.style.display = 'block';
 				qt.style.display = 'block';
-				ta.style.color = '';
+				vta.style.color = '';
+				document.getElementById('edButtonHTML').className = 'active';
+				document.getElementById('edButtonPreview').className = '';
 				setUserSetting( 'editor', 'html' );
-			} else {
-				if(inst && qt.style.display=='none' && !inst.isHidden()) {
-					qtrans_assign('qtrans_textarea_'+id,qtrans_use(lang,ta.value));
+			} else if(lang=='tinymce') {
+				if(inst && ! inst.isHidden())
+					return false;
+				vta.style.color = '#fff';
+				edCloseAllTags(); // :-(
+				qt.style.display = 'none';
+				vta.value = this.wpautop(qtrans_use(qtrans_get_active_language(),ta.value));
+				//ta.style.display = 'none';
+				//vta.style.display = 'block';
+				if (inst) {
+					inst.show();
 				} else {
-					ta.style.color = '#fff';
-					edCloseAllTags(); // :-(
-					qt.style.display = 'none';
-					vta.value = this.wpautop(qtrans_use(lang,ta.value));
-					ta.style.display = 'none';
-					vta.style.display = 'block';
-					if ( inst ) {
-						inst.execCommand('mceSetContent', false, vta.value);
-						inst.show();
-					} else {
-						tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_'+id);
-					}
+					tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_'+id);
 				}
+				document.getElementById('edButtonHTML').className = '';
+				document.getElementById('edButtonPreview').className = 'active';
 				setUserSetting( 'editor', 'tinymce' );
+			} else {
+				// switch content
+				qtrans_assign('qtrans_textarea_'+id,qtrans_use(lang,ta.value));
 			}
 		}
 		";

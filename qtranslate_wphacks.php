@@ -115,9 +115,11 @@ function qtrans_modifyRichEditor($old_content) {
 	$content .= $q_config['js']['qtrans_assign'];
 	$content .= $q_config['js']['qtrans_save'];
 	$content .= $q_config['js']['qtrans_integrate_title'];
+	$content .= $q_config['js']['qtrans_get_active_language'];
 
-	// insert language and code buttons
-	$content .= qtrans_createEditorToolbarButton('code', $id);
+	// insert language, visual and html buttons
+	//$content .= qtrans_createEditorToolbarButton('html', $id);
+	//$content .= qtrans_createEditorToolbarButton('visual', $id);
 	$el = $q_config['enabled_languages'];
 	sort($el);
 	foreach($el as $language) {
@@ -129,8 +131,10 @@ function qtrans_modifyRichEditor($old_content) {
 	}
 	
 	// remove old buttons
-	$content .= "document.getElementById('editor-toolbar').removeChild(document.getElementById('edButtonPreview'));\n";
-	$content .= "document.getElementById('editor-toolbar').removeChild(document.getElementById('edButtonHTML'));\n";
+	//$content .= "document.getElementById('editor-toolbar').removeChild(document.getElementById('edButtonPreview'));\n";
+	//$content .= "document.getElementById('editor-toolbar').removeChild(document.getElementById('edButtonHTML'));\n";
+	//$content .= "document.getElementById('edButtonPreview').onclick = function() { switchEditors.go('visual','".$id."'); };\n";
+	//$content .= "document.getElementById('edButtonHTML').onclick = function() { switchEditors.go('html','".$id."'); };\n";
 	
 	// hijack tinymce control
 	$content .= $q_config['js']['qtrans_disable_old_editor'];
@@ -318,7 +322,7 @@ function qtrans_createEditorToolbarButton($language, $id){
 		var l = document.createTextNode('".$q_config['language_name'][$language]."');
 		ls.id = 'qtrans_select_".$language."';
 		ls.className = 'edButton';
-		ls.onclick = function() { switchEditors.go('".$language."','".$id."'); };
+		ls.onclick = function() { switchEditors.go('".$id."','".$language."'); };
 		ls.appendChild(l);
 		bc.insertBefore(ls,mb);
 		";

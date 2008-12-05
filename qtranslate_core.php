@@ -192,17 +192,11 @@ function qtrans_loadConfig() {
 	$q_config['url_mode'] = $url_mode;
 	$q_config['pre_domain'] = $pre_domain;
 	
-	// Add Code (used only in Editor)
-	$q_config['language_name']['code'] = __('Code');
-	$q_config['locale']['code'] = "code";
 }
 
 // saves entire configuration
 function qtrans_saveConfig() {
 	global $q_config;
-	// prevent "code"-language from beeing saved
-	unset($q_config['language_name']['code']);
-	unset($q_config['locale']['code']);
 	
 	// sort enabled languages to prevent language tab position jumps
 	sort($q_config['enabled_languages']);
@@ -224,10 +218,6 @@ function qtrans_saveConfig() {
 		update_option('qtranslate_use_strftime', '1');
 	else
 		update_option('qtranslate_use_strftime', '0');
-	
-	// get Code-Language back
-	$q_config['language_name']['code'] = __('Code');
-	$q_config['locale']['code'] = "code";
 }
 
 /* BEGIN DATE FUNCTIONS */
