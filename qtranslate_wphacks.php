@@ -98,7 +98,7 @@ function qtrans_modifyRichEditor($old_content) {
 	
 	// create editing field for selected languages
 	$old_content = substr($old_content,0,26)
-		."<textarea id='qtrans_textarea_".$id."' name='qtrans_textarea_".$id."' tabindex='2' rows='".$rows."' cols='".$cols."' style='display:none'></textarea>"
+		."<textarea id='qtrans_textarea_".$id."' name='qtrans_textarea_".$id."' tabindex='2' rows='".$rows."' cols='".$cols."' style='display:none' onblur='qtrans_save(this.value);'></textarea>"
 		.substr($old_content,26);
 	
 	// do some crazy js to alter the admin view

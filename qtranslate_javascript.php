@@ -205,7 +205,7 @@ function qtrans_initJS() {
 		qtrans_assign = function(id, text) {
 			var inst = tinyMCE.get(id);
 			var ta = document.getElementById(id);
-			if(inst) {
+			if(inst && ! inst.isHidden()) {
 				htm = switchEditors.wpautop(text);
 				inst.execCommand('mceSetContent', null, htm);
 			} else {

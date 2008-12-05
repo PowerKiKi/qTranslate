@@ -82,6 +82,7 @@ function qtrans_adminHeader() {
 	echo ".qtrans_title { background-image: url(images/postbox-bg.gif); background-position: left top; background-repeat: repeat-x; -moz-border-radius: 6px 6px 0 0;";
 	echo	"-webkit-border-top-right-radius: 6px; -webkit-border-top-left-radius: 6px; -khtml-border-top-right-radius: 6px; -khtml-border-top-left-radius: 6px;";
 	echo	"border-top-right-radius: 6px; border-top-left-radius: 6px; }\n";
+	echo "#edButtonPreview { margin-left:6px !important;}";
 	echo "</style>\n";
 	return qtrans_optionFilter('disable');
 }
