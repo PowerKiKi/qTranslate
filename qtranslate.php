@@ -58,6 +58,9 @@ $q_config['default_language'] = 'en';
 // enables browser language detection
 $q_config['detect_browser_language'] = true;
 
+// hide pages without content
+$q_config['hide_untranslated'] = true;
+
 // sets default url mode 
 // 0 - post-questionmark
 // 1 - pre-path

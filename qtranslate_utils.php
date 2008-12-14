@@ -58,6 +58,12 @@ function qtrans_getLanguage() {
     return $q_config['language'];
 }
 
+function qtrans_getLanguageName($lang = '') {
+    global $q_config;
+    if($lang=='' || !qtrans_isEnabled($lang)) $lang = $q_config['language'];
+    return $q_config['language_name'][$lang];
+}
+
 function qtrans_isEnabled($lang) {
 	global $q_config;
 	return in_array($lang, $q_config['enabled_languages']);

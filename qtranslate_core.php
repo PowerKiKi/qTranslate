@@ -362,13 +362,44 @@ function qtrans_convertURL($url='', $lang='') {
 	
 	// check if it's an external link
 	$urlinfo = qtrans_parseURL($url);
-	if($urlinfo['host']!=''&&substr($url,0,strlen(get_option('home')))!=get_option('home')) {
-		return $url;
+	$home = rtrim(get_option('home'),"/");
+	if($urlinfo['host']!='') {
+		// check for already existing pre-domain language information
+		if($q_config['url_mode'] == 2 && preg_match("#^([a-z]{2}).#i",$urlinfo['host'],$match)) {
+			if(qtrans_isEnabled($match[1])) {
+				// found language information, remove it
+				$url = preg_replace("/".$match[1]."\./i","",$url, 1);
+				// reparse url
+				$urlinfo = qtrans_parseURL($url);
+			}
+		}
+		if(substr($url,0,strlen($home))!=$home) {
+			return $url;
+		}
+		// strip home path
+		$url = substr($url,strlen($home));
+	} else {
+		// relative url, strip home path
+		$homeinfo = qtrans_parseURL($home);
+		if($homeinfo['path']==substr($url,0,strlen($homeinfo['path']))) {
+			$url = substr($url,strlen($homeinfo['path']));
+		}
 	}
 	
-	// check for double or more slash at beginning and remove if found
-	$url = preg_replace("#^//+#i", "/", $url);
-
+	// check for query language information and remove if found
+	if(preg_match("#(&|\?)lang=([^&\#]+)#i",$url,$match) && qtrans_isEnabled($match[2])) {
+		$url = preg_replace("#(&|\?)lang=".$match[2]."&?#i","$1",$url);
+	}
+	
+	// remove any slashes out front
+	$url = ltrim($url,"/");
+	
+	// remove any useless trailing characters
+	$url = rtrim($url,"?&");
+	
+	// reparse url without home path
+	$urlinfo = qtrans_parseURL($url);
+	
 	// check if its a link to an ignored file type
 	$ignore_file_types = preg_split('/\s*,\s*/', strtolower($q_config['ignore_file_types']));
 	$pathinfo = pathinfo($urlinfo['path']);
@@ -376,52 +407,39 @@ function qtrans_convertURL($url='', $lang='') {
 		return $url;
 	}
 	
-	if(strpos(get_option('permalink_structure'),'?')===false&&get_option('permalink_structure')!='') {
-		// clicking around in default language shouldn't change any urls
-		if($lang==$q_config['default_language']) return $url;
-		// optimized urls
-		if(preg_match('#^https?://[^/]+$#i',$url)) $url.='/';
-		// remove home path if set
-		$home_path = qtrans_parseURL(get_option('home'));
-		if ( isset($home_path['path']) )
-			$home_path = $home_path['path'];
-		else
-			$home_path = '';
-		$home_path = trim($home_path, '/');
-		if(strlen($home_path)>0) {
-			$url = preg_replace('#^((https?://[^/]+/?)?.*?)'.$home_path.'/?(.*)$#','$1$3',$url);
-			$home_path .= '/';
-		}
-		// prevent multiple execution errors
-		if(preg_match('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i',$url, $match)) {
-			if(qtrans_isEnabled(ltrim($match[2],'/'))) {
-				$url = preg_replace('#^(https?://[^/]+)?(/[a-z]{2})(/.*)$#i','$1$3',$url);
+	switch($q_config['url_mode']) {
+		case 1:	// pre url
+			// might already have language information
+			if(preg_match("#^([a-z]{2})/#i",$url,$match)) {
+				if(qtrans_isEnabled($match[1])) {
+					// found language information, remove it
+					$url = substr($url, 3);
+				}
 			}
-		}
-		$url = preg_replace('#^(https?://[^/]+)?(/.*)$#i', '$1/'.$home_path.$lang.'$2', $url);
-	} else {
-		// default urls append language setting
-		// prevent multiple execution errors
-		$url = preg_replace('#\?lang=[^&]*#i','?',$url);
-		$url = preg_replace('#\?+#i','?',$url);
-		$url = preg_replace('#(&+amp;)+#i','&amp;',$url);
-		$url = preg_replace('#\?(&amp;)+#i','?',$url);
-		if(substr($url,-1,1)=='?') $url = substr($url,0,-1);
-		$url = preg_replace('#(&amp;|&)*$#i','',$url);
-		$url = preg_replace('#&amp;lang=[^&]*#i','',$url);
-
-		// dont append default language
-		if($lang!=$q_config['default_language']) {
-			if(strpos($url,'?')===false) {
-				// no get data, so time to set it
-				$url.= '?lang='.$lang;
-			} else {
-				// append language setting
-				$url.= '&amp;lang='.$lang;
+			if($lang!=$q_config['default_language']) $url = $lang."/".$url;
+			break;
+		case 2:	// pre domain 
+			$home = preg_replace("#//#","//".$lang.".",$home,1);
+			break;
+		default: // query
+			if($lang!=$q_config['default_language']){
+				if(strpos($url,'?')===false) {
+					$url .= '?';
+				} else {
+					$url .= '&';
+				}
+				$url .= $lang;
 			}
-		}
 	}
-	return $url;
+	return $home."/".$url;
+}
+
+function qtrans_excludeUntranslatedPosts($where) {
+	global $q_config, $wpdb;
+	if($q_config['hide_untranslated']) {
+		$where .= " AND $wpdb->posts.post_content LIKE '%<!--:".qtrans_getLanguage()."-->%'";
+	}
+	return $where;
 }
 
 // splits text with language tags into array

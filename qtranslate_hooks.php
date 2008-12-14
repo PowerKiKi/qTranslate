@@ -168,5 +168,6 @@ add_filter('feed_link',						'qtrans_convertURL');
 add_filter('post_comments_feed_link',		'qtrans_convertURL');
 add_filter('tag_feed_link',					'qtrans_convertURL');
 add_filter('clean_url',						'qtrans_convertURL');
+add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
 
 ?>
