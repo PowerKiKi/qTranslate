@@ -138,6 +138,8 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 			// user coming from external link
 			$result['redirect'] = true;
 		}
+	} elseif(empty($referer['host'])) {
+		$result['redirect'] = true;
 	}
 	
 	return $result;
@@ -428,18 +430,22 @@ function qtrans_convertURL($url='', $lang='') {
 				} else {
 					$url .= '&';
 				}
-				$url .= $lang;
+				$url .= "lang=".$lang;
 			}
 	}
-	return $home."/".$url;
-}
-
-function qtrans_excludeUntranslatedPosts($where) {
-	global $q_config, $wpdb;
-	if($q_config['hide_untranslated']) {
-		$where .= " AND $wpdb->posts.post_content LIKE '%<!--:".qtrans_getLanguage()."-->%'";
+	
+	// see if cookies are activated
+	if(!isset($_COOKIE['qtrans_cookie_test']) && $url == '') {
+		// :( now we have to make unpretty URLs
+		$url = preg_replace("#(&|\?)lang=".$match[2]."&?#i","$1",$url);
+		if(strpos($url,'?')===false) {
+			$url .= '?';
+		} else {
+			$url .= '&';
+		}
+		$url .= "lang=".$lang;
 	}
-	return $where;
+	return $home."/".$url;
 }
 
 // splits text with language tags into array
@@ -496,7 +502,14 @@ function qtrans_use($lang, $text, $show_available=false) {
 		}
 		return $text;
 	}
-
+	
+	if(is_object($text)) {
+		foreach(get_object_vars($text) as $key => $t) {
+			$text->$key = qtrans_use($lang,$text->$key,$show_available);
+		}
+		return $text;
+	}
+	
 	// get content
 	$content = qtrans_split($text);
 	// find available languages
@@ -541,21 +554,6 @@ function qtrans_use($lang, $text, $show_available=false) {
 		}
 	}
 	return "<p>".preg_replace('/%LANG:([^:]*):([^%]*)%/', $language_list, $q_config['not_available'][$lang])."</p>";
-}
-
-function qtrans_useCurrentLanguageIfNotFoundShowAvailable($content) {
-	global $q_config;
-	return qtrans_use($q_config['language'], $content, true);
-}
-
-function qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($content) {
-	global $q_config;
-	return qtrans_use($q_config['language'], $content, false);
-}
-
-function qtrans_useDefaultLanguage($content) {
-	global $q_config;
-	return qtrans_use($q_config['default_language'], $content, false);
 }
 
 ?>

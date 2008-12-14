@@ -87,6 +87,39 @@ function qtrans_adminHeader() {
 	return qtrans_optionFilter('disable');
 }
 
+function qtrans_useCurrentLanguageIfNotFoundShowAvailable($content) {
+	global $q_config;
+	return qtrans_use($q_config['language'], $content, true);
+}
+
+function qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($content) {
+	global $q_config;
+	return qtrans_use($q_config['language'], $content, false);
+}
+
+function qtrans_useDefaultLanguage($content) {
+	global $q_config;
+	return qtrans_use($q_config['default_language'], $content, false);
+}
+
+function qtrans_excludeUntranslatedPosts($where) {
+	global $q_config, $wpdb;
+	if($q_config['hide_untranslated']) {
+		$where .= " AND $wpdb->posts.post_content LIKE '%<!--:".qtrans_getLanguage()."-->%'";
+	}
+	return $where;
+}
+
+function qtrans_postsFilter($posts) {
+	if(is_array($posts)) {
+		foreach($posts as $post) {
+			$post->post_content = qtrans_useCurrentLanguageIfNotFoundShowAvailable($post->post_content);
+			$post = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($post);
+		}
+	}
+	return $posts;
+}
+
 // Hooks (Actions)
 add_action('wp_head',						'qtrans_header');
 add_action('edit_category_form',			'qtrans_modifyCategoryForm');
@@ -169,5 +202,6 @@ add_filter('post_comments_feed_link',		'qtrans_convertURL');
 add_filter('tag_feed_link',					'qtrans_convertURL');
 add_filter('clean_url',						'qtrans_convertURL');
 add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
+add_filter('the_posts',						'qtrans_postsFilter');
 
 ?>
