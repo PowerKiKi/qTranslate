@@ -287,7 +287,6 @@ function qtrans_insertTitleInput($language){
 		var tw = document.createElement('div');
 		var ti = document.createElement('input');
 		var slug = document.getElementById('edit-slug-box');
-
 		
 		ti.type = 'text';
 		ti.id = 'qtrans_title_".$language."';

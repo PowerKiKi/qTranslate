@@ -35,19 +35,20 @@ function qtrans_init() {
 	
 	// set test cookie
 	setcookie('qtrans_cookie_test', 'qTranslate Cookie Test', 0, $url_info['home'], $url_info['host']);
-	
 	// check cookies for admin
 	if(defined('WP_ADMIN')) {
-		if(!empty($_COOKIE['qtrans_admin_language']) && qtrans_isEnabled($_COOKIE['qtrans_admin_language'])) {
-			$q_config['language'] = $_COOKIE['qtrans_admin_language'];
-		} else {
+		if(qtrans_isEnabled($_GET['lang'])) {
 			$q_config['language'] = $url_info['language'];
 			setcookie('qtrans_admin_language', $q_config['language'], time()+60*60*24*30);
+		} elseif(!empty($_COOKIE['qtrans_admin_language']) && qtrans_isEnabled($_COOKIE['qtrans_admin_language'])) {
+			$q_config['language'] = $_COOKIE['qtrans_admin_language'];
+		} else {
+			$q_config['language'] = $q_config['default_language'];
 		}
 	} else {
 		$q_config['language'] = $url_info['language'];
 	}
-	
+
 	// detect language and forward if needed
 	if($url_info['redirect'] && $url_info['language'] == $q_config['default_language']) {
 		$prefered_languages = array();
@@ -126,20 +127,22 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 		// language override given
 		$result['language'] = $_GET['lang'];
 		$result['url'] = preg_replace("#(&|\?)lang=".$result['language']."&?#i","$1",$result['url']);
-	} elseif(!empty($referer['host']) && $home['host'] == $result['host'] && $home['path'] == $result['url']) {
-		// check if activating language detection is possible
-		if(preg_match("#^([a-z]{2}).#i",$referer['host'],$match)) {
-			if(qtrans_isEnabled($match[1])) {
-				// found language information
-				$referer['host'] = substr($referer['host'], 3);
+	} elseif($home['host'] == $result['host'] && $home['path'] == $result['url']) {
+		if(empty($referer['host'])) {
+			$result['redirect'] = true;
+		} else {
+			// check if activating language detection is possible
+			if(preg_match("#^([a-z]{2}).#i",$referer['host'],$match)) {
+				if(qtrans_isEnabled($match[1])) {
+					// found language information
+					$referer['host'] = substr($referer['host'], 3);
+				}
+			}
+			if($referer['host']!=$result['host'] || !qtrans_startsWith($referer['path'], $home['path'])) {
+				// user coming from external link
+				$result['redirect'] = true;
 			}
 		}
-		if($referer['host']!=$result['host'] || !qtrans_startsWith($referer['path'], $home['path'])) {
-			// user coming from external link
-			$result['redirect'] = true;
-		}
-	} elseif(empty($referer['host'])) {
-		$result['redirect'] = true;
 	}
 	
 	return $result;
@@ -406,7 +409,7 @@ function qtrans_convertURL($url='', $lang='') {
 	$ignore_file_types = preg_split('/\s*,\s*/', strtolower($q_config['ignore_file_types']));
 	$pathinfo = pathinfo($urlinfo['path']);
 	if(in_array(strtolower($pathinfo['extension']), $ignore_file_types)) {
-		return $url;
+		return $home."/".$url;
 	}
 	
 	switch($q_config['url_mode']) {
@@ -435,7 +438,7 @@ function qtrans_convertURL($url='', $lang='') {
 	}
 	
 	// see if cookies are activated
-	if(!isset($_COOKIE['qtrans_cookie_test']) && $url == '') {
+	if($q_config['cookie_enabled'] && $url == '') {
 		// :( now we have to make unpretty URLs
 		$url = preg_replace("#(&|\?)lang=".$match[2]."&?#i","$1",$url);
 		if(strpos($url,'?')===false) {
