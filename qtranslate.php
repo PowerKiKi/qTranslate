@@ -65,7 +65,7 @@ $q_config['hide_untranslated'] = true;
 // 0 - post-questionmark
 // 1 - pre-path
 // 2 - pre-domain
-$q_config['url_mode'] = 1;
+$q_config['url_mode'] = 2;
 
 // pre-Domain Endings
 $q_config['pre_domain']['de'] = "de";

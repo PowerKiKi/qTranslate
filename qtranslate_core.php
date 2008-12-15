@@ -424,7 +424,7 @@ function qtrans_convertURL($url='', $lang='') {
 			if($lang!=$q_config['default_language']) $url = $lang."/".$url;
 			break;
 		case 2:	// pre domain 
-			$home = preg_replace("#//#","//".$lang.".",$home,1);
+			if($lang!=$q_config['default_language']) $home = preg_replace("#//#","//".$lang.".",$home,1);
 			break;
 		default: // query
 			if($lang!=$q_config['default_language']){
@@ -438,7 +438,7 @@ function qtrans_convertURL($url='', $lang='') {
 	}
 	
 	// see if cookies are activated
-	if($q_config['cookie_enabled'] && $url == '') {
+	if(!$q_config['cookie_enabled'] && $url == '' && $lang == $q_config['default_language']) {
 		// :( now we have to make unpretty URLs
 		$url = preg_replace("#(&|\?)lang=".$match[2]."&?#i","$1",$url);
 		if(strpos($url,'?')===false) {
