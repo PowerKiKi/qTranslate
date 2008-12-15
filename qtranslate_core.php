@@ -363,6 +363,7 @@ function qtrans_convertURL($url='', $lang='') {
 	// invalid language
 	if($url=='') $url = $_SERVER['REQUEST_URI'];
 	if($lang=='') $lang = $q_config['language'];
+	if(defined('WP_ADMIN')) return $url;
 	if(!qtrans_isEnabled($lang)) return "";
 	
 	// check if it's an external link

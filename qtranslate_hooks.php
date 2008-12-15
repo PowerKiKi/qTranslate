@@ -103,7 +103,7 @@ function qtrans_useDefaultLanguage($content) {
 
 function qtrans_excludeUntranslatedPosts($where) {
 	global $q_config, $wpdb;
-	if($q_config['hide_untranslated']) {
+	if($q_config['hide_untranslated'] && is_home()) {
 		$where .= " AND $wpdb->posts.post_content LIKE '%<!--:".qtrans_getLanguage()."-->%'";
 	}
 	return $where;
