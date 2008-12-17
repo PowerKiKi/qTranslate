@@ -25,8 +25,26 @@ function qtrans_init() {
 	if(defined('QTRANS_INIT')) return;
 	define('QTRANS_INIT',true);
 	
-	// load configuration
+	// load configuration if not beeing reseted
+	if(isset($_POST['qtranslate_reset']) && isset($_POST['qtranslate_reset2']) && defined('WP_ADMIN') && current_user_can('manage_options')) {
+		// reset all settings
+		delete_option('qtranslate_language_names');
+		delete_option('qtranslate_enabled_languages');
+		delete_option('qtranslate_default_language');
+		delete_option('qtranslate_flag_location');
+		delete_option('qtranslate_flags');
+		delete_option('qtranslate_locales');
+		delete_option('qtranslate_na_messages');
+		delete_option('qtranslate_date_formats');
+		delete_option('qtranslate_time_formats');
+		delete_option('qtranslate_use_strftime');
+		delete_option('qtranslate_ignore_file_types');
+		delete_option('qtranslate_url_mode');
+		delete_option('detect_browser_language');
+		delete_option('hide_untranslated');
+	}
 	qtrans_loadConfig();
+	
 	// init Javascript functions
 	qtrans_initJS();
 	
@@ -165,10 +183,10 @@ function qtrans_loadConfig() {
 	$use_strftime = get_option('qtranslate_use_strftime');
 	$ignore_file_types = get_option('qtranslate_ignore_file_types');
 	$url_mode = get_option('qtranslate_url_mode');
-	$pre_domain = get_option('qtranslate_pre_domain');
+	$detect_browser_language = get_option('detect_browser_language');
+	$hide_untranslated = get_option('hide_untranslated');
 	
 	// default if not set
-	if(!is_array($pre_domain)) $pre_domain = $q_config['pre_domain'];
 	if(!is_array($ignore_file_types)) $ignore_file_types = $q_config['ignore_file_types'];
 	if(!is_array($date_formats)) $date_formats = $q_config['date_format'];
 	if(!is_array($time_formats)) $time_formats = $q_config['time_format'];
@@ -181,6 +199,8 @@ function qtrans_loadConfig() {
 	if(empty($default_language)) $default_language = $q_config['default_language'];
 	if($flag_location=='') $flag_location = $q_config['flag_location'];
 	if($use_strftime=='0') $use_strftime = false; else $use_strftime = true;
+	if($detect_browser_language=='0') $detect_browser_language = false; else $detect_browser_language = true;
+	if($hide_untranslated=='0') $hide_untranslated = false; else $hide_untranslated = true;
 	
 	// overwrite default values with loaded values
 	$q_config['date_format'] = $date_formats;
@@ -195,7 +215,8 @@ function qtrans_loadConfig() {
 	$q_config['use_strftime'] = $use_strftime;
 	$q_config['ignore_file_types'] = $ignore_file_types;
 	$q_config['url_mode'] = $url_mode;
-	$q_config['pre_domain'] = $pre_domain;
+	$q_config['detect_browser_language'] = $detect_browser_language;
+	$q_config['hide_untranslated'] = $hide_untranslated;
 	
 }
 
@@ -223,6 +244,7 @@ function qtrans_saveConfig() {
 		update_option('qtranslate_use_strftime', '1');
 	else
 		update_option('qtranslate_use_strftime', '0');
+		
 }
 
 /* BEGIN DATE FUNCTIONS */

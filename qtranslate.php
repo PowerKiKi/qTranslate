@@ -40,7 +40,6 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
     it by Lorenzo De Tomasi
     
 */
-
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
 /* There is no need to edit anything here! */
@@ -110,7 +109,7 @@ $q_config['not_available']['se'] = "Tyvärr är denna artikel enbart tillgängli
 $q_config['not_available']['it'] = "Ci spiace, ma questo articolo è disponibile soltanto in %LANG:, : e %.";
 
 // enable strftime usage
-$q_config['use_strftime'] = true;
+$q_config['use_strftime'] = false;
 
 // Date Configuration (uses strftime)
 $q_config['date_format']['en'] = '%A %B %e%q, %Y';
