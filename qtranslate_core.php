@@ -245,8 +245,6 @@ function qtrans_saveConfig() {
 	sort($q_config['enabled_languages']);
 	
 	// save everything
-	update_option('qtranslate_url_mode', $q_config['url_mode']);
-	update_option('qtranslate_pre_domain', $q_config['pre_domain']);
 	update_option('qtranslate_language_names', $q_config['language_name']);
 	update_option('qtranslate_enabled_languages', $q_config['enabled_languages']);
 	update_option('qtranslate_default_language', $q_config['default_language']);
@@ -257,10 +255,24 @@ function qtrans_saveConfig() {
 	update_option('qtranslate_date_formats', $q_config['date_format']);
 	update_option('qtranslate_time_formats', $q_config['time_format']);
 	update_option('qtranslate_ignore_file_types', $q_config['ignore_file_types']);
+	update_option('qtranslate_url_mode', $q_config['url_mode']);
+	update_option('qtranslate_term_name', $q_config['term_name']);
 	if($q_config['use_strftime'])
 		update_option('qtranslate_use_strftime', '1');
 	else
 		update_option('qtranslate_use_strftime', '0');
+	if($q_config['detect_browser_language'])
+		update_option('qtranslate_detect_browser_language', '1');
+	else
+		update_option('qtranslate_detect_browser_language', '0');
+	if($q_config['hide_untranslated'])
+		update_option('qtranslate_hide_untranslated', '1');
+	else
+		update_option('qtranslate_hide_untranslated', '0');
+	if($q_config['auto_update_mo'])
+		update_option('qtranslate_auto_update_mo', '1');
+	else
+		update_option('qtranslate_auto_update_mo', '0');
 		
 }
 
