@@ -534,9 +534,9 @@ function qtrans_disableLanguage($lang) {
 	return false;
 }
 
-function qtrans_enabledLanguage($lang) {
+function qtrans_enableLanguage($lang) {
 	global $q_config;
-	if(qtrans_isEnabled($lang)) {
+	if(qtrans_isEnabled($lang) || !isset($q_config['language_name'][$lang])) {
 		return false;
 	}
 	$q_config['enabled_languages'][] = $lang;

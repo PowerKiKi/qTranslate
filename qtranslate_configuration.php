@@ -314,26 +314,14 @@ function qtranslate_conf() {
 			unset($q_config['date_format'][$_GET['delete']]);
 			unset($q_config['time_format'][$_GET['delete']]);
 			unset($q_config['not_available'][$_GET['delete']]);
-			if(in_array($_GET['delete'],$q_config['enabled_languages'])) {
-				// was enabled, so remove the enabled flag
-				$new_enabled = array();
-				for($i = 0; $i < sizeof($q_config['enabled_languages']); $i++) {
-					if($q_config['enabled_languages'][$i] != $_GET['delete']) {
-						$new_enabled[] = $q_config['enabled_languages'][$i];
-					}
-				}
-				$q_config['enabled_languages'] = $new_enabled;
+			if(qtrans_isEnabled($_GET['delete'])) {
+				qtrans_disableLanguage($_GET['delete']);
 			}
 		}
 	} elseif(isset($_GET['enable'])) {
 		// enable validate
-		if(in_array($_GET['enable'],$q_config['enabled_languages']))
-			$error = __('Language is already enabled!');
-		if(!isset($q_config['language_name'][$_GET['enable']])||strtolower($_GET['enable'])=='code')
-			$error = __('No such language!');
-		if($error=='') {
-			// everything seems fine, enable language
-			$q_config['enabled_languages'][]=$_GET['enable'];
+		if(!qtrans_enableLanguage($_GET['enable'])) {
+			$error = __('Language is already enabled or invalid!');
 		}
 	} elseif(isset($_GET['disable'])) {
 		// enable validate
@@ -345,13 +333,7 @@ function qtranslate_conf() {
 			$error = __('No such language!');
 		if($error=='') {
 			// everything seems fine, disable language
-			$new_enabled = array();
-			for($i = 0; $i < sizeof($q_config['enabled_languages']); $i++) {
-				if($q_config['enabled_languages'][$i] != $_GET['disable']) {
-					$new_enabled[] = $q_config['enabled_languages'][$i];
-				}
-			}
-			$q_config['enabled_languages'] = $new_enabled;
+			qtrans_disableLanguage($_GET['disable']);
 		}
 	}
 	$everything_fine = ((isset($_POST['submit'])||isset($_GET['delete'])||isset($_GET['enable'])||isset($_GET['disable']))&&$error=='');
