@@ -233,22 +233,22 @@ function qtranslate_conf() {
 	
 	if(isset($_POST['original_lang'])) {
 		// validate form input
-		if($_POST['language_na_message']=='')		   $error = 'The Language must have a Not-Available Message!';
-		if($_POST['language_time_format']=='')		  $error = 'The Language must have a Time Format!';
-		if($_POST['language_date_format']=='')		  $error = 'The Language must have a Date Format!';
-		if(strlen($_POST['language_locale'])<2)		 $error = 'The Language must have a Locale!';
-		if($_POST['language_name']=='')				 $error = 'The Language must have a name!';
-		if(strlen($_POST['language_code'])!=2)		  $error = 'Language Code has to be 2 characters long!';
+		if($_POST['language_na_message']=='')		   $error = __('The Language must have a Not-Available Message!');
+		if($_POST['language_time_format']=='')		  $error = __('The Language must have a Time Format!');
+		if($_POST['language_date_format']=='')		  $error = __('The Language must have a Date Format!');
+		if(strlen($_POST['language_locale'])<2)		 $error = __('The Language must have a Locale!');
+		if($_POST['language_name']=='')				 $error = __('The Language must have a name!');
+		if(strlen($_POST['language_code'])!=2)		  $error = __('Language Code has to be 2 characters long!');
 		if($_POST['original_lang']==''&&$error=='') {
 			// new language
 			if(isset($q_config['language_name'][$_POST['language_code']])) {
-				$error = 'There is already a language with the same Language Code!';
+				$error = __('There is already a language with the same Language Code!');
 			} 
 		} 
 		if($_POST['original_lang']!=''&&$error=='') {
 			// language update
 			if($_POST['language_code']!=$_POST['original_lang']&&isset($q_config['language_name'][$_POST['language_code']])) {
-				$error = 'There is already a language with the new Language Code!';
+				$error = __('There is already a language with the new Language Code!');
 			} else {
 				// remove old language
 				unset($q_config['language_name'][$_POST['original_lang']]);
@@ -265,7 +265,7 @@ function qtranslate_conf() {
 						}
 					}
 					}
-			if($_POST['original_lang']==$q_config['default_language'])
+			    if($_POST['original_lang']==$q_config['default_language'])
 					// was default, so set modified the default
 					$q_config['default_language'] = $_POST['language_code'];
 			}
@@ -278,11 +278,6 @@ function qtranslate_conf() {
 			$q_config['date_format'][$_POST['language_code']] = $_POST['language_date_format'];
 			$q_config['time_format'][$_POST['language_code']] = $_POST['language_time_format'];
 			$q_config['not_available'][$_POST['language_code']] = $_POST['language_na_message'];
-			if($_POST['language_default']=='1') {
-				// enable language and make it default
-				if(!in_array($_POST['language_code'],$q_config['enabled_languages'])) $q_config['enabled_languages'][] = $_POST['language_code'];
-				$q_config['default_language'] = $_POST['language_code'];
-			}
 		}
 		if($error!=''||isset($_GET['edit'])) {
 			// get old values in the form
@@ -307,8 +302,10 @@ function qtranslate_conf() {
 		$language_flag = $q_config['flag'][$_GET['edit']];
 	} elseif(isset($_GET['delete'])) {
 		// validate delete (protect code)
-		if($q_config['default_language']==$_GET['delete'])											  $error = 'Cannot delete Default Language!';
-		if(!isset($q_config['language_name'][$_GET['delete']])||strtolower($_GET['delete'])=='code')	$error = 'No such language!';
+		if($q_config['default_language']==$_GET['delete'])
+			$error = 'Cannot delete Default Language!';
+		if(!isset($q_config['language_name'][$_GET['delete']])||strtolower($_GET['delete'])=='code')
+			$error = 'No such language!';
 		if($error=='') {
 			// everything seems fine, delete language
 			unset($q_config['language_name'][$_GET['delete']]);
@@ -330,17 +327,22 @@ function qtranslate_conf() {
 		}
 	} elseif(isset($_GET['enable'])) {
 		// enable validate
-		if(in_array($_GET['enable'],$q_config['enabled_languages']))									$error = 'Language is already enabled!';
-		if(!isset($q_config['language_name'][$_GET['enable']])||strtolower($_GET['enable'])=='code')	$error = 'No such language!';
+		if(in_array($_GET['enable'],$q_config['enabled_languages']))
+			$error = __('Language is already enabled!');
+		if(!isset($q_config['language_name'][$_GET['enable']])||strtolower($_GET['enable'])=='code')
+			$error = __('No such language!');
 		if($error=='') {
 			// everything seems fine, enable language
 			$q_config['enabled_languages'][]=$_GET['enable'];
 		}
 	} elseif(isset($_GET['disable'])) {
 		// enable validate
-		if($_GET['disable']==$q_config['default_language'])											   $error = 'Cannot disable Default Language!';
-		if(!in_array($_GET['disable'],$q_config['enabled_languages']))									$error = 'Language is already disabled!';
-		if(!isset($q_config['language_name'][$_GET['disable']])||strtolower($_GET['disable'])=='code')	$error = 'No such language!';
+		if($_GET['disable']==$q_config['default_language'])
+			$error = __('Cannot disable Default Language!');
+		if(!in_array($_GET['disable'],$q_config['enabled_languages']))
+			$error = __('Language is already disabled!');
+		if(!isset($q_config['language_name'][$_GET['disable']]))
+			$error = __('No such language!');
 		if($error=='') {
 			// everything seems fine, disable language
 			$new_enabled = array();
@@ -370,7 +372,7 @@ function qtranslate_conf() {
 <div id="message" class="updated fade"><p><strong><?php echo $message; ?></strong></p></div>
 <?php endif; ?>
 <?php if ($error!='') : ?>
-<div id="message" class="error fade"><p><strong><?php _e($error); ?></strong></p></div>
+<div id="message" class="error fade"><p><strong><?php echo $error; ?></strong></p></div>
 <?php endif; ?>
 
 <?php if(isset($_GET['edit'])) { ?>

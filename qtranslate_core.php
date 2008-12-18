@@ -518,6 +518,32 @@ function qtrans_split($text) {
 	return $result;
 }
 
+function qtrans_disableLanguage($lang) {
+	global $q_config;
+	if(qtrans_isEnabled($lang)) {
+		$new_enabled = array();
+		for($i = 0; $i < sizeof($q_config['enabled_languages']); $i++) {
+			if($q_config['enabled_languages'][$i] != $_GET['delete']) {
+				$new_enabled[] = $q_config['enabled_languages'][$i];
+			}
+		}
+		$q_config['enabled_languages'] = $new_enabled;
+        sort($q_config['enabled_languages']);
+		return true;
+	}
+	return false;
+}
+
+function qtrans_enabledLanguage($lang) {
+	global $q_config;
+	if(qtrans_isEnabled($lang)) {
+		return false;
+	}
+	$q_config['enabled_languages'][] = $lang;
+    sort($q_config['enabled_languages']);
+	return true;
+}
+
 function qtrans_use($lang, $text, $show_available=false) {
 	global $q_config;
 	// return full string if language is not enabled
