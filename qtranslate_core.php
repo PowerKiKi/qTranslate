@@ -113,7 +113,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 	$home['path'] = trailingslashit($home['path']);
 	
 	switch($q_config['url_mode']) {
-		case 1:
+		case QT_URL_PATH:
 			// pre url
 			$url = substr($url, strlen($home['path']));
 			if($url) {
@@ -127,7 +127,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 				}
 			}
 			break;
-		case 2:
+		case QT_URL_DOMAIN:
 			// pre domain
 			if($host) {
 				if(preg_match("#^([a-z]{2}).#i",$host,$match)) {
@@ -195,12 +195,13 @@ function qtrans_loadConfig() {
 	if(!is_array($flags)) $flags = $q_config['flag'];
 	if(!is_array($language_names)) $language_names = $q_config['language_name'];
 	if(!is_array($enabled_languages)) $enabled_languages = $q_config['enabled_languages'];
-	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
 	if(empty($default_language)) $default_language = $q_config['default_language'];
 	if($flag_location=='') $flag_location = $q_config['flag_location'];
-	if($use_strftime=='0') $use_strftime = false; else $use_strftime = true;
-	if($detect_browser_language=='0') $detect_browser_language = false; else $detect_browser_language = true;
-	if($hide_untranslated=='0') $hide_untranslated = false; else $hide_untranslated = true;
+	if($use_strftime==='0') $use_strftime = false; else $use_strftime = true;
+	if($detect_browser_language==='0') $detect_browser_language = false; else $detect_browser_language = true;
+	if($hide_untranslated==='0') $hide_untranslated = false; else $hide_untranslated = true;
+	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
+	if(strpos(get_option('permalink_structure'),'?')===true||strpos(get_option('permalink_structure'),'index.php')===true) $url_mode = QT_URL_QUERY;
 	
 	// overwrite default values with loaded values
 	$q_config['date_format'] = $date_formats;
@@ -393,7 +394,7 @@ function qtrans_convertURL($url='', $lang='') {
 	$home = rtrim(get_option('home'),"/");
 	if($urlinfo['host']!='') {
 		// check for already existing pre-domain language information
-		if($q_config['url_mode'] == 2 && preg_match("#^([a-z]{2}).#i",$urlinfo['host'],$match)) {
+		if($q_config['url_mode'] == QT_URL_DOMAIN && preg_match("#^([a-z]{2}).#i",$urlinfo['host'],$match)) {
 			if(qtrans_isEnabled($match[1])) {
 				// found language information, remove it
 				$url = preg_replace("/".$match[1]."\./i","",$url, 1);
@@ -436,7 +437,7 @@ function qtrans_convertURL($url='', $lang='') {
 	}
 	
 	switch($q_config['url_mode']) {
-		case 1:	// pre url
+		case QT_URL_PATH:	// pre url
 			// might already have language information
 			if(preg_match("#^([a-z]{2})/#i",$url,$match)) {
 				if(qtrans_isEnabled($match[1])) {
@@ -446,7 +447,7 @@ function qtrans_convertURL($url='', $lang='') {
 			}
 			if($lang!=$q_config['default_language']) $url = $lang."/".$url;
 			break;
-		case 2:	// pre domain 
+		case QT_URL_DOMAIN:	// pre domain 
 			if($lang!=$q_config['default_language']) $home = preg_replace("#//#","//".$lang.".",$home,1);
 			break;
 		default: // query

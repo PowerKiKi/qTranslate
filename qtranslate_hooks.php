@@ -203,5 +203,6 @@ add_filter('tag_feed_link',					'qtrans_convertURL');
 add_filter('clean_url',						'qtrans_convertURL');
 add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
 add_filter('the_posts',						'qtrans_postsFilter');
+add_filter('manage_language_columns',		'qtrans_language_columns');
 
 ?>
