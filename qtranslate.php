@@ -158,6 +158,8 @@ $q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,di
 
 /* DEFAULT CONFIGURATION PART ENDS HERE */
 
+$q_config['term_name'] = array();
+
 // Load qTranslate
 require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_javascript.php");
 require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_utils.php");

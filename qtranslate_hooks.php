@@ -122,6 +122,7 @@ function qtrans_postsFilter($posts) {
 // Hooks (Actions)
 add_action('wp_head',						'qtrans_header');
 add_action('edit_category_form',			'qtrans_modifyCategoryForm');
+add_action('add_tag_form',					'qtrans_modifyTagForm');
 add_action('edit_tag_form',					'qtrans_modifyTagForm');
 add_action('edit_link_category_form',		'qtrans_modifyLinkCategoryForm');
 add_action('plugins_loaded',				'qtrans_widget_init'); 
@@ -145,12 +146,12 @@ add_filter('get_the_time',					'qtrans_timeFromPostForCurrentLanguage',0,3);
 add_filter('the_time',						'qtrans_timeFromPostForCurrentLanguage',0,2);
 add_filter('the_date',						'qtrans_dateFromPostForCurrentLanguage',0,4);
 add_filter('locale',						'qtrans_localeForCurrentLanguage',99);
-add_filter('get_the_tags',					'qtrans_convertGetTheTags',0);
-add_filter('get_tags',						'qtrans_convertGetTheTags',0);
+//add_filter('get_the_tags',					'qtrans_convertGetTheTags',0);
+//add_filter('get_tags',						'qtrans_convertGetTheTags',0);
 add_filter('term_name',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('tag_rows',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('cat_row',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('cat_rows',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('cat_row',						'qtrans_useCategoryLib',0);
+add_filter('cat_rows',						'qtrans_useCategoryLib',0);
 add_filter('list_cats',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_list_categories',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_dropdown_cats',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
@@ -171,7 +172,7 @@ add_filter('widget_text',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLang
 add_filter('category_description',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('bloginfo_rss',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('the_category_rss',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('category_name',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('get_terms',						'qtrans_useTermLib',0);
 add_filter('wp_tag_cloud',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_generate_tag_cloud',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('term_links-post_tag',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);

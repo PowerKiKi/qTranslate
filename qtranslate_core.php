@@ -24,7 +24,6 @@ function qtrans_init() {
 	// check if it isn't already initialized
 	if(defined('QTRANS_INIT')) return;
 	define('QTRANS_INIT',true);
-	
 	// load configuration if not beeing reseted
 	if(isset($_POST['qtranslate_reset']) && isset($_POST['qtranslate_reset2']) && defined('WP_ADMIN') && current_user_can('manage_options')) {
 		// reset all settings
@@ -52,6 +51,9 @@ function qtrans_init() {
 	
 	// update Gettext Databases if on Backend
 	if(defined('WP_ADMIN') && $q_config['auto_update_mo']) qtrans_updateGettextDatabases();
+	
+	// update definitions if neccesary
+	if(defined('WP_ADMIN') && current_user_can('manage_options')) qtrans_updateTermLibrary();
 	
 	// extract url information
 	$url_info = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
@@ -191,6 +193,7 @@ function qtrans_loadConfig() {
 	$detect_browser_language = get_option('qtranslate_detect_browser_language');
 	$hide_untranslated = get_option('qtranslate_hide_untranslated');
 	$auto_update_mo = get_option('qtranslate_auto_update_mo');
+	$term_name = get_option('qtranslate_term_name');
 	
 	// default if not set
 	if(!is_array($ignore_file_types)) $ignore_file_types = $q_config['ignore_file_types'];
@@ -201,6 +204,7 @@ function qtrans_loadConfig() {
 	if(!is_array($flags)) $flags = $q_config['flag'];
 	if(!is_array($language_names)) $language_names = $q_config['language_name'];
 	if(!is_array($enabled_languages)) $enabled_languages = $q_config['enabled_languages'];
+	if(!is_array($term_name)) $term_name = $q_config['term_name'];
 	if(empty($default_language)) $default_language = $q_config['default_language'];
 	if($flag_location=='') $flag_location = $q_config['flag_location'];
 	if($use_strftime==='0') $use_strftime = false; else $use_strftime = true;
@@ -226,6 +230,7 @@ function qtrans_loadConfig() {
 	$q_config['detect_browser_language'] = $detect_browser_language;
 	$q_config['hide_untranslated'] = $hide_untranslated;
 	$q_config['auto_update_mo'] = $auto_update_mo;
+	$q_config['term_name'] = $term_name;
 	
 }
 
@@ -289,6 +294,29 @@ function qtrans_updateGettextDatabases($force = false) {
 		}
 	}
 	return true;
+}
+
+function qtrans_updateTermLibrary() {
+	global $q_config;
+	switch($_POST['action']) {
+		case 'editedtag':
+		case 'addtag':
+		case 'editedcat':
+		case 'addcat':
+			if($_POST['qtrans_term_'.$q_config['default_language']]!='') {
+				$default = $_POST['qtrans_term_'.$q_config['default_language']];
+				if(!is_array($q_config['term_name'][$default])) $q_config['term_name'][$default] = array();
+				foreach($q_config['enabled_languages'] as $lang) {
+					if($_POST['qtrans_term_'.$lang]!='') {
+						$q_config['term_name'][$default][$lang] = $_POST['qtrans_term_'.$lang];
+					} else {
+						$q_config['term_name'][$default][$lang] = $default;
+					}
+				}
+				update_option('qtranslate_term_name',$q_config['term_name']);
+			}
+		break;
+	}
 }
 
 /* BEGIN DATE FUNCTIONS */
@@ -407,6 +435,21 @@ function qtrans_timeFromPostForCurrentLanguage($old_date, $format = '', $gmt = f
 
 /* END TIME FUNCTIONS */
 
+function qtrans_useTermLib($obj) {
+	global $q_config;
+	if(is_array($obj)) {
+		// handle arrays recursively
+		foreach($obj as $key => $t) {
+			$obj[$key] = qtrans_useTermLib($obj[$key]);
+		}
+		return $obj;
+	}
+	if(isset($q_config['term_name'][$obj->name][$q_config['language']])) {
+		$obj->name = $q_config['term_name'][$obj->name][$q_config['language']];
+	} 
+	return $obj;
+}
+/*
 function qtrans_convertGetTheTags($tags) {
 	if(empty($tags)) return $tags;
 	foreach($tags as $id => $tag) {
@@ -414,7 +457,7 @@ function qtrans_convertGetTheTags($tags) {
 	}
 	return $tags;
 }
-
+*/
 function qtrans_convertBlogInfoURL($url, $what) {
 	if($what=='stylesheet_url') return $url;
 	if($what=='template_url') return $url;

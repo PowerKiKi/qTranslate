@@ -19,53 +19,37 @@
 
 /* Modifications Hacks to get Wordpress work the way it should */
 
-// modifys category form to support multilingual content
-function qtrans_modifyCategoryForm($category) {
+// modifys term form to support multilingual content
+function qtrans_modifyTermForm($id, $name, $term) {
 	global $q_config;
 	echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
-	// include needed js functions
-	//echo $q_config['js']['qtrans_integrate'];
-	//echo $q_config['js']['qtrans_use'];
-	//echo $q_config['js']['qtrans_integrate_category'];
 	// create input fields for each language
 	foreach($q_config['enabled_languages'] as $language) {
-		echo qtrans_insertCategoryInput($language);
+		if($_GET['action']=='edit') {
+			echo qtrans_insertTermInput2($id, $name, $term->name, $language);
+		} else {
+			echo qtrans_insertTermInput($id, $name, $term->name, $language);
+		}
 	}
 	// hide real category text
-	//echo "document.getElementById('cat_name').parentNode.style.display='none';\n";
+	if($_GET['action']=='edit') {
+		echo "ins.parentNode.style.display='none';\n";
+	} else {
+		echo "ins.style.display='none';\n";
+	}
 	echo "// ]]>\n</script>\n";
 }
 
-function qtrans_modifyTagForm($tag) {
-	global $q_config;
-	echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
-	// include needed js functions
-	echo $q_config['js']['qtrans_integrate'];
-	echo $q_config['js']['qtrans_use'];
-	echo $q_config['js']['qtrans_integrate_tag'];
-	// create input fields for each language
-	foreach($q_config['enabled_languages'] as $language) {
-		echo qtrans_insertTagInput($language);
-	}
-	// hide real category text
-	echo "document.getElementById('name').parentNode.parentNode.style.display='none';\n";
-	echo "// ]]>\n</script>\n";
+function qtrans_modifyCategoryForm($term) {
+	return qtrans_modifyTermForm('cat_name', __('Category Name'), $term);
 }
 
-function qtrans_modifyLinkCategoryForm($category) {
-	global $q_config;
-	echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
-	// include needed js functions
-	echo $q_config['js']['qtrans_integrate'];
-	echo $q_config['js']['qtrans_use'];
-	echo $q_config['js']['qtrans_integrate_link_category'];
-	// create input fields for each language
-	foreach($q_config['enabled_languages'] as $language) {
-		echo qtrans_insertLinkCategoryInput($language);
-	}
-	// hide real category text
-	echo "document.getElementById('name').parentNode.parentNode.style.display='none';\n";
-	echo "// ]]>\n</script>\n";
+function qtrans_modifyTagForm($term) {
+	return qtrans_modifyTermForm('name', __('Tag Name'), $term);
+}
+
+function qtrans_modifyLinkCategoryForm($term) {
+	return qtrans_modifyTermForm('name', __('Category Name'), $term);
 }
 
 // Modifys TinyMCE to edit multilingual content
@@ -118,8 +102,6 @@ function qtrans_modifyRichEditor($old_content) {
 	$content .= $q_config['js']['qtrans_get_active_language'];
 
 	// insert language, visual and html buttons
-	//$content .= qtrans_createEditorToolbarButton('html', $id);
-	//$content .= qtrans_createEditorToolbarButton('visual', $id);
 	$el = $q_config['enabled_languages'];
 	sort($el);
 	foreach($el as $language) {
@@ -129,12 +111,6 @@ function qtrans_modifyRichEditor($old_content) {
 	foreach($el as $language) {
 		$content .= qtrans_createEditorToolbarButton($language, $id);
 	}
-	
-	// remove old buttons
-	//$content .= "document.getElementById('editor-toolbar').removeChild(document.getElementById('edButtonPreview'));\n";
-	//$content .= "document.getElementById('editor-toolbar').removeChild(document.getElementById('edButtonHTML'));\n";
-	//$content .= "document.getElementById('edButtonPreview').onclick = function() { switchEditors.go('visual','".$id."'); };\n";
-	//$content .= "document.getElementById('edButtonHTML').onclick = function() { switchEditors.go('html','".$id."'); };\n";
 	
 	// hijack tinymce control
 	$content .= $q_config['js']['qtrans_disable_old_editor'];
@@ -193,22 +169,41 @@ function qtrans_modifyUpload() {
 	echo $content;
 }
 
-function qtrans_insertCategoryInput($language){
+function qtrans_insertTermInput($id,$name,$term,$language){
 	global $q_config;
-	;
 	$html ="
+		var il = document.getElementsByTagName('input');
 		var d =  document.createElement('div');
-		var l = document.createTextNode('".__("Category Name")." (".$q_config['language_name'][$language].")');
+		var l = document.createTextNode('".$name." (".$q_config['language_name'][$language].")');
 		var ll = document.createElement('label');
 		var i = document.createElement('input');
-		var ins = document.getElementById('cat_name').parentNode;
+		var ins = null;
+		for(var j = 0; j < il.length; j++) {
+			if(il[j].id=='".$id."') {
+				ins = il[j].parentNode;
+				break;
+			}
+		}
 		i.type = 'text';
-		i.id = i.name = ll.htmlFor ='qtrans_category_".$language."';
-		i.value = '".$q_config['category_name'][$language]."';
+		i.id = i.name = ll.htmlFor ='qtrans_term_".$language."';
+	";
+	if(isset($q_config['term_name'][$term][$language])) {
+	$html .="
+		i.value = '".$q_config['term_name'][$term][$language]."';
 		";
+	}
 	if($language == $q_config['default_language']) {
 		$html .="
-			i.onchange = function() { document.getElementById('cat_name').value = document.getElementById('qtrans_category_".$language."').value; };
+			i.onchange = function() { 
+				var ins = null;
+				for(var j = 0; j < il.length; j++) {
+					if(il[j].id=='".$id."') {
+						ins = il[j];
+						break;
+					}
+				}
+				ins.value = document.getElementById('qtrans_term_".$language."').value;
+			};
 			";
 	}
 	$html .="
@@ -221,22 +216,40 @@ function qtrans_insertCategoryInput($language){
 	return $html;	
 }
 
-function qtrans_insertTagInput($language){
+function qtrans_insertTermInput2($id,$name,$term,$language){
 	global $q_config;
 	$html ="
 		var tr = document.createElement('tr');
 		var th = document.createElement('th');
 		var ll = document.createElement('label');
-		var l = document.createTextNode('".$q_config['language_name'][$language]." ".__("Tag name")."');
+		var l = document.createTextNode('".$name." (".$q_config['language_name'][$language].")');
 		var td = document.createElement('td');
 		var i = document.createElement('input');
-		var ins = document.getElementById('name').parentNode.parentNode;
+		var ins = document.getElementById('".$id."').parentNode.parentNode;
 		i.type = 'text';
-		i.id = i.name = ll.htmlFor ='qtrans_tag_".$language."';
-		i.value = qtrans_use('".$language."', document.getElementById('name').value);
-		i.onchange = qtrans_integrate_tag;
-		td.width = '67%';
-		th.width = '33%';
+		i.id = i.name = ll.htmlFor ='qtrans_term_".$language."';
+	";
+	if(isset($q_config['term_name'][$term][$language])) {
+	$html .="
+		i.value = '".$q_config['term_name'][$term][$language]."';
+		";
+	}
+	if($language == $q_config['default_language']) {
+		$html .="
+			i.onchange = function() { 
+				var ins = null;
+				for(var j = 0; j < il.length; j++) {
+					if(il[j].id=='".$id."') {
+						ins = il[j];
+						break;
+					}
+				}
+				ins.value = document.getElementById('qtrans_term_".$language."').value;
+			};
+			";
+	}
+	$html .="
+		tr.className = 'form-field form-required';
 		th.scope = 'row';
 		th.vAlign = 'top';
 		ll.appendChild(l);
@@ -246,35 +259,7 @@ function qtrans_insertTagInput($language){
 		tr.appendChild(td);
 		ins.parentNode.insertBefore(tr,ins);
 		";
-	return $html;	
-}
-
-function qtrans_insertLinkCategoryInput($language){
-	global $q_config;
-	$html ="
-		var tr = document.createElement('tr');
-		var th = document.createElement('th');
-		var ll = document.createElement('label');
-		var l = document.createTextNode('".$q_config['language_name'][$language]." ".__("Category name")."');
-		var td = document.createElement('td');
-		var i = document.createElement('input');
-		var ins = document.getElementById('name').parentNode.parentNode;
-		i.type = 'text';
-		i.id = i.name = ll.htmlFor ='qtrans_link_category_".$language."';
-		i.value = qtrans_use('".$language."', document.getElementById('name').value);
-		i.onchange = qtrans_integrate_link_category;
-		td.width = '67%';
-		th.width = '33%';
-		th.scope = 'row';
-		th.vAlign = 'top';
-		ll.appendChild(l);
-		th.appendChild(ll);
-		tr.appendChild(th);
-		td.appendChild(i);
-		tr.appendChild(td);
-		ins.parentNode.insertBefore(tr,ins);
-		";
-	return $html;	
+	return $html;
 }
 
 function qtrans_insertTitleInput($language){
