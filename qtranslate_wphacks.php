@@ -32,11 +32,7 @@ function qtrans_modifyTermForm($id, $name, $term) {
 		}
 	}
 	// hide real category text
-	if($_GET['action']=='edit') {
-		echo "ins.parentNode.style.display='none';\n";
-	} else {
-		echo "ins.style.display='none';\n";
-	}
+	echo "ins.style.display='none';\n";
 	echo "// ]]>\n</script>\n";
 }
 

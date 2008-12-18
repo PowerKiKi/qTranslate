@@ -43,6 +43,9 @@ function qtrans_init() {
 		delete_option('qtranslate_hide_untranslated');
 		delete_option('qtranslate_auto_update_mo');
 		delete_option('qtranslate_next_update_mo');
+		if(isset($_POST['qtranslate_reset3'])) {
+			delete_option('qtranslate_term_name');
+		}
 	}
 	qtrans_loadConfig();
 	
@@ -75,7 +78,7 @@ function qtrans_init() {
 	}
 
 	// detect language and forward if needed
-	if($url_info['redirect'] && $url_info['language'] == $q_config['default_language']) {
+	if($q_config['detect_browser_language'] && $url_info['redirect'] && $url_info['language'] == $q_config['default_language']) {
 		$prefered_languages = array();
 		if(preg_match_all("#([^;,]+)(;[^,0-9]*([0-9\.]+)[^,]*)?#i",$_SERVER["HTTP_ACCEPT_LANGUAGE"], $matches, PREG_SET_ORDER)) {
 			foreach($matches as $match) {
@@ -263,7 +266,10 @@ function qtrans_saveConfig() {
 
 function qtrans_updateGettextDatabases($force = false) {
 	global $q_config;
-	if(!is_dir(ABSPATH.'wp-content/languages/')) return false;
+	if(!is_dir(ABSPATH.'wp-content/languages/')) {
+		if(!@mkdir(ABSPATH.'wp-content/languages/'))
+			return false;
+	}
 	$next_update = get_option('qtranslate_next_update_mo');
 	if(time() < $next_update && !$force) return true;
 	update_option('qtranslate_next_update_mo', time() + 7*24*60*60);

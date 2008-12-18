@@ -103,12 +103,12 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 <div class="form-field">
 	<label for="language_date_format"><?php _e('Date Format') ?></label>
 	<input name="language_date_format" id="language_date_format" type="text" value="<?php echo $language_date_format; ?>" size="2" maxlength="2"/>
-    <p><?php _e('... (Example: en)'); ?></p>
+    <p><?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a> by default! Use %q for day suffix (st,nd,rd,th). (Example: %A %B %e%q, %Y)'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_time_format"><?php _e('Time Format') ?></label>
 	<input name="language_time_format" id="language_time_format" type="text" value="<?php echo $language_time_format; ?>" size="2" maxlength="2"/>
-    <p><?php _e('... (Example: en)'); ?></p>
+    <p><?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a> by default! (Example: %I:%M %p)'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_na_message"><?php _e('Not Available Message') ?></label>
@@ -341,6 +341,14 @@ function qtranslate_conf() {
 			qtrans_disableLanguage($_GET['disable']);
 		}
 	}
+	if($q_config['auto_update_mo']) {
+		if(!is_dir(ABSPATH.'wp-content/languages/') || !$ll = @fopen(ABSPATH.'wp-content/languages/qtranslate.test','a')) {
+			$message = sprintf(__('Could not write to "%s", Gettext Databases could not be downloaded!'), ABSPATH.'wp-content/languages/');
+		} else {
+			@fclose($ll);
+			@unlink(ABSPATH.'wp-content/languages/qtranslate.test');
+		}
+	}
 	$everything_fine = ((isset($_POST['submit'])||isset($_GET['delete'])||isset($_GET['enable'])||isset($_GET['disable']))&&$error=='');
 	if($everything_fine) {
 		// settings might have changed, so save
@@ -457,6 +465,8 @@ function qtranslate_conf() {
 					<br/>
 					<label for="qtranslate_reset2"><input type="checkbox" name="qtranslate_reset2" id="qtranslate_reset2" value="1"/> <?php _e('Yes, I really want to reset qTranslate.'); ?></label>
 					<br/>
+					<label for="qtranslate_reset3"><input type="checkbox" name="qtranslate_reset3" id="qtranslate_reset3" value="1"/> <?php _e('Also delete Translations for Categories/Tags/Link Categories.'); ?></label>
+					<br/>
 					<?php _e('If something isn\'t working correctly, you can always try to reset all qTranslate settings. A Reset won\'t delete any posts but will remove all settings (including all languages added).'); ?>
 				</td>
 			</tr>
@@ -521,6 +531,7 @@ function qtranslate_conf() {
 <h3><?php _e('Add Language'); ?></h3>
 <form name="addcat" id="addcat" method="post" action="categories.php" class="add:the-list: validate">
 <?php qtranslate_language_form($language_code, $language_code, $language_name, $language_locale, $language_date_format, $language_time_format, $language_flag, $language_default, $language_na_message); ?>
+<p class="submit"><input type="submit" name="submit" value="<?php _e('Add Language &raquo;'); ?>" /></p>
 </form></div>
 </div>
 </div><!-- /col-left -->
