@@ -46,14 +46,6 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 	<input name="language_code" id="language_code" type="text" value="<?php echo $language_code; ?>" size="2" maxlength="2"/>
     <p><?php _e('2-Letter <a href="http://www.w3.org/WAI/ER/IG/ert/iso639.htm#2letter">ISO Language Code</a> for the Language you want to insert. (Example: en)'); ?></p>
 </div>
-<script type="text/javascript">
-//<![CDATA[
-	function switch_flag(url) {
-		document.getElementById('preview_flag').style.display = "inline";
-		document.getElementById('preview_flag').src = "<?php echo get_option('home').'/'.$q_config['flag_location'];?>" + url;
-	}
-//]]>
-</script>
 <div class="form-field">
 	<label for="language_flag"><?php _e('Flag') ?></label>
 	<?php 
@@ -68,7 +60,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 	}
 	if(sizeof($files)>0){
 	?>
-	<select name="language_flag" id="language_flag" onchange="switch_flag(this.value);">
+	<select name="language_flag" id="language_flag" onchange="switch_flag(this.value);"  onclick="switch_flag(this.value);" onkeypress="switch_flag(this.value);">
 	<?php
 		foreach ($files as $file) {
 	?>
@@ -85,6 +77,16 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 	?>
     <p><?php _e('Choose the corresponding country flag for language. (Example: gb.png)'); ?></p>
 </div>
+<script type="text/javascript">
+//<![CDATA[
+	function switch_flag(url) {
+		document.getElementById('preview_flag').style.display = "inline";
+		document.getElementById('preview_flag').src = "<?php echo get_option('home').'/'.$q_config['flag_location'];?>" + url;
+	}
+	
+	switch_flag(document.getElementById('language_flag').value);
+//]]>
+</script>
 <div class="form-field">
 	<label for="language_name"><?php _e('Name') ?></label>
 	<input name="language_name" id="language_name" type="text" value="<?php echo $language_name; ?>"/>
@@ -220,7 +222,7 @@ function qtranslate_conf() {
 	
 	// check for action
 	if(isset($_POST['qtranslate_reset']) && isset($_POST['qtranslate_reset2'])) {
-		$message = "qTranslate has been reset.";
+		$message = _('qTranslate has been reset.');
 	} else {
 		// save settings
 		qtrans_checkSetting('default_language',			true, QT_STRING, true);
@@ -229,6 +231,9 @@ function qtranslate_conf() {
 		qtrans_checkSetting('detect_browser_language',	true, QT_BOOLEAN);
 		qtrans_checkSetting('hide_untranslated',		true, QT_BOOLEAN);
 		qtrans_checkSetting('url_mode',					true, QT_INTEGER);
+		qtrans_checkSetting('auto_update_mo',			true, QT_BOOLEAN);
+		if($_POST['update_mo_now']=='1' && qtrans_updateGettextDatabases(true))
+			$message = __('Gettext databases updated.');
 	}
 	
 	if(isset($_POST['original_lang'])) {
@@ -422,7 +427,7 @@ function qtranslate_conf() {
 			<tr valign="top">
 				<th scope="row"><?php _e('Flag Image Path');?></th>
 				<td>
-					<input type="text" name="flag_location" id="flag_location" value="<?php echo $q_config['flag_location']; ?>" style="width:95%"/>
+					<input type="text" name="flag_location" id="flag_location" value="<?php echo $q_config['flag_location']; ?>" style="width:100%"/>
 					<br/>
 					<?php _e('Relative path to the flag images, with trailing slash. (Default: wp-content/plugins/qtranslate/flags/)'); ?>
 				</td>
@@ -430,9 +435,19 @@ function qtranslate_conf() {
 			<tr valign="top">
 				<th scope="row"><?php _e('Ignore Links');?></th>
 				<td>
-					<input type="text" name="ignore_file_types" id="ignore_file_types" value="<?php echo $q_config['ignore_file_types']; ?>" style="width:95%"/>
+					<input type="text" name="ignore_file_types" id="ignore_file_types" value="<?php echo $q_config['ignore_file_types']; ?>" style="width:100%"/>
 					<br/>
 					<?php _e('Don\'t convert Links to files of the given file types. (Default: gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js)'); ?>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e('Update Gettext Databases');?></th>
+				<td>
+					<label for="auto_update_mo"><input type="checkbox" name="auto_update_mo" id="auto_update_mo" value="1"<?php echo ($q_config['auto_update_mo'])?' checked="checked"':''; ?>/> <?php _e('Automatically check for .mo-Database Updates of installed languages.'); ?></label>
+					<br/>
+					<label for="update_mo_now"><input type="checkbox" name="update_mo_now" id="update_mo_now" value="1" /> <?php _e('Update Gettext databases now.'); ?></label>
+					<br/>
+					<?php _e('qTranslate will query the Wordpress Localisation Repository every week and download the latest Gettext Databases (.mo Files).'); ?>
 				</td>
 			</tr>
 			<tr valign="top">

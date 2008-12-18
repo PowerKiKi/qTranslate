@@ -66,13 +66,16 @@ $q_config['detect_browser_language'] = true;
 // hide pages without content
 $q_config['hide_untranslated'] = true;
 
+// automatically update .mo files
+$q_config['auto_update_mo'] = true;
+
 // sets default url mode 
 // QT_URL_QUERY - query (questionmark)
 // QT_URL_PATH - pre-path
 // QT_URL_DOMAIN - pre-domain
 $q_config['url_mode'] = QT_URL_PATH;
 
-// pre-Domain Endings
+// pre-Domain Endings - for future use
 $q_config['pre_domain']['de'] = "de";
 $q_config['pre_domain']['en'] = "en";
 $q_config['pre_domain']['zh'] = "zh";
@@ -97,7 +100,7 @@ $q_config['language_name']['it'] = "Italiano";
 $q_config['locale']['de'] = "de_DE";
 $q_config['locale']['en'] = "en_US";
 $q_config['locale']['zh'] = "zh_CN";
-$q_config['locale']['fi'] = "fi_FI";
+$q_config['locale']['fi'] = "fi";
 $q_config['locale']['fr'] = "fr_FR";
 $q_config['locale']['nl'] = "nl_NL";
 $q_config['locale']['se'] = "sv_SE";

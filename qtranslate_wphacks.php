@@ -24,15 +24,15 @@ function qtrans_modifyCategoryForm($category) {
 	global $q_config;
 	echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
 	// include needed js functions
-	echo $q_config['js']['qtrans_integrate'];
-	echo $q_config['js']['qtrans_use'];
-	echo $q_config['js']['qtrans_integrate_category'];
+	//echo $q_config['js']['qtrans_integrate'];
+	//echo $q_config['js']['qtrans_use'];
+	//echo $q_config['js']['qtrans_integrate_category'];
 	// create input fields for each language
 	foreach($q_config['enabled_languages'] as $language) {
 		echo qtrans_insertCategoryInput($language);
 	}
 	// hide real category text
-	echo "document.getElementById('cat_name').parentNode.parentNode.style.display='none';\n";
+	//echo "document.getElementById('cat_name').parentNode.style.display='none';\n";
 	echo "// ]]>\n</script>\n";
 }
 
@@ -195,28 +195,28 @@ function qtrans_modifyUpload() {
 
 function qtrans_insertCategoryInput($language){
 	global $q_config;
+	;
 	$html ="
-		var tr = document.createElement('tr');
-		var th = document.createElement('th');
+		var d =  document.createElement('div');
+		var l = document.createTextNode('".__("Category Name")." (".$q_config['language_name'][$language].")');
 		var ll = document.createElement('label');
-		var l = document.createTextNode('".$q_config['language_name'][$language]." ".__("Category name")."');
-		var td = document.createElement('td');
 		var i = document.createElement('input');
-		var ins = document.getElementById('cat_name').parentNode.parentNode;
+		var ins = document.getElementById('cat_name').parentNode;
 		i.type = 'text';
 		i.id = i.name = ll.htmlFor ='qtrans_category_".$language."';
-		i.value = qtrans_use('".$language."', document.getElementById('cat_name').value);
-		i.onchange = qtrans_integrate_category;
-		td.width = '67%';
-		th.width = '33%';
-		th.scope = 'row';
-		th.vAlign = 'top';
+		i.value = '".$q_config['category_name'][$language]."';
+		";
+	if($language == $q_config['default_language']) {
+		$html .="
+			i.onchange = function() { document.getElementById('cat_name').value = document.getElementById('qtrans_category_".$language."').value; };
+			";
+	}
+	$html .="
+		d.className = 'form-field form-required';
 		ll.appendChild(l);
-		th.appendChild(ll);
-		tr.appendChild(th);
-		td.appendChild(i);
-		tr.appendChild(td);
-		ins.parentNode.insertBefore(tr,ins);
+		d.appendChild(ll);
+		d.appendChild(i);
+		ins.parentNode.insertBefore(d,ins);
 		";
 	return $html;	
 }

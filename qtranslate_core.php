@@ -40,13 +40,18 @@ function qtrans_init() {
 		delete_option('qtranslate_use_strftime');
 		delete_option('qtranslate_ignore_file_types');
 		delete_option('qtranslate_url_mode');
-		delete_option('detect_browser_language');
-		delete_option('hide_untranslated');
+		delete_option('qtranslate_detect_browser_language');
+		delete_option('qtranslate_hide_untranslated');
+		delete_option('qtranslate_auto_update_mo');
+		delete_option('qtranslate_next_update_mo');
 	}
 	qtrans_loadConfig();
 	
 	// init Javascript functions
 	qtrans_initJS();
+	
+	// update Gettext Databases if on Backend
+	if(defined('WP_ADMIN') && $q_config['auto_update_mo']) qtrans_updateGettextDatabases();
 	
 	// extract url information
 	$url_info = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
@@ -183,8 +188,9 @@ function qtrans_loadConfig() {
 	$use_strftime = get_option('qtranslate_use_strftime');
 	$ignore_file_types = get_option('qtranslate_ignore_file_types');
 	$url_mode = get_option('qtranslate_url_mode');
-	$detect_browser_language = get_option('detect_browser_language');
-	$hide_untranslated = get_option('hide_untranslated');
+	$detect_browser_language = get_option('qtranslate_detect_browser_language');
+	$hide_untranslated = get_option('qtranslate_hide_untranslated');
+	$auto_update_mo = get_option('qtranslate_auto_update_mo');
 	
 	// default if not set
 	if(!is_array($ignore_file_types)) $ignore_file_types = $q_config['ignore_file_types'];
@@ -200,6 +206,7 @@ function qtrans_loadConfig() {
 	if($use_strftime==='0') $use_strftime = false; else $use_strftime = true;
 	if($detect_browser_language==='0') $detect_browser_language = false; else $detect_browser_language = true;
 	if($hide_untranslated==='0') $hide_untranslated = false; else $hide_untranslated = true;
+	if($auto_update_mo==='0') $auto_update_mo = false; else $auto_update_mo = true;
 	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
 	if(strpos(get_option('permalink_structure'),'?')===true||strpos(get_option('permalink_structure'),'index.php')===true) $url_mode = QT_URL_QUERY;
 	
@@ -218,6 +225,7 @@ function qtrans_loadConfig() {
 	$q_config['url_mode'] = $url_mode;
 	$q_config['detect_browser_language'] = $detect_browser_language;
 	$q_config['hide_untranslated'] = $hide_untranslated;
+	$q_config['auto_update_mo'] = $auto_update_mo;
 	
 }
 
@@ -246,6 +254,41 @@ function qtrans_saveConfig() {
 	else
 		update_option('qtranslate_use_strftime', '0');
 		
+}
+
+function qtrans_updateGettextDatabases($force = false) {
+	global $q_config;
+	if(!is_dir(ABSPATH.'wp-content/languages/')) return false;
+	$next_update = get_option('qtranslate_next_update_mo');
+	if(time() < $next_update && !$force) return true;
+	update_option('qtranslate_next_update_mo', time() + 7*24*60*60);
+	foreach($q_config['locale'] as $locale) {
+		if($ll = @fopen(ABSPATH.'wp-content/languages/'.$locale.'.mo','a')) {
+			// can access .mo file
+			fclose($ll);
+			// try to find a .mo file
+			if(!($locale == 'en_US' && $lcr = @fopen('http://www.qianqin.de/wp-content/languages/'.$locale.'.mo','r')))
+			if(!$lcr = @fopen('http://svn.automattic.com/wordpress-i18n/'.$locale.'/tags/'.$GLOBALS['wp_version'].'/messages/'.$locale.'.mo','r'))
+			if(!$lcr = @fopen('http://svn.automattic.com/wordpress-i18n/'.substr($locale,0,2).'/tags/'.$GLOBALS['wp_version'].'/messages/'.$locale.'.mo','r'))
+			if(!$lcr = @fopen('http://svn.automattic.com/wordpress-i18n/'.$locale.'/trunk/messages/'.$locale.'.mo','r')) 
+			if(!$lcr = @fopen('http://svn.automattic.com/wordpress-i18n/'.substr($locale,0,2).'/trunk/messages/'.$locale.'.mo','r')) {
+				// couldn't find a .mo file
+				if(filesize(ABSPATH.'wp-content/languages/'.$locale.'.mo')==0) unlink(ABSPATH.'wp-content/languages/'.$locale.'.mo');
+				continue;
+			}
+			// found a .mo file, update local .mo
+			$ll = fopen(ABSPATH.'wp-content/languages/'.$locale.'.mo','w');
+			while(!feof($lcr)) {
+				// try to get some more time
+				set_time_limit(30);
+				$lc = fread($lcr, 8192);
+				fwrite($ll,$lc);
+			}
+			fclose($lcr);
+			fclose($ll);
+		}
+	}
+	return true;
 }
 
 /* BEGIN DATE FUNCTIONS */
