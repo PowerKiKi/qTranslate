@@ -296,6 +296,17 @@ function qtranslate_conf() {
 			$language_flag = $_POST['language_flag'];
 			$language_default = $_POST['language_default'];
 		}
+	} elseif(isset($_GET['convert'])){
+		// update language tags
+		global $wpdb;
+		$wpdb->show_errors();
+		foreach($q_config['enabled_languages'] as $lang) {
+			$wpdb->query('UPDATE '.$wpdb->posts.' set post_title = REPLACE(post_title, "[lang_'.$lang.']","<!--:'.$lang.'-->")');
+			$wpdb->query('UPDATE '.$wpdb->posts.' set post_title = REPLACE(post_title, "[/lang_'.$lang.']","<!--:-->")');
+			$wpdb->query('UPDATE '.$wpdb->posts.' set post_content = REPLACE(post_content, "[lang_'.$lang.']","<!--:'.$lang.'-->")');
+			$wpdb->query('UPDATE '.$wpdb->posts.' set post_content = REPLACE(post_content, "[/lang_'.$lang.']","<!--:-->")');
+		}
+		$message = "Database Update successful!";
 	} elseif(isset($_GET['edit'])){
 		$original_lang = $_GET['edit'];
 		$language_code = $_GET['edit'];
@@ -468,6 +479,12 @@ function qtranslate_conf() {
 					<label for="qtranslate_reset3"><input type="checkbox" name="qtranslate_reset3" id="qtranslate_reset3" value="1"/> <?php _e('Also delete Translations for Categories/Tags/Link Categories.'); ?></label>
 					<br/>
 					<?php _e('If something isn\'t working correctly, you can always try to reset all qTranslate settings. A Reset won\'t delete any posts but will remove all settings (including all languages added).'); ?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php _e('Convert Database');?></th>
+				<td>
+					<?php printf(__('If you are updating from qTranslate 1.x, <a href="%s">click here</a> to convert posts to the new language tag format. This process is <b>irreversible</b>! Be sure to make a full database backup before clicking the link.'), $clean_uri.'&convert=true'); ?>
 				</td>
 			</tr>
 		</table>

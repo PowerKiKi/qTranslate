@@ -176,7 +176,7 @@ function qtrans_insertTermInput($id,$name,$term,$language){
 		var ins = null;
 		for(var j = 0; j < il.length; j++) {
 			if(il[j].id=='".$id."') {
-				ins = il[j].parentNode;
+				ins = il[j];
 				break;
 			}
 		}
@@ -186,6 +186,10 @@ function qtrans_insertTermInput($id,$name,$term,$language){
 	if(isset($q_config['term_name'][$term][$language])) {
 	$html .="
 		i.value = '".$q_config['term_name'][$term][$language]."';
+		";
+	} else {
+	$html .="
+		i.value = ins.value;
 		";
 	}
 	if($language == $q_config['default_language']) {
@@ -203,6 +207,7 @@ function qtrans_insertTermInput($id,$name,$term,$language){
 			";
 	}
 	$html .="
+		ins = ins.parentNode;
 		d.className = 'form-field form-required';
 		ll.appendChild(l);
 		d.appendChild(ll);
@@ -221,13 +226,17 @@ function qtrans_insertTermInput2($id,$name,$term,$language){
 		var l = document.createTextNode('".$name." (".$q_config['language_name'][$language].")');
 		var td = document.createElement('td');
 		var i = document.createElement('input');
-		var ins = document.getElementById('".$id."').parentNode.parentNode;
+		var ins = document.getElementById('".$id."');
 		i.type = 'text';
 		i.id = i.name = ll.htmlFor ='qtrans_term_".$language."';
 	";
 	if(isset($q_config['term_name'][$term][$language])) {
 	$html .="
 		i.value = '".$q_config['term_name'][$term][$language]."';
+		";
+	} else {
+	$html .="
+		i.value = ins.value;
 		";
 	}
 	if($language == $q_config['default_language']) {
@@ -245,6 +254,7 @@ function qtrans_insertTermInput2($id,$name,$term,$language){
 			";
 	}
 	$html .="
+		ins = ins.parentNode.parentNode;
 		tr.className = 'form-field form-required';
 		th.scope = 'row';
 		th.vAlign = 'top';
