@@ -50,9 +50,9 @@ define('QT_SUPPORTED_WP_VERSION', '2.7');
 define('QT_STRING',		1);
 define('QT_BOOLEAN',	2);
 define('QT_INTEGER',	3);
-define('QT_URL_QUERY',	0);
-define('QT_URL_PATH',	1);
-define('QT_URL_DOMAIN',	2);
+define('QT_URL_QUERY',	1);
+define('QT_URL_PATH',	2);
+define('QT_URL_DOMAIN',	3);
 
 // enable the use of following languages
 $q_config['enabled_languages'] = array('en', 'de', 'zh');

@@ -155,6 +155,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 		// language override given
 		$result['language'] = $_GET['lang'];
 		$result['url'] = preg_replace("#(&|\?)lang=".$result['language']."&?#i","$1",$result['url']);
+		$result['url'] = preg_replace("#\&+$#i","",$result['url']);
 	} elseif($home['host'] == $result['host'] && $home['path'] == $result['url']) {
 		if(empty($referer['host'])) {
 			$result['redirect'] = true;
