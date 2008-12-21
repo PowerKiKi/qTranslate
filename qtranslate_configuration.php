@@ -484,7 +484,7 @@ function qtranslate_conf() {
 			<tr>
 				<th scope="row"><?php _e('Convert Database');?></th>
 				<td>
-					<?php printf(__('If you are updating from qTranslate 1.x, <a href="%s">click here</a> to convert posts to the new language tag format. This process is <b>irreversible</b>! Be sure to make a full database backup before clicking the link.'), $clean_uri.'&convert=true'); ?>
+					<?php printf(__('If you are updating from qTranslate 1.x or Polyglot, <a href="%s">click here</a> to convert posts to the new language tag format. This process is <b>irreversible</b>! Be sure to make a full database backup before clicking the link.'), $clean_uri.'&convert=true'); ?>
 				</td>
 			</tr>
 		</table>
