@@ -15,16 +15,14 @@ Writing multilingual content is already hard enough, why make the plugin even mo
 qTranslate makes creation of multilingual content as easy as working with a single language.
 
 - No need to edit the plugin file to get your language working! - Use the comfortable Configuration Page
-- No more adding language tags into your text! - Let qTranslate manage them for you
-- No more problems with `<!--more-->` tags in multilingual content! - qTranslate will make them work the way you want it
+- No more adding language tags into your text! - Let qTranslate handle them for you
+- No more problems with `<!--more-->` or `<!--nextpage-->` tags in multilingual content! - qTranslate will make them work the way you want it
 - Add your own language in seconds! - Thanks to the comfortable Configuration Page
 - Comes with a lot of languages already builtin! - English, German, Simplified Chinese and a lot of others
+- No more juggling with .mo-files! - qTranslate will download them automatically for you
 
 qTranslate supports infinite languages, which can be easily added/modified/deleted via the comfortable Configuration Page.
-All you need to do is activate the plugin and start writing the content! Well, almost, you will need to get the .mo languages
-files for the languages you want to use, just like changing Wordpress' language. But there is an easy [tutorial in the 
-official documentation](http://codex.wordpress.org/Installing_WordPress_in_Your_Language#Manually_Installing_Language_Files)
-on how to do to this.
+All you need to do is activate the plugin and start writing the content!
 
 For more Information visit the [Plugin Homepage](http://www.qianqin.de/qtranslate/)
 
@@ -37,7 +35,6 @@ For more detailed instructions, take a look at the [Installation Guide](http://w
 
 Installation of this plugin is fairly easy:
 
-1. Make sure you have the .mo files for all the languages you use.
 1. Download the plugin from [here](http://wordpress.org/extend/plugins/qtranslate/ "qTranslate").
 1. Extract all the files. 
 1. Upload everything (keeping the directory structure) to the `/wp-content/plugins/` directory.
@@ -47,10 +44,10 @@ Installation of this plugin is fairly easy:
 
 == Frequently Asked Questions ==
 
-The FAQ is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/faq/)
-The Support Forum is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/forum/)
+The FAQ is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/)
+For Problems visits the [Support Forum](http://www.qianqin.de/qtranslate/forum/)
 
 == Screenshots ==
 
-1. The Editor with activated qTranslate
+1. Wordpress Editor with qTranslate
 2. Language Management Interface
