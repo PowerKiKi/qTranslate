@@ -546,7 +546,7 @@ function qtranslate_conf() {
 <div class="col-wrap">
 <div class="form-wrap">
 <h3><?php _e('Add Language'); ?></h3>
-<form name="addcat" id="addcat" method="post" action="categories.php" class="add:the-list: validate">
+<form name="addcat" id="addcat" method="post" class="add:the-list: validate">
 <?php qtranslate_language_form($language_code, $language_code, $language_name, $language_locale, $language_date_format, $language_time_format, $language_flag, $language_default, $language_na_message); ?>
 <p class="submit"><input type="submit" name="submit" value="<?php _e('Add Language &raquo;'); ?>" /></p>
 </form></div>
