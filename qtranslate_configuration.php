@@ -102,17 +102,17 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 </div>
 <div class="form-field">
 	<label for="language_date_format"><?php _e('Date Format') ?></label>
-	<input name="language_date_format" id="language_date_format" type="text" value="<?php echo $language_date_format; ?>" size="2" maxlength="2"/>
+	<input name="language_date_format" id="language_date_format" type="text" value="<?php echo $language_date_format; ?>"/>
     <p><?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a> by default! Use %q for day suffix (st,nd,rd,th). (Example: %A %B %e%q, %Y)'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_time_format"><?php _e('Time Format') ?></label>
-	<input name="language_time_format" id="language_time_format" type="text" value="<?php echo $language_time_format; ?>" size="2" maxlength="2"/>
+	<input name="language_time_format" id="language_time_format" type="text" value="<?php echo $language_time_format; ?>"/>
     <p><?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a> by default! (Example: %I:%M %p)'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_na_message"><?php _e('Not Available Message') ?></label>
-	<input name="language_na_message" id="language_na_message" type="text" value="<?php echo $language_na_message; ?>" size="2" maxlength="2"/>
+	<input name="language_na_message" id="language_na_message" type="text" value="<?php echo $language_na_message; ?>"/>
     <p>
 		<?php _e('Message to display if post is not available in the requested language. (Example: Sorry, this entry is only available in %LANG:, : and %.)'); ?><br />
 		<?php _e('%LANG:&lt;normal_seperator&gt;:&lt;last_seperator&gt;% generates a list of languages seperated by &lt;normal_seperator&gt; except for the last one, where &lt;last_seperator&gt; will be used instead.'); ?><br />
