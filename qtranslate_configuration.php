@@ -343,7 +343,7 @@ function qtranslate_conf() {
 		// enable validate
 		if($_GET['disable']==$q_config['default_language'])
 			$error = __('Cannot disable Default Language!');
-		if(!in_array($_GET['disable'],$q_config['enabled_languages']))
+		if(!qtrans_isEnabled($_GET['disable']))
 			$error = __('Language is already disabled!');
 		if(!isset($q_config['language_name'][$_GET['disable']]))
 			$error = __('No such language!');

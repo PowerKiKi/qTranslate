@@ -652,7 +652,7 @@ function qtrans_disableLanguage($lang) {
 	if(qtrans_isEnabled($lang)) {
 		$new_enabled = array();
 		for($i = 0; $i < sizeof($q_config['enabled_languages']); $i++) {
-			if($q_config['enabled_languages'][$i] != $_GET['delete']) {
+			if($q_config['enabled_languages'][$i] != $lang) {
 				$new_enabled[] = $q_config['enabled_languages'][$i];
 			}
 		}
