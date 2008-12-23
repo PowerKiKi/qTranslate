@@ -146,8 +146,8 @@ add_filter('get_the_time',					'qtrans_timeFromPostForCurrentLanguage',0,3);
 add_filter('the_time',						'qtrans_timeFromPostForCurrentLanguage',0,2);
 add_filter('the_date',						'qtrans_dateFromPostForCurrentLanguage',0,4);
 add_filter('locale',						'qtrans_localeForCurrentLanguage',99);
-//add_filter('get_the_tags',					'qtrans_convertGetTheTags',0);
-//add_filter('get_tags',						'qtrans_convertGetTheTags',0);
+add_filter('get_the_tags',					'qtrans_useTermLib',0);
+add_filter('get_tags',						'qtrans_useTermLib',0);
 add_filter('term_name',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('tag_rows',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('cat_row',						'qtrans_useCategoryLib',0);
@@ -179,6 +179,7 @@ add_filter('term_links-post_tag',			'qtrans_useCurrentLanguageIfNotFoundUseDefau
 add_filter('wp_list_bookmarks',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('widget_title',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('pre_option_rss_language',		'qtrans_getLanguage',0);
+add_filter('wp_get_object_terms',			'qtrans_useTermLib',0);
 // Compability with Default Widgets
 qtrans_optionFilter();
 
