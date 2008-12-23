@@ -23,6 +23,8 @@
 function qtrans_modifyTermForm($id, $name, $term) {
 	global $q_config;
 	echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
+	// ' workaround
+	$term->name = str_replace('&#039;',"'",$term->name);
 	// create input fields for each language
 	foreach($q_config['enabled_languages'] as $language) {
 		if($_GET['action']=='edit') {
@@ -185,7 +187,7 @@ function qtrans_insertTermInput($id,$name,$term,$language){
 	";
 	if(isset($q_config['term_name'][$term][$language])) {
 	$html .="
-		i.value = '".$q_config['term_name'][$term][$language]."';
+		i.value = '".addslashes($q_config['term_name'][$term][$language])."';
 		";
 	} else {
 	$html .="
@@ -233,7 +235,7 @@ function qtrans_insertTermInput2($id,$name,$term,$language){
 	";
 	if(isset($q_config['term_name'][$term][$language])) {
 	$html .="
-		i.value = '".$q_config['term_name'][$term][$language]."';
+		i.value = '".addslashes($q_config['term_name'][$term][$language])."';
 		";
 	} else {
 	$html .="

@@ -36,6 +36,13 @@ function qtrans_parseURL($url) {
     return $result;
 }
 
+function qtrans_stripSlashesIfNecessary($str) {
+	if(1==get_magic_quotes_gpc()) {
+		$str = stripslashes($str);
+	}
+	return $str;
+}
+
 function qtrans_insertDropDownElement($language, $url, $id){
     global $q_config;
     $html ="
