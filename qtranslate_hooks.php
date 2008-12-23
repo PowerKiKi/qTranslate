@@ -136,7 +136,7 @@ add_filter('the_content',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable'
 add_filter('the_excerpt',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_excerpt_rss',				'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_title',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
-add_filter('the_category',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
+add_filter('the_category',					'qtrans_useTermLib', 0);
 add_filter('sanitize_title',				'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',				'qtrans_dateFromCommentForCurrentLanguage',0,2);
 add_filter('get_comment_time',				'qtrans_timeFromCommentForCurrentLanguage',0,3);
