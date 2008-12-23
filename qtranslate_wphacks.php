@@ -195,6 +195,7 @@ function qtrans_insertTermInput($id,$name,$term,$language){
 	if($language == $q_config['default_language']) {
 		$html .="
 			i.onchange = function() { 
+				var il = document.getElementsByTagName('input');
 				var ins = null;
 				for(var j = 0; j < il.length; j++) {
 					if(il[j].id=='".$id."') {
@@ -242,6 +243,7 @@ function qtrans_insertTermInput2($id,$name,$term,$language){
 	if($language == $q_config['default_language']) {
 		$html .="
 			i.onchange = function() { 
+				var il = document.getElementsByTagName('input');
 				var ins = null;
 				for(var j = 0; j < il.length; j++) {
 					if(il[j].id=='".$id."') {
