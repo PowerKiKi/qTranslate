@@ -118,7 +118,7 @@ $q_config['not_available']['se'] = "Tyvärr är denna artikel enbart tillgängli
 $q_config['not_available']['it'] = "Ci spiace, ma questo articolo è disponibile soltanto in %LANG:, : e %.";
 
 // enable strftime usage
-$q_config['use_strftime'] = false;
+$q_config['use_strftime'] = true;
 
 // Date Configuration (uses strftime)
 $q_config['date_format']['en'] = '%A %B %e%q, %Y';

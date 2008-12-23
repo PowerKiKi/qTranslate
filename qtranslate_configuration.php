@@ -230,6 +230,7 @@ function qtranslate_conf() {
 		qtrans_checkSetting('ignore_file_types',		true, QT_STRING);
 		qtrans_checkSetting('detect_browser_language',	true, QT_BOOLEAN);
 		qtrans_checkSetting('hide_untranslated',		true, QT_BOOLEAN);
+		qtrans_checkSetting('use_strftime',				true, QT_BOOLEAN);
 		qtrans_checkSetting('url_mode',					true, QT_INTEGER);
 		qtrans_checkSetting('auto_update_mo',			true, QT_BOOLEAN);
 		if($_POST['update_mo_now']=='1' && qtrans_updateGettextDatabases(true))
@@ -467,6 +468,14 @@ function qtranslate_conf() {
 					<label for="update_mo_now"><input type="checkbox" name="update_mo_now" id="update_mo_now" value="1" /> <?php _e('Update Gettext databases now.'); ?></label>
 					<br/>
 					<?php _e('qTranslate will query the Wordpress Localisation Repository every week and download the latest Gettext Databases (.mo Files).'); ?>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e('Date / Time Conversion');?></th>
+				<td>
+					<label for="use_strftime"><input type="checkbox" name="use_strftime" id="use_strftime" value="1"<?php echo ($q_config['use_strftime'])?' checked="checked"':''; ?>/> <?php _e('Use strftime instead of date to allow multilingual dates and times.'); ?></label>
+					<br/>
+					<?php _e('You can display support for multilingual dates by unchecking this option. Once disabled, all date formats will need to be changed to PHP date format.'); ?>
 				</td>
 			</tr>
 			<tr valign="top">
