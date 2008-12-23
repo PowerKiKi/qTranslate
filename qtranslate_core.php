@@ -592,7 +592,7 @@ function qtrans_convertURL($url='', $lang='') {
 	}
 	
 	// see if cookies are activated
-	if(!$q_config['cookie_enabled'] && !$q_config['url_info']['internal_referer'] && $urlinfo['path'] == '' && $lang == $q_config['default_language']) {
+	if(!$q_config['cookie_enabled'] && !$q_config['url_info']['internal_referer'] && $urlinfo['path'] == '' && $lang == $q_config['default_language'] && $q_config['language'] != $q_config['default_language']) {
 		// :( now we have to make unpretty URLs
 		$url = preg_replace("#(&|\?)lang=".$match[2]."&?#i","$1",$url);
 		if(strpos($url,'?')===false) {
