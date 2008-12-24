@@ -64,7 +64,7 @@ $q_config['default_language'] = 'en';
 $q_config['detect_browser_language'] = true;
 
 // hide pages without content
-$q_config['hide_untranslated'] = true;
+$q_config['hide_untranslated'] = false;
 
 // automatically update .mo files
 $q_config['auto_update_mo'] = true;
