@@ -68,7 +68,7 @@ function qtrans_init() {
 		if(qtrans_isEnabled($_GET['lang'])) {
 			$q_config['language'] = $q_config['url_info']['language'];
 			setcookie('qtrans_admin_language', $q_config['language'], time()+60*60*24*30);
-		} elseif(!isset($_COOKIE['qtrans_admin_language']) && qtrans_isEnabled($_COOKIE['qtrans_admin_language'])) {
+		} elseif(isset($_COOKIE['qtrans_admin_language']) && qtrans_isEnabled($_COOKIE['qtrans_admin_language'])) {
 			$q_config['language'] = $_COOKIE['qtrans_admin_language'];
 		} else {
 			$q_config['language'] = $q_config['default_language'];
