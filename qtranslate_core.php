@@ -514,7 +514,7 @@ function qtrans_convertURL($url='', $lang='') {
 	global $q_config;
 	
 	// invalid language
-	if($url=='') $url = $_SERVER['REQUEST_URI'];
+	if($url=='') $url = add_query_arg();
 	if($lang=='') $lang = $q_config['language'];
 	if(defined('WP_ADMIN')) return $url;
 	if(!qtrans_isEnabled($lang)) return "";
