@@ -9,36 +9,40 @@ Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
 */
 /*
-    Flags in flags directory are made by Luc Balemans and downloaded from
-    FOTW Flags Of The World website at http://flagspot.net/flags/
-    (http://www.crwflags.com/FOTW/FLAGS/wflags.html)
+	Flags in flags directory are made by Luc Balemans and downloaded from
+	FOTW Flags Of The World website at http://flagspot.net/flags/
+	(http://www.crwflags.com/FOTW/FLAGS/wflags.html)
 */
 /*  Copyright 2008  Qian Qin  (email : mail@qianqin.de)
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /*
-    Default Language Contributers
-    en, de by Qian Qin
-    zh by Junyan Chen
-    fi by Tatu Siltanen
-    fr by Damien Choizit
-    nl by RobV
-    se by bear3556
-    it by Lorenzo De Tomasi
-    
+	Default Language Contributers
+	en, de by Qian Qin
+	zh by Junyan Chen
+	fi by Tatu Siltanen
+	fr by Damien Choizit
+	nl by RobV
+	se by bear3556
+	it by Lorenzo De Tomasi
+	
+*/
+/*
+	Specials thanks to:
+	Carmen (Present), Jean-Pierre (Postcard), Bruno (Present), Andrea (Present), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
 */
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 

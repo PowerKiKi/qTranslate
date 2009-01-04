@@ -64,7 +64,10 @@ function qtrans_modifyRichEditor($old_content) {
 	}
 		
 	// don't do anything to the editor if it's not rich
-	if(!user_can_richedit()) return $old_content;
+	if(!user_can_richedit()) {
+		echo '<p class="updated">'.__('The qTranslate Editor could not be loaded because WYSIWYG/TinyMCE if not activate for your profile.').'</p>';
+		return $old_content;
+	}
 	
 	preg_match("/<textarea[^>]*id='([^']+)'/",$old_content,$matches);
 	$id = $matches[1];

@@ -57,6 +57,7 @@ function qtrans_initJS() {
 			var split_regex = /(<!--.*?-->)/gi;
 			var lang_begin_regex = /<!--:([a-z]{2})-->/gi;
 			var lang_end_regex = /<!--:-->/gi;
+			var morenextpage_regex = /(<!--more-->|<!--nextpage-->)+$/gi;
 			var matches = null;
 			var result = new Object;
 			var matched = false;
@@ -87,6 +88,9 @@ function qtrans_initJS() {
 						}
 					}
 				}
+			}
+			for (var i = 0;i<result.length;i++) {
+				result[i] = result[i].replace(morenextpage_regex,'');
 			}
 			return result;
 		}

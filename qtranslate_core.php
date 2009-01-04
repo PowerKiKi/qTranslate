@@ -59,7 +59,7 @@ function qtrans_init() {
 	if(defined('WP_ADMIN') && current_user_can('manage_options')) qtrans_updateTermLibrary();
 	
 	// extract url information
-	$q_config['url_info'] = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
+	$q_config['url_info'] = qtrans_extractURL(add_query_arg('',''), $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
 	
 	// set test cookie
 	setcookie('qtrans_cookie_test', 'qTranslate Cookie Test', 0, $q_config['url_info']['home'], $q_config['url_info']['host']);
@@ -350,7 +350,7 @@ function qtrans_updateTermLibrary() {
 
 function qtrans_strftime($format, $date) {
 	// add date suffix ability (%q) to strftime
-	$day = intval(trim(strftime("%e",$date)));
+	$day = intval(ltrim(strftime("%d",$date),'0'));
 	$replace = 'th';
 	if($day==1||$day==21||$day==31) $replace = 'st';
 	if($day==2||$day==22) $replace = 'nd';
@@ -514,7 +514,7 @@ function qtrans_convertURL($url='', $lang='') {
 	global $q_config;
 	
 	// invalid language
-	if($url=='') $url = add_query_arg();
+	if($url=='') $url = clean_url($q_config['url_info']['url']);
 	if($lang=='') $lang = $q_config['language'];
 	if(defined('WP_ADMIN')) return $url;
 	if(!qtrans_isEnabled($lang)) return "";
@@ -644,7 +644,9 @@ function qtrans_split($text) {
 			$result[$current_language] .= $block;
 		}
 	}
-	
+	foreach($result as $lang => $lang_content) {
+		$result[$lang] = preg_replace("#(<!--more-->|<!--nextpage-->)+$#ism","",$lang_content);
+	}
 	return $result;
 }
 
@@ -732,7 +734,7 @@ function qtrans_use($lang, $text, $show_available=false) {
 		foreach($available_languages as $language) {
 			if($i==1) $language_list  = $end_seperator.$language_list;
 			if($i>1) $language_list  = $normal_seperator.$language_list;
-			$language_list = "<a href=\"".qtrans_convertURL($_SERVER['REQUEST_URI'], $language)."\">".$q_config['language_name'][$language]."</a>".$language_list;
+			$language_list = "<a href=\"".qtrans_convertURL('', $language)."\">".$q_config['language_name'][$language]."</a>".$language_list;
 			$i++;
 		}
 	}

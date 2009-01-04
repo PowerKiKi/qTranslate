@@ -33,7 +33,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 				echo '<li';
 				if($language == $q_config['language'])
 					echo ' class="active"';
-				echo '><a href="'.clean_url(qtrans_convertURL($_SERVER['REQUEST_URI'], $language)).'"';
+				echo '><a href="'.qtrans_convertURL('', $language).'"';
 				if($style=='image')
 					echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
 				echo '><span';
@@ -50,7 +50,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 				echo "lc.parentNode.insertBefore(s,lc);";
 				// create dropdown fields for each language
 				foreach($q_config['enabled_languages'] as $language) {
-					echo qtrans_insertDropDownElement($language,clean_url(qtrans_convertURL($_SERVER['REQUEST_URI'], $language)),$id);
+					echo qtrans_insertDropDownElement($language,qtrans_convertURL('', $language),$id);
 				}
 				// hide html language chooser text
 				echo "s.onchange = function() { document.location.href = this.value;}\n";
@@ -64,7 +64,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 				echo '<li';
 				if($language == $q_config['language'])
 					echo ' class="active"';
-				echo '><a href="'.clean_url(qtrans_convertURL($_SERVER['REQUEST_URI'], $language)).'"';
+				echo '><a href="'.qtrans_convertURL('', $language).'"';
 				echo ' class="qtrans_flag_'.$language.' qtrans_flag_and_text"';
 				echo '><span>'.$q_config['language_name'][$language].'</span></a></li>';
 			}
