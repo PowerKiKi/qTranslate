@@ -42,6 +42,7 @@ function qtrans_localeForCurrentLanguage($locale){
 	$locale[] = $q_config['locale'][$q_config['language']].".utf8";
 	$locale[] = $q_config['locale'][$q_config['language']]."@euro";
 	$locale[] = $q_config['locale'][$q_config['language']];
+	$locale[] = $q_config['windows_locale'][$q_config['language']];
 	$locale[] = $q_config['language'];
 	// return the correct locale and most importantly set it (wordpress doesn't, which is bad)
 	setlocale(LC_ALL, $locale);
