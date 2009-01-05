@@ -59,7 +59,7 @@ function qtrans_init() {
 	if(defined('WP_ADMIN') && current_user_can('manage_options')) qtrans_updateTermLibrary();
 	
 	// extract url information
-	$q_config['url_info'] = qtrans_extractURL(add_query_arg('',''), $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
+	$q_config['url_info'] = qtrans_extractURL(add_query_arg('lang',$_GET['lang']), $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
 	
 	// set test cookie
 	setcookie('qtrans_cookie_test', 'qTranslate Cookie Test', 0, $q_config['url_info']['home'], $q_config['url_info']['host']);
@@ -184,6 +184,10 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 	return $result;
 }
 
+function qtrans_validateBool($var, $default) {
+	if($var==='0') return false; elseif($var==='1') return true; else return $default;
+}
+
 // loads config via get_option and defaults to values set on top
 function qtrans_loadConfig() {
 	global $q_config;
@@ -218,10 +222,10 @@ function qtrans_loadConfig() {
 	if(!is_array($term_name)) $term_name = $q_config['term_name'];
 	if(empty($default_language)) $default_language = $q_config['default_language'];
 	if($flag_location=='') $flag_location = $q_config['flag_location'];
-	if($use_strftime==='0') $use_strftime = false; else $use_strftime = true;
-	if($detect_browser_language==='0') $detect_browser_language = false; else $detect_browser_language = true;
-	if($hide_untranslated==='0') $hide_untranslated = false; else $hide_untranslated = true;
-	if($auto_update_mo==='0') $auto_update_mo = false; else $auto_update_mo = true;
+	$use_strftime = qtrans_validateBool($use_strftime, $q_config['use_strftime']);
+	$detect_browser_language = qtrans_validateBool($detect_browser_language, $q_config['detect_browser_language']);
+	$hide_untranslated = qtrans_validateBool($hide_untranslated, $q_config['hide_untranslated']);
+	$auto_update_mo = qtrans_validateBool($auto_update_mo, $q_config['auto_update_mo']);
 	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
 	if(strpos(get_option('permalink_structure'),'?')===true||strpos(get_option('permalink_structure'),'index.php')===true) $url_mode = QT_URL_QUERY;
 	
