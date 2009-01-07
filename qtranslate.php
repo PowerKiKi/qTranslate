@@ -38,6 +38,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	nl by RobV
 	se by bear3556
 	it by Lorenzo De Tomasi
+	ro, hu by Jani Monoses
 	
 */
 /*
@@ -88,6 +89,8 @@ $q_config['pre_domain']['fr'] = "fr";
 $q_config['pre_domain']['nl'] = "nl";
 $q_config['pre_domain']['se'] = "se";
 $q_config['pre_domain']['it'] = "it";
+$q_config['pre_domain']['ro'] = "ro";
+$q_config['pre_domain']['hu'] = "hu";
 
 // Names for languages in the corresponding language, add more if needed
 $q_config['language_name']['de'] = "Deutsch";
@@ -98,6 +101,8 @@ $q_config['language_name']['fr'] = "Français";
 $q_config['language_name']['nl'] = "Nederlands";
 $q_config['language_name']['se'] = "Svenska";
 $q_config['language_name']['it'] = "Italiano";
+$q_config['language_name']['ro'] = "Română";
+$q_config['language_name']['hu'] = "Magyar";
 
 // Locales for languages
 // see locale -a for available locales
@@ -109,6 +114,8 @@ $q_config['locale']['fr'] = "fr_FR";
 $q_config['locale']['nl'] = "nl_NL";
 $q_config['locale']['se'] = "sv_SE";
 $q_config['locale']['it'] = "it_IT";
+$q_config['locale']['ro'] = "ro_RO";
+$q_config['locale']['hu'] = "hu_HU";
 
 // Language not available messages
 // %LANG:<normal_seperator>:<last_seperator>% generates a list of languages seperated by <normal_seperator> except for the last one, where <last_seperator> will be used instead.
@@ -120,6 +127,8 @@ $q_config['not_available']['fr'] = "Désolé, cet article est seulement disponib
 $q_config['not_available']['nl'] = "Onze verontschuldigingen, dit bericht is alleen beschikbaar in %LANG:, : en %.";
 $q_config['not_available']['se'] = "Tyvärr är denna artikel enbart tillgänglig på %LANG:, : och %.";
 $q_config['not_available']['it'] = "Ci spiace, ma questo articolo è disponibile soltanto in %LANG:, : e %.";
+$q_config['not_available']['ro'] = "Din păcate acest articol este disponibil doar în %LANG:, : și %.";
+$q_config['not_available']['hu'] = "Sajnos ennek a bejegyzésnek csak %LANG:, : és % nyelvű változata van.";
 
 // enable strftime usage
 $q_config['use_strftime'] = true;
@@ -133,6 +142,8 @@ $q_config['date_format']['fr'] = '%A %e %B %Y';
 $q_config['date_format']['nl'] = '%d/%m/%y';
 $q_config['date_format']['se'] = '%d/%m/%y';
 $q_config['date_format']['it'] = '%e %B %Y';
+$q_config['date_format']['ro'] = '%A, %e %B %Y';
+$q_config['date_format']['hu'] = '%Y %B %e, %A';
 
 $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
@@ -142,6 +153,8 @@ $q_config['time_format']['fr'] = '%H:%M';
 $q_config['time_format']['nl'] = '%H:%M';
 $q_config['time_format']['se'] = '%H:%M';
 $q_config['time_format']['it'] = '%H:%M';
+$q_config['time_format']['ro'] = '%H:%M';
+$q_config['time_format']['hu'] = '%H:%M';
 
 // Flag images configuration
 // Look in /flags/ directory for a huge list of flags for usage
@@ -153,6 +166,8 @@ $q_config['flag']['fr'] = 'fr.png';
 $q_config['flag']['nl'] = 'nl.png';
 $q_config['flag']['se'] = 'se.png';
 $q_config['flag']['it'] = 'it.png';
+$q_config['flag']['ro'] = 'ro.png';
+$q_config['flag']['hu'] = 'hu.png';
 
 // Location of flags (needs trailing slash!)
 $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
