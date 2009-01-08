@@ -63,12 +63,6 @@ function qtrans_modifyRichEditor($old_content) {
 		$init_editor = false;
 	}
 		
-	// don't do anything to the editor if it's not rich
-	if(!user_can_richedit()) {
-		echo '<p class="updated">'.__('The qTranslate Editor could not be loaded because WYSIWYG/TinyMCE if not activate for your profile.').'</p>';
-		return $old_content;
-	}
-	
 	preg_match("/<textarea[^>]*id='([^']+)'/",$old_content,$matches);
 	$id = $matches[1];
 	preg_match("/cols='([^']+)'/",$old_content,$matches);
@@ -77,6 +71,12 @@ function qtrans_modifyRichEditor($old_content) {
 	$rows = $matches[1];
 	// don't do anything if not editing the content
 	if($id!="content") return $old_content;
+	
+	// don't do anything to the editor if it's not rich
+	if(!user_can_richedit()) {
+		echo '<p class="updated">'.__('The qTranslate Editor could not be loaded because WYSIWYG/TinyMCE is not activated in your profile.').'</p>';
+		return $old_content;
+	}
 	
 	$content = "";
 	$content_append = "";
