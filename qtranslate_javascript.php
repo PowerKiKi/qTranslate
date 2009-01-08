@@ -220,11 +220,12 @@ function qtrans_initJS() {
 		
 	$q_config['js']['qtrans_saveCallback'] = "
 		switchEditors.saveCallback = function(el, content, body) {
-			if ( tinyMCE.activeEditor.isHidden() )
+			if ( tinyMCE.activeEditor.isHidden() ) {
 				content = this.I(el).value;
-			else
+			} else {
 				content = this.pre_wpautop(content);
 				qtrans_save(content);
+			}
 			return content;
 		}
 		";
@@ -322,8 +323,6 @@ function qtrans_initJS() {
 					return false;
 				vta.style.height = inst.getContentAreaContainer().offsetHeight + 6 + 'px';
 				inst.hide();
-				//vta.style.display = 'none';
-				//ta.style.display = 'block';
 				qt.style.display = 'block';
 				vta.style.color = '';
 				document.getElementById('edButtonHTML').className = 'active';
@@ -336,8 +335,6 @@ function qtrans_initJS() {
 				edCloseAllTags(); // :-(
 				qt.style.display = 'none';
 				vta.value = this.wpautop(qtrans_use(qtrans_get_active_language(),ta.value));
-				//ta.style.display = 'none';
-				//vta.style.display = 'block';
 				if (inst) {
 					inst.show();
 				} else {
