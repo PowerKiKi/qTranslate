@@ -82,4 +82,19 @@ function qtrans_startsWith($s, $n) {
 	return false;
 }
 
+function qtrans_getAvailableLanguages($text) {
+	global $q_config;
+	$result = array();
+	$content = qtrans_split($text);
+	foreach($content as $language => $lang_text) {
+		$lang_text = trim($lang_text);
+		if(!empty($lang_text)) $result[] = $language;
+	}
+	if(sizeof($result)==0) {
+		// add default language to keep default URL
+		$result[] = $q_config['language'];
+	}
+	return $result;
+}
+
 ?>
