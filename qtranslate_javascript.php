@@ -213,7 +213,7 @@ function qtrans_initJS() {
 				htm = switchEditors.wpautop(text);
 				inst.execCommand('mceSetContent', null, htm);
 			} else {
-				ta.value = switchEditors.wpautop(text);
+				ta.value = text;
 			}
 		}
 		";

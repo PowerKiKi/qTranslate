@@ -127,7 +127,7 @@ function qtrans_modifyRichEditor($old_content) {
 	$content_append .="function qtrans_editorInit2() {\n";
 	
 	// show default language tab
-	$content_append .="document.getElementById('content').style.display='none';\n";
+	//$content_append .="document.getElementById('content').style.display='none';\n";
 	$content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='edButton active';\n";
 	// make editor save the correct content
 	$content_append .= $q_config['js']['qtrans_saveCallback'];
