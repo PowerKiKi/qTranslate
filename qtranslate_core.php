@@ -107,7 +107,7 @@ function qtrans_init() {
 	if(!defined('WP_ADMIN')) {
 		$alloptions = wp_cache_get( 'alloptions', 'options' );
 		foreach($alloptions as $option => $value) {
-			$alloptions[$option] = qtrans_use($q_config['language'],$value);
+			$alloptions[$option] = maybe_serialize(qtrans_use($q_config['language'],maybe_unserialize($value)));
 		}
 		wp_cache_replace( 'alloptions', $alloptions, 'options' );
 	}
