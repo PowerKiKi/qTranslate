@@ -521,13 +521,13 @@ function qtrans_convertBlogInfoURL($url, $what) {
 	return qtrans_convertURL($url);
 }
 
-function qtrans_convertURL($url='', $lang='') {
+function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 	global $q_config;
 	
 	// invalid language
 	if($url=='') $url = clean_url($q_config['url_info']['url']);
 	if($lang=='') $lang = $q_config['language'];
-	if(defined('WP_ADMIN')) return $url;
+	if(defined('WP_ADMIN')&&!$forceadmin) return $url;
 	if(!qtrans_isEnabled($lang)) return "";
 	
 	// &amp; workaround
@@ -576,7 +576,7 @@ function qtrans_convertURL($url='', $lang='') {
 	// check if its a link to an ignored file type
 	$ignore_file_types = preg_split('/\s*,\s*/', strtolower($q_config['ignore_file_types']));
 	$pathinfo = pathinfo($urlinfo['path']);
-	if(in_array(strtolower($pathinfo['extension']), $ignore_file_types)) {
+	if(isset($pathinfo['extension']) && in_array(strtolower($pathinfo['extension']), $ignore_file_types)) {
 		return $home."/".$url;
 	}
 	

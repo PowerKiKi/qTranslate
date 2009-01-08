@@ -24,7 +24,7 @@ function qtrans_parseURL($url) {
     $r .= '(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
 
     preg_match ( $r, $url, $out );
-    $result = array(
+    $result = @array(
         "scheme" => $out[1],
         "host" => $out[4].(($out[5]=='')?'':':'.$out[5]),
         "user" => $out[2],
