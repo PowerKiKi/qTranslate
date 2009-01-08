@@ -483,7 +483,7 @@ function qtrans_useTermLib($obj) {
 	} else {
 		// string conversion - unpretty workaround for missing filter :(
 		preg_match_all("#<a [^>]+>([^<]+)</a>#i",$obj,$matches);
-		if(is_array($matches)) {
+		if(is_array($matches) && sizeof($matches[0]) > 0) {
 			$search = array();
 			$replace = array();
 			foreach($matches[1] as $match) {
@@ -493,19 +493,13 @@ function qtrans_useTermLib($obj) {
 				}
 			}
 			$obj = str_replace($search,$replace,$obj);
+		} elseif(isset($q_config['term_name'][$obj][$q_config['language']])) {
+			$obj = $q_config['term_name'][$obj][$q_config['language']];
 		}
 	}
 	return $obj;
 }
-/*
-function qtrans_convertGetTheTags($tags) {
-	if(empty($tags)) return $tags;
-	foreach($tags as $id => $tag) {
-		$tags[$id]->name = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($tag->name);
-	}
-	return $tags;
-}
-*/
+
 function qtrans_convertBlogInfoURL($url, $what) {
 	if($what=='stylesheet_url') return $url;
 	if($what=='template_url') return $url;
