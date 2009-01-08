@@ -278,6 +278,18 @@ function qtrans_initJS() {
 				return this.get2('qtrans_textarea_content');
 			return this.get2(id);
 		}
+		
+		if (typeof window.onload == 'function') {
+			qtrans_onload = window.onload;
+			window.onload = function() {
+				qtrans_onload();
+				edCanvas = document.getElementById('qtrans_textarea_content');
+			}
+		} else {
+			window.onload = function() {
+				edCanvas = document.getElementById('qtrans_textarea_content');
+			}
+		}
 		";
 		
 	$q_config['js']['qtrans_get_active_language'] = "
