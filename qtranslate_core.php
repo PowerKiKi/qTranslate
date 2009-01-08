@@ -103,6 +103,15 @@ function qtrans_init() {
 		$q_config['cookie_enabled'] = false;
 	}
 	
+	// Filter all options for language tags
+	if(!defined('WP_ADMIN')) {
+		$alloptions = wp_cache_get( 'alloptions', 'options' );
+		foreach($alloptions as $option => $value) {
+			$alloptions[$option] = qtrans_use($q_config['language'],$value);
+		}
+		wp_cache_replace( 'alloptions', $alloptions, 'options' );
+	}
+	
 	// remove traces of language
 	unset($_GET['lang']);
 	$_SERVER['REQUEST_URI'] = $q_config['url_info']['url'];
