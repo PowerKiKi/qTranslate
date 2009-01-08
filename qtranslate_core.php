@@ -517,6 +517,9 @@ function qtrans_convertURL($url='', $lang='') {
 	if(defined('WP_ADMIN')) return $url;
 	if(!qtrans_isEnabled($lang)) return "";
 	
+	// &amp; workaround
+	$url = str_replace('&amp;','&',$url);
+	
 	// check if it's an external link
 	$urlinfo = qtrans_parseURL($url);
 	$home = rtrim(get_option('home'),"/");
@@ -600,7 +603,10 @@ function qtrans_convertURL($url='', $lang='') {
 		}
 		$url .= "lang=".$lang;
 	}
-	return $home."/".$url;
+	
+	// &amp; workaround
+	$complete = str_replace('&','&amp;',$home."/".$url);
+	return $complete;
 }
 
 // splits text with language tags into array
@@ -608,7 +614,7 @@ function qtrans_split($text) {
 	global $q_config;
 	
 	//init vars
-	$split_regex = "#(<!--[^-]*-->)#ism";
+	$split_regex = "#(<!--[^-]*-->|\[:[a-z]{2}\])#ism";
 	$current_language = "";
 	$result = array();
 	foreach($q_config['enabled_languages'] as $language) {
@@ -619,7 +625,7 @@ function qtrans_split($text) {
 	$blocks = preg_split($split_regex, $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
 	foreach($blocks as $block) {
 		# detect language tags
-		if(preg_match("#<!--:([a-z]{2})-->#ism", $block, $matches)) {
+		if(preg_match("#^<!--:([a-z]{2})-->$#ism", $block, $matches)) {
 			if(qtrans_isEnabled($matches[1])) {
 				$current_language = $matches[1];
 			} else {
@@ -627,8 +633,22 @@ function qtrans_split($text) {
 			}
 			continue;
 		// detect ending tags
-		} elseif(preg_match("#<!--:-->#ism", $block, $matches)) {
+		} elseif(preg_match("#^\[:([a-z]{2})\]$#ism", $block, $matches)) {
+			if(qtrans_isEnabled($matches[1])) {
+				$current_language = $matches[1];
+			} else {
+				$current_language = "invalid";
+			}
+			continue;
+		// detect ending tags
+		} elseif(preg_match("#^<!--:-->$#ism", $block, $matches)) {
 			$current_language = "";
+			continue;
+		// detect defective more tag
+		} elseif(preg_match("#^<!--more-->$#ism", $block, $matches)) {
+			foreach($q_config['enabled_languages'] as $language) {
+				$result[$language] .= $block;
+			}
 			continue;
 		}
 		// correctly categorize text block
