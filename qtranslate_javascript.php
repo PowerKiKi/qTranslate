@@ -109,6 +109,7 @@ function qtrans_initJS() {
 			var moreregex = /<!--more-->/i;
 			var text = '';
 			var max = 0;
+			var morenextpage_regex = /(<!--more-->|<!--nextpage-->)+$/gi;
 			
 			texts[lang] = lang_text;
 		";
@@ -136,6 +137,7 @@ function qtrans_initJS() {
 			";
 	$q_config['js']['qtrans_integrate'].= "
 			}
+			text = text.replace(morenextpage_regex,'');
 			return text;
 		}
 		";
