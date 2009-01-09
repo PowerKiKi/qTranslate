@@ -159,7 +159,7 @@ add_filter('wp_dropdown_cats',				'qtrans_useCurrentLanguageIfNotFoundUseDefault
 add_filter('wp_title',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('single_tag_title',				'qtrans_useTermLib',0);
 add_filter('single_cat_title',				'qtrans_useTermLib',0);
-add_filter('single_post_title',				'qtrans_useTermLib',0);
+add_filter('single_post_title',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('bloginfo',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('get_others_drafts',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('get_bloginfo_rss',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
