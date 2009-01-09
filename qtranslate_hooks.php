@@ -178,7 +178,7 @@ add_filter('wp_tag_cloud',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLan
 add_filter('wp_generate_tag_cloud',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('term_links-post_tag',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_list_bookmarks',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('widget_title',					'gettext',0);
+add_filter('widget_title',					'__',0);
 add_filter('pre_option_rss_language',		'qtrans_getLanguage',0);
 add_filter('wp_get_object_terms',			'qtrans_useTermLib',0);
 // Compability with Default Widgets
