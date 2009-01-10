@@ -39,7 +39,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	se by bear3556
 	it by Lorenzo De Tomasi
 	ro, hu by Jani Monoses
-	ja by park
+	ja by Brian Parker
 	
 */
 /*
@@ -133,7 +133,7 @@ $q_config['not_available']['se'] = "Tyvärr är denna artikel enbart tillgängli
 $q_config['not_available']['it'] = "Ci spiace, ma questo articolo è disponibile soltanto in %LANG:, : e %.";
 $q_config['not_available']['ro'] = "Din păcate acest articol este disponibil doar în %LANG:, : și %.";
 $q_config['not_available']['hu'] = "Sajnos ennek a bejegyzésnek csak %LANG:, : és % nyelvű változata van.";
-$q_config['not_available']['ja'] = "申し訳ありません、このコンテンツは日本語になっていません。ただ今　%LANG:, : and %　のみです。";
+$q_config['not_available']['ja'] = "申し訳ありません、このコンテンツはただ今　%LANG:、 :と %　のみです。";
 
 // enable strftime usage
 $q_config['use_strftime'] = true;
