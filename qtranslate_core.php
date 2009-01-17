@@ -105,11 +105,10 @@ function qtrans_init() {
 	
 	// Filter all options for language tags
 	if(!defined('WP_ADMIN')) {
-		$alloptions = wp_cache_get( 'alloptions', 'options' );
+		$alloptions = wp_load_alloptions();
 		foreach($alloptions as $option => $value) {
-			$alloptions[$option] = maybe_serialize(qtrans_use($q_config['language'],maybe_unserialize($value)));
+			add_filter('option_'.$option, 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 		}
-		wp_cache_replace( 'alloptions', $alloptions, 'options' );
 	}
 	
 	// remove traces of language
@@ -645,7 +644,7 @@ function qtrans_split($text) {
 				$current_language = "invalid";
 			}
 			continue;
-		// detect ending tags
+		// detect quicktags
 		} elseif(preg_match("#^\[:([a-z]{2})\]$#ism", $block, $matches)) {
 			if(qtrans_isEnabled($matches[1])) {
 				$current_language = $matches[1];
