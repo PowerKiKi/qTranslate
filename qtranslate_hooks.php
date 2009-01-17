@@ -45,7 +45,10 @@ function qtrans_localeForCurrentLanguage($locale){
 	$locale[] = $q_config['windows_locale'][$q_config['language']];
 	$locale[] = $q_config['language'];
 	// return the correct locale and most importantly set it (wordpress doesn't, which is bad)
-	setlocale(LC_ALL, $locale);
+	setlocale(LC_COLLATE, $locale);
+	setlocale(LC_CTYPE, $locale);
+	setlocale(LC_TIME, $locale);
+	setlocale(LC_MESSAGES, $locale);
 	return $q_config['locale'][$q_config['language']];
 }
 
@@ -175,7 +178,7 @@ add_filter('bloginfo_rss',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLan
 add_filter('the_category_rss',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('get_term',						'qtrans_useTermLib',0);
 add_filter('get_terms',						'qtrans_useTermLib',0);
-add_filter('wp_tag_cloud',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+//add_filter('wp_tag_cloud',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_generate_tag_cloud',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('term_links-post_tag',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('link_name',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);

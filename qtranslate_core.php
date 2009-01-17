@@ -125,6 +125,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 	$result = array();
 	$result['language'] = $q_config['default_language'];
 	$result['url'] = $url;
+	$result['original_url'] = $url;
 	$result['host'] = $host;
 	$result['redirect'] = false;
 	$result['internal_referer'] = false;
