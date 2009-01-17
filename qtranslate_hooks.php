@@ -178,7 +178,6 @@ add_filter('bloginfo_rss',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLan
 add_filter('the_category_rss',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('get_term',						'qtrans_useTermLib',0);
 add_filter('get_terms',						'qtrans_useTermLib',0);
-//add_filter('wp_tag_cloud',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('wp_generate_tag_cloud',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('term_links-post_tag',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('link_name',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
