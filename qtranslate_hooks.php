@@ -123,6 +123,18 @@ function qtrans_postsFilter($posts) {
 	return $posts;
 }
 
+function qtrans_links($links, $file){ // copied from Sociable Plugin
+	//Static so we don't call plugin_basename on every plugin row.
+	static $this_plugin;
+	if (!$this_plugin) $this_plugin = plugin_basename(dirname(__FILE__).'/qtranslate.php');
+	
+	if ($file == $this_plugin){
+		$settings_link = '<a href="options-general.php?page=qtranslate">' . __('Settings') . '</a>';
+		array_unshift( $links, $settings_link ); // before other links
+	}
+	return $links;
+}
+
 // Hooks (Actions)
 add_action('wp_head',						'qtrans_header');
 add_action('edit_category_form',			'qtrans_modifyCategoryForm');
@@ -209,6 +221,7 @@ add_filter('clean_url',						'qtrans_convertURL');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
+add_filter('plugin_action_links', 			'qtrans_links', 10, 2 );
 add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
 add_filter('the_posts',						'qtrans_postsFilter');
 add_filter('manage_language_columns',		'qtrans_language_columns');
