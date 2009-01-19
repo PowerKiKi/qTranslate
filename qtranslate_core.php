@@ -743,7 +743,6 @@ function qtrans_use($lang, $text, $show_available=false) {
 	// if no languages available show full text
 	if(sizeof($available_languages)==0) return $text;
 	// if content is available show the content in the requested language
-	$content[$lang] = trim($content[$lang]);
 	if(!empty($content[$lang])) {
 		return $content[$lang];
 	}
