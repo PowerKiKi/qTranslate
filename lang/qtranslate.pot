@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/qtranslate\n"
-"POT-Creation-Date: 2009-01-20 10:56+0000\n"
+"POT-Creation-Date: 2009-01-20 11:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -382,7 +382,13 @@ msgstr ""
 msgid "Add Language &raquo;"
 msgstr ""
 
-#: qtranslate_hooks.php:132
+#: qtranslate_core.php:109
+msgid ""
+"Your $wp_default_secret_key is mismatchting with your AUTH_KEY. This might "
+"cause you not to be able to login anymore."
+msgstr ""
+
+#: qtranslate_hooks.php:131
 msgid "Settings"
 msgstr ""
 

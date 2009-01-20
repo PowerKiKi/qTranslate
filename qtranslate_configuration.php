@@ -199,27 +199,6 @@ function qtranslate_conf() {
 	$language_default = '';
 	$altered_table = false;
 	
-	// check if category names can be longer than 55 characters
-	/*if($wpdb->terms != '') {
-		$category_table_name = $wpdb->terms;
-	} else {
-		$category_table_name = $wpdb->categories;
-	}
-	$fields = $wpdb->get_results("DESCRIBE ".$category_table_name);
-	foreach($fields as $field) {
-		if(strtolower($field->Field)=='name') {
-			// check field type
-			if(preg_match("/varchar\(([0-9]+)\)/i",$field->Type,$match)) {
-				// is varchar
-				if(intval($match[1])<255){
-					// too small varchar, lets change it
-					$wpdb->get_results("ALTER TABLE $wpdb->terms MODIFY `name` VARCHAR(255) NOT NULL DEFAULT ''");
-					$altered_table = true;
-				}
-			}
-		}
-	}*/
-	
 	// check for action
 	if(isset($_POST['qtranslate_reset']) && isset($_POST['qtranslate_reset2'])) {
 		$message = __('qTranslate has been reset.', 'qtranslate');
