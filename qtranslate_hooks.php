@@ -48,7 +48,6 @@ function qtrans_localeForCurrentLanguage($locale){
 	setlocale(LC_COLLATE, $locale);
 	setlocale(LC_CTYPE, $locale);
 	setlocale(LC_TIME, $locale);
-	setlocale(LC_MESSAGES, $locale);
 	return $q_config['locale'][$q_config['language']];
 }
 
