@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/qtranslate\n"
-"POT-Creation-Date: 2009-01-20 10:02+0000\n"
+"POT-Creation-Date: 2009-01-20 10:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,12 +146,8 @@ msgstr ""
 msgid "Language Code has to be 2 characters long!"
 msgstr ""
 
-#: qtranslate_configuration.php:251
+#: qtranslate_configuration.php:251 qtranslate_configuration.php:257
 msgid "There is already a language with the same Language Code!"
-msgstr ""
-
-#: qtranslate_configuration.php:257
-msgid "There is already a language with the new Language Code!"
 msgstr ""
 
 #: qtranslate_configuration.php:341
@@ -314,7 +310,7 @@ msgstr ""
 
 #: qtranslate_configuration.php:478
 msgid ""
-"You can display support for multilingual dates by unchecking this option. "
+"You can disable support for multilingual dates by unchecking this option. "
 "Once disabled, all date formats will need to be changed to PHP date format."
 msgstr ""
 
@@ -386,7 +382,7 @@ msgstr ""
 msgid "Add Language &raquo;"
 msgstr ""
 
-#: qtranslate_hooks.php:131
+#: qtranslate_hooks.php:132
 msgid "Settings"
 msgstr ""
 
