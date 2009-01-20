@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/qtranslate\n"
-"POT-Creation-Date: 2009-01-20 10:38+0000\n"
+"POT-Creation-Date: 2009-01-20 10:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -429,16 +429,21 @@ msgstr ""
 #: qtranslate_wphacks.php:59
 msgid ""
 "This version of qTranslate has not been tested with your Wordpress version. "
-"To prevent Wordpress from malfunctioning, "
+"To prevent Wordpress from malfunctioning, the qTranslate Editor has been "
+"disabled. You can reenable it by <a href=\"javascript:qtrans_editorInit();\" "
+"title=\"Activate qTranslate\" id=\"qtrans_imsg_link\">clicking here</a> (may "
+"cause <b>data loss</b>!). To remove this message, please update qTranslate "
+"to the <a href=\"http://www.qianqin.de/qtranslate/download/\">corresponding "
+"version</a>."
 msgstr ""
 
-#: qtranslate_wphacks.php:77
+#: qtranslate_wphacks.php:75
 msgid ""
 "The qTranslate Editor could not be loaded because WYSIWYG/TinyMCE is not "
 "activated in your profile."
 msgstr ""
 
-#: qtranslate_wphacks.php:284
+#: qtranslate_wphacks.php:282
 msgid "Title"
 msgstr ""
 
