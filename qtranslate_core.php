@@ -236,7 +236,10 @@ function qtrans_loadConfig() {
 	$hide_untranslated = qtrans_validateBool($hide_untranslated, $q_config['hide_untranslated']);
 	$auto_update_mo = qtrans_validateBool($auto_update_mo, $q_config['auto_update_mo']);
 	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
-	if(strpos(get_option('permalink_structure'),'?')===true||strpos(get_option('permalink_structure'),'index.php')===true) $url_mode = QT_URL_QUERY;
+	
+	// check for invalid permalink/url mode combinations
+	$permalink_structure = get_option('permalink_structure');
+	if($permalink_structure===""||strpos($permalink_structure,'?')===true||strpos($permalink_structure,'index.php')===true) $url_mode = QT_URL_QUERY;
 	
 	// overwrite default values with loaded values
 	$q_config['date_format'] = $date_formats;
