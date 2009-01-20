@@ -45,10 +45,9 @@ function qtrans_localeForCurrentLanguage($locale){
 	$locale[] = $q_config['language'];
 	
 	// return the correct locale and most importantly set it (wordpress doesn't, which is bad)
-	setlocale(LC_COLLATE, $locale);
-	setlocale(LC_CTYPE, $locale);
+	// only set LC_TIME as everyhing else doesn't seem to work with windows
 	setlocale(LC_TIME, $locale);
-
+	
 	return $q_config['locale'][$q_config['language']];
 }
 
