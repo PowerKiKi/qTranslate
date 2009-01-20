@@ -35,7 +35,6 @@ function qtrans_header(){
 }
 
 function qtrans_localeForCurrentLanguage($locale){
-	// wordpress is looking for locale, this should happen even before init action, so let's hook in here
 	global $q_config;
 	// try to figure out the correct locale
 	$locale = array();
@@ -44,10 +43,12 @@ function qtrans_localeForCurrentLanguage($locale){
 	$locale[] = $q_config['locale'][$q_config['language']];
 	$locale[] = $q_config['windows_locale'][$q_config['language']];
 	$locale[] = $q_config['language'];
+	
 	// return the correct locale and most importantly set it (wordpress doesn't, which is bad)
 	setlocale(LC_COLLATE, $locale);
 	setlocale(LC_CTYPE, $locale);
 	setlocale(LC_TIME, $locale);
+
 	return $q_config['locale'][$q_config['language']];
 }
 

@@ -239,12 +239,12 @@ function qtranslate_conf() {
 	
 	if(isset($_POST['original_lang'])) {
 		// validate form input
-		if($_POST['language_na_message']=='')		   $error = __('The Language must have a Not-Available Message!', 'qtranslate');
-		if($_POST['language_time_format']=='')		  $error = __('The Language must have a Time Format!', 'qtranslate');
-		if($_POST['language_date_format']=='')		  $error = __('The Language must have a Date Format!', 'qtranslate');
-		if(strlen($_POST['language_locale'])<2)		 $error = __('The Language must have a Locale!', 'qtranslate');
-		if($_POST['language_name']=='')				 $error = __('The Language must have a name!', 'qtranslate');
-		if(strlen($_POST['language_code'])!=2)		  $error = __('Language Code has to be 2 characters long!', 'qtranslate');
+		if($_POST['language_na_message']=='')		$error = __('The Language must have a Not-Available Message!', 'qtranslate');
+		if($_POST['language_time_format']=='')		$error = __('The Language must have a Time Format!', 'qtranslate');
+		if($_POST['language_date_format']=='')		$error = __('The Language must have a Date Format!', 'qtranslate');
+		if(strlen($_POST['language_locale'])<2)		$error = __('The Language must have a Locale!', 'qtranslate');
+		if($_POST['language_name']=='')				$error = __('The Language must have a name!', 'qtranslate');
+		if(strlen($_POST['language_code'])!=2)		$error = __('Language Code has to be 2 characters long!', 'qtranslate');
 		if($_POST['original_lang']==''&&$error=='') {
 			// new language
 			if(isset($q_config['language_name'][$_POST['language_code']])) {
@@ -254,7 +254,7 @@ function qtranslate_conf() {
 		if($_POST['original_lang']!=''&&$error=='') {
 			// language update
 			if($_POST['language_code']!=$_POST['original_lang']&&isset($q_config['language_name'][$_POST['language_code']])) {
-				$error = __('There is already a language with the new Language Code!', 'qtranslate');
+				$error = __('There is already a language with the same Language Code!', 'qtranslate');
 			} else {
 				// remove old language
 				unset($q_config['language_name'][$_POST['original_lang']]);
@@ -475,7 +475,7 @@ function qtranslate_conf() {
 				<td>
 					<label for="use_strftime"><input type="checkbox" name="use_strftime" id="use_strftime" value="1"<?php echo ($q_config['use_strftime'])?' checked="checked"':''; ?>/> <?php _e('Use strftime instead of date to allow multilingual dates and times.', 'qtranslate'); ?></label>
 					<br/>
-					<?php _e('You can display support for multilingual dates by unchecking this option. Once disabled, all date formats will need to be changed to PHP date format.', 'qtranslate'); ?>
+					<?php _e('You can disable support for multilingual dates by unchecking this option. Once disabled, all date formats will need to be changed to PHP date format.', 'qtranslate'); ?>
 				</td>
 			</tr>
 			<tr valign="top">

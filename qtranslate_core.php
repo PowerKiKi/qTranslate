@@ -103,6 +103,12 @@ function qtrans_init() {
 		$q_config['cookie_enabled'] = false;
 	}
 	
+	// Check for WP Secret Key Missmatch
+	//if($wp_default_secret_key != AUTH_KEY) {
+	//	global $error;
+	//	$error = __('Your $wp_default_secret_key is mismatchting with your AUTH_KEY. This might cause you not to be able to login anymore.','qtranslate');
+	//}
+	
 	// Filter all options for language tags
 	if(!defined('WP_ADMIN')) {
 		$alloptions = wp_load_alloptions();
@@ -110,6 +116,9 @@ function qtrans_init() {
 			add_filter('option_'.$option, 'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 		}
 	}
+	
+	// load plugin translations
+	load_plugin_textdomain('qtranslate', PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)));
 	
 	// remove traces of language
 	unset($_GET['lang']);
