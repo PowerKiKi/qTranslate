@@ -222,7 +222,7 @@ function qtranslate_conf() {
 	
 	// check for action
 	if(isset($_POST['qtranslate_reset']) && isset($_POST['qtranslate_reset2'])) {
-		$message = _('qTranslate has been reset.');
+		$message = __('qTranslate has been reset.', 'qtranslate');
 	} elseif(isset($_POST['default_language'])) {
 		// save settings
 		qtrans_checkSetting('default_language',			true, QT_STRING, true);

@@ -104,10 +104,10 @@ function qtrans_init() {
 	}
 	
 	// Check for WP Secret Key Missmatch
-	//if($wp_default_secret_key != AUTH_KEY) {
-	//	global $error;
-	//	$error = __('Your $wp_default_secret_key is mismatchting with your AUTH_KEY. This might cause you not to be able to login anymore.','qtranslate');
-	//}
+	if($wp_default_secret_key != AUTH_KEY) {
+		global $error;
+		$error = __('Your $wp_default_secret_key is mismatchting with your AUTH_KEY. This might cause you not to be able to login anymore.','qtranslate');
+	}
 	
 	// Filter all options for language tags
 	if(!defined('WP_ADMIN')) {
@@ -118,7 +118,7 @@ function qtrans_init() {
 	}
 	
 	// load plugin translations
-	load_plugin_textdomain('qtranslate', PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)));
+	load_plugin_textdomain('qtranslate', PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/lang');
 	
 	// remove traces of language
 	unset($_GET['lang']);
@@ -318,7 +318,8 @@ function qtrans_updateGettextDatabases($force = false) {
 	$next_update = get_option('qtranslate_next_update_mo');
 	if(time() < $next_update && !$force) return true;
 	update_option('qtranslate_next_update_mo', time() + 7*24*60*60);
-	foreach($q_config['locale'] as $locale) {
+	foreach($q_config['locale'] as $lang => $locale) {
+		if(!qtrans_isEnabled($lang)) continue;
 		if($ll = @fopen(ABSPATH.'wp-content/languages/'.$locale.'.mo','a')) {
 			// can access .mo file
 			fclose($ll);
@@ -716,6 +717,8 @@ function qtrans_enableLanguage($lang) {
 	}
 	$q_config['enabled_languages'][] = $lang;
     sort($q_config['enabled_languages']);
+	// force update of .mo files
+	qtrans_updateGettextDatabases(true);
 	return true;
 }
 
