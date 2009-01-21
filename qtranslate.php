@@ -186,6 +186,9 @@ $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
 // Don't convert URLs to this file types
 $q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js';
 
+// Activate Translation Services
+$q_config['translation_services'] = false;
+
 /* DEFAULT CONFIGURATION PART ENDS HERE */
 
 $q_config['term_name'] = array();
@@ -364,5 +367,7 @@ require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_wphacks.php");
 require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_widget.php");
 require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_configuration.php");
 require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_hooks.php");
+if($q_config['translation_services'])
+	require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_services.php");
 
 ?>
