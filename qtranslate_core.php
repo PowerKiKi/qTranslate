@@ -104,7 +104,8 @@ function qtrans_init() {
 	}
 	
 	// Check for WP Secret Key Missmatch
-	if($wp_default_secret_key != AUTH_KEY) {
+	global $wp_default_secret_key;
+	if(defined('AUTH_KEY') && isset($wp_default_secret_key) && $wp_default_secret_key != AUTH_KEY) {
 		global $error;
 		$error = __('Your $wp_default_secret_key is mismatchting with your AUTH_KEY. This might cause you not to be able to login anymore.','qtranslate');
 	}
@@ -123,7 +124,7 @@ function qtrans_init() {
 	// remove traces of language
 	unset($_GET['lang']);
 	$_SERVER['REQUEST_URI'] = $q_config['url_info']['url'];
-	$_SERVER["HTTP_HOST"] = $q_config['url_info']['host'];
+	$_SERVER['HTTP_HOST'] = $q_config['url_info']['host'];
 }
 
 // returns cleaned string and language information
