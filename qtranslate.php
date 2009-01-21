@@ -41,6 +41,9 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	ro, hu by Jani Monoses
 	ja by Brian Parker
 	
+	Plugin Translation Contributers
+	en, de by Qian Qin
+	es by Alejandro Urrutia
 */
 /*
 	Specials thanks to:
