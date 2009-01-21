@@ -544,8 +544,9 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 	if(defined('WP_ADMIN')&&!$forceadmin) return $url;
 	if(!qtrans_isEnabled($lang)) return "";
 	
-	// &amp; workaround
+	// & workaround
 	$url = str_replace('&amp;','&',$url);
+	$url = str_replace('&#038;','&',$url);
 	
 	// check if it's an external link
 	$urlinfo = qtrans_parseURL($url);
