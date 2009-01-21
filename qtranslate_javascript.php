@@ -200,8 +200,7 @@ function qtrans_initJS() {
 		";
 	foreach($q_config['enabled_languages'] as $language)
 		$q_config['js']['qtrans_integrate_title'].= "
-			if(document.getElementById('qtrans_title_".$language."').value!='')
-				t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_title_".$language."').value,t.value);
+			t.value = qtrans_integrate('".$language."',document.getElementById('qtrans_title_".$language."').value,t.value);
 			";
 	$q_config['js']['qtrans_integrate_title'].= "
 		}
