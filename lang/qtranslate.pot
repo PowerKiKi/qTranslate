@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/qtranslate\n"
-"POT-Creation-Date: 2009-01-20 11:20+0000\n"
+"POT-Creation-Date: 2009-01-22 16:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 msgid "Language Management"
 msgstr ""
 
-#: qtranslate_configuration.php:25 qtranslate_configuration.php:520
+#: qtranslate_configuration.php:25 qtranslate_configuration.php:521
 msgid "Languages"
 msgstr ""
 
@@ -78,9 +78,11 @@ msgstr ""
 
 #: qtranslate_configuration.php:106
 msgid ""
-"qTranslate uses <a href=\"http://www.php.net/manual/function.strftime.php"
-"\">strftime</a> by default! Use %q for day suffix (st,nd,rd,th). (Example: %"
-"A %B %e%q, %Y)"
+"Depending on your Date / Time Conversion Mode, you can either enter a <a "
+"href=\"http://www.php.net/manual/function.strftime.php\">strftime</a> (use %"
+"q for day suffix (st,nd,rd,th)) or <a href=\"http://www.php.net/manual/"
+"function.date.php\">date</a> format. This field is optional. (Example: %A %B "
+"%e%q, %Y)"
 msgstr ""
 
 #: qtranslate_configuration.php:109
@@ -89,8 +91,10 @@ msgstr ""
 
 #: qtranslate_configuration.php:111
 msgid ""
-"qTranslate uses <a href=\"http://www.php.net/manual/function.strftime.php"
-"\">strftime</a> by default! (Example: %I:%M %p)"
+"Depending on your Date / Time Conversion Mode, you can either enter a <a "
+"href=\"http://www.php.net/manual/function.strftime.php\">strftime</a> or <a "
+"href=\"http://www.php.net/manual/function.date.php\">date</a> format. This "
+"field is optional. (Example: %I:%M %p)"
 msgstr ""
 
 #: qtranslate_configuration.php:114
@@ -114,275 +118,303 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: qtranslate_configuration.php:225
+#: qtranslate_configuration.php:204
 msgid "qTranslate has been reset."
 msgstr ""
 
-#: qtranslate_configuration.php:237
+#: qtranslate_configuration.php:216
 msgid "Gettext databases updated."
 msgstr ""
 
-#: qtranslate_configuration.php:242
+#: qtranslate_configuration.php:221
 msgid "The Language must have a Not-Available Message!"
 msgstr ""
 
-#: qtranslate_configuration.php:243
-msgid "The Language must have a Time Format!"
-msgstr ""
-
-#: qtranslate_configuration.php:244
-msgid "The Language must have a Date Format!"
-msgstr ""
-
-#: qtranslate_configuration.php:245
+#: qtranslate_configuration.php:222
 msgid "The Language must have a Locale!"
 msgstr ""
 
-#: qtranslate_configuration.php:246
+#: qtranslate_configuration.php:223
 msgid "The Language must have a name!"
 msgstr ""
 
-#: qtranslate_configuration.php:247
+#: qtranslate_configuration.php:224
 msgid "Language Code has to be 2 characters long!"
 msgstr ""
 
-#: qtranslate_configuration.php:251 qtranslate_configuration.php:257
+#: qtranslate_configuration.php:228 qtranslate_configuration.php:234
 msgid "There is already a language with the same Language Code!"
 msgstr ""
 
-#: qtranslate_configuration.php:341
+#: qtranslate_configuration.php:337
 msgid "Language is already enabled or invalid!"
 msgstr ""
 
-#: qtranslate_configuration.php:346
+#: qtranslate_configuration.php:342
 msgid "Cannot disable Default Language!"
 msgstr ""
 
-#: qtranslate_configuration.php:348
+#: qtranslate_configuration.php:344
 msgid "Language is already disabled!"
 msgstr ""
 
-#: qtranslate_configuration.php:350
+#: qtranslate_configuration.php:346
 msgid "No such language!"
 msgstr ""
 
-#: qtranslate_configuration.php:358
+#: qtranslate_configuration.php:354
 #, php-format
 msgid "Could not write to \"%s\", Gettext Databases could not be downloaded!"
 msgstr ""
 
-#: qtranslate_configuration.php:369
+#: qtranslate_configuration.php:365
 msgid "Options saved."
 msgstr ""
 
-#: qtranslate_configuration.php:387
+#: qtranslate_configuration.php:383
 msgid "Edit Language"
 msgstr ""
 
-#: qtranslate_configuration.php:390
+#: qtranslate_configuration.php:386
 msgid "Save Changes &raquo;"
 msgstr ""
 
-#: qtranslate_configuration.php:395
+#: qtranslate_configuration.php:391
 msgid "Language Management (qTranslate Configuration)"
 msgstr ""
 
-#: qtranslate_configuration.php:396
+#: qtranslate_configuration.php:392
 #, php-format
 msgid ""
 "For help on how to configure qTranslate correctly, take a look at the <a "
 "href=\"%1$s\">qTranslate FAQ</a> and the <a href=\"%2$s\">Support Forum</a>."
 msgstr ""
 
-#: qtranslate_configuration.php:398
+#: qtranslate_configuration.php:394
 msgid "General Settings"
 msgstr ""
 
-#: qtranslate_configuration.php:401 qtranslate_configuration.php:403
+#: qtranslate_configuration.php:397 qtranslate_configuration.php:399
 msgid "Default Language"
 msgstr ""
 
-#: qtranslate_configuration.php:418
+#: qtranslate_configuration.php:414
 msgid "Hide Untranslated Content"
 msgstr ""
 
-#: qtranslate_configuration.php:420
+#: qtranslate_configuration.php:416
 msgid "Hide Content which is not available for the selected language."
 msgstr ""
 
-#: qtranslate_configuration.php:422
+#: qtranslate_configuration.php:418
 msgid ""
 "When checked, posts will be hidden if the content is not available for the "
 "selected language. If unchecked, a message will appear showing all the "
 "languages the content is available in."
 msgstr ""
 
-#: qtranslate_configuration.php:426
+#: qtranslate_configuration.php:419
+msgid ""
+"This function will not work correctly if you installed qTranslate on a blog "
+"with existing entries. In this case you will need to take a look at "
+"\"Convert Database\" under \"Advanced Settings\"."
+msgstr ""
+
+#: qtranslate_configuration.php:423
 msgid "Detect Browser Language"
 msgstr ""
 
-#: qtranslate_configuration.php:428
+#: qtranslate_configuration.php:425
 msgid "Detect the language of the browser and redirect accordingly."
 msgstr ""
 
-#: qtranslate_configuration.php:430
+#: qtranslate_configuration.php:427
 msgid ""
 "When the frontpage is visited via bookmark/external link/type-in, the "
 "visitor will be forwarded to the correct URL for the language specified by "
 "his browser."
 msgstr ""
 
-#: qtranslate_configuration.php:434
+#: qtranslate_configuration.php:431
 msgid "Advanced Settings"
 msgstr ""
 
-#: qtranslate_configuration.php:434
+#: qtranslate_configuration.php:431
 msgid "Show"
 msgstr ""
 
-#: qtranslate_configuration.php:437 qtranslate_configuration.php:439
+#: qtranslate_configuration.php:434 qtranslate_configuration.php:436
 msgid "URL Modification Mode"
 msgstr ""
 
-#: qtranslate_configuration.php:440
+#: qtranslate_configuration.php:437
 msgid "Use Query Mode (?lang=en)"
 msgstr ""
 
-#: qtranslate_configuration.php:441
+#: qtranslate_configuration.php:438
 msgid "Use Pre-Path Mode (Default, puts /en/ in front of URL)"
 msgstr ""
 
-#: qtranslate_configuration.php:442
+#: qtranslate_configuration.php:439
 msgid "Use Pre-Domain Mode (uses http://en.yoursite.com)"
 msgstr ""
 
-#: qtranslate_configuration.php:444
+#: qtranslate_configuration.php:441
 msgid ""
 "Pre-Path and Pre-Domain mode will only work with mod_rewrite/pretty "
 "permalinks. Additional Configuration is needed for Pre-Domain mode!"
 msgstr ""
 
-#: qtranslate_configuration.php:448
+#: qtranslate_configuration.php:445
 msgid "Flag Image Path"
 msgstr ""
 
-#: qtranslate_configuration.php:452
+#: qtranslate_configuration.php:449
 msgid ""
 "Relative path to the flag images, with trailing slash. (Default: wp-content/"
 "plugins/qtranslate/flags/)"
 msgstr ""
 
-#: qtranslate_configuration.php:456
+#: qtranslate_configuration.php:453
 msgid "Ignore Links"
 msgstr ""
 
-#: qtranslate_configuration.php:460
+#: qtranslate_configuration.php:457
 msgid ""
 "Don't convert Links to files of the given file types. (Default: gif,jpg,jpeg,"
 "png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js)"
 msgstr ""
 
-#: qtranslate_configuration.php:464
+#: qtranslate_configuration.php:461
 msgid "Update Gettext Databases"
 msgstr ""
 
-#: qtranslate_configuration.php:466
+#: qtranslate_configuration.php:463
 msgid "Automatically check for .mo-Database Updates of installed languages."
 msgstr ""
 
-#: qtranslate_configuration.php:468
+#: qtranslate_configuration.php:465
 msgid "Update Gettext databases now."
 msgstr ""
 
-#: qtranslate_configuration.php:470
+#: qtranslate_configuration.php:467
 msgid ""
 "qTranslate will query the Wordpress Localisation Repository every week and "
 "download the latest Gettext Databases (.mo Files)."
 msgstr ""
 
-#: qtranslate_configuration.php:474
+#: qtranslate_configuration.php:471
 msgid "Date / Time Conversion"
 msgstr ""
 
-#: qtranslate_configuration.php:476
-msgid "Use strftime instead of date to allow multilingual dates and times."
+#: qtranslate_configuration.php:473
+msgid "Use emulated date function."
 msgstr ""
 
-#: qtranslate_configuration.php:478
+#: qtranslate_configuration.php:474
 msgid ""
-"You can disable support for multilingual dates by unchecking this option. "
-"Once disabled, all date formats will need to be changed to PHP date format."
+"Use emulated date function and replace formats with the predefined formats "
+"for each language."
 msgstr ""
 
-#: qtranslate_configuration.php:482
+#: qtranslate_configuration.php:475
+msgid "Use strftime instead of date."
+msgstr ""
+
+#: qtranslate_configuration.php:476
+msgid ""
+"Use strftime instead of date and replace formats with the predefined formats "
+"for each language."
+msgstr ""
+
+#: qtranslate_configuration.php:477
+msgid ""
+"Depending on the mode selected, additional customizations of the theme may "
+"be needed."
+msgstr ""
+
+#: qtranslate_configuration.php:481
 msgid "Reset qTranslate"
 msgstr ""
 
-#: qtranslate_configuration.php:484
+#: qtranslate_configuration.php:483
 msgid "Check this box and click Save Changes to reset all qTranslate settings."
 msgstr ""
 
-#: qtranslate_configuration.php:486
+#: qtranslate_configuration.php:485
 msgid "Yes, I really want to reset qTranslate."
 msgstr ""
 
-#: qtranslate_configuration.php:488
+#: qtranslate_configuration.php:487
 msgid "Also delete Translations for Categories/Tags/Link Categories."
 msgstr ""
 
-#: qtranslate_configuration.php:490
+#: qtranslate_configuration.php:489
 msgid ""
 "If something isn't working correctly, you can always try to reset all "
 "qTranslate settings. A Reset won't delete any posts but will remove all "
 "settings (including all languages added)."
 msgstr ""
 
-#: qtranslate_configuration.php:494
+#: qtranslate_configuration.php:493
 msgid "Convert Database"
+msgstr ""
+
+#: qtranslate_configuration.php:495
+#, php-format
+msgid ""
+"If you are updating from qTranslate 1.x or Polyglot, <a href=\"%s\">click "
+"here</a> to convert posts to the new language tag format."
 msgstr ""
 
 #: qtranslate_configuration.php:496
 #, php-format
 msgid ""
-"If you are updating from qTranslate 1.x or Polyglot, <a href=\"%s\">click "
-"here</a> to convert posts to the new language tag format. This process is "
-"<b>irreversible</b>! Be sure to make a full database backup before clicking "
-"the link."
+"If you have installed qTranslate for the first time on a Wordpress with "
+"existing posts, you can either go through all your posts manually and save "
+"them in the correct language or <a href=\"%s\">click here</a> to mark all "
+"existing posts as written in the default language."
 msgstr ""
 
-#: qtranslate_configuration.php:513
+#: qtranslate_configuration.php:497
+msgid ""
+"Both processes are <b>irreversible</b>! Be sure to make a full database "
+"backup before clicking one of the links."
+msgstr ""
+
+#: qtranslate_configuration.php:514
 msgid "Save Changes"
 msgstr ""
 
-#: qtranslate_configuration.php:544
+#: qtranslate_configuration.php:545
 msgid "Disable"
 msgstr ""
 
-#: qtranslate_configuration.php:544
+#: qtranslate_configuration.php:545
 msgid "Enable"
 msgstr ""
 
-#: qtranslate_configuration.php:545
+#: qtranslate_configuration.php:546
 msgid "Edit"
 msgstr ""
 
-#: qtranslate_configuration.php:546
+#: qtranslate_configuration.php:547
 msgid "Default"
 msgstr ""
 
-#: qtranslate_configuration.php:546
+#: qtranslate_configuration.php:547
 msgid "Delete"
 msgstr ""
 
-#: qtranslate_configuration.php:557
+#: qtranslate_configuration.php:558
 msgid "Add Language"
 msgstr ""
 
-#: qtranslate_configuration.php:560
+#: qtranslate_configuration.php:561
 msgid "Add Language &raquo;"
 msgstr ""
 
-#: qtranslate_core.php:109
+#: qtranslate_core.php:110
 msgid ""
 "Your $wp_default_secret_key is mismatchting with your AUTH_KEY. This might "
 "cause you not to be able to login anymore."
@@ -424,15 +456,15 @@ msgstr ""
 msgid "Dropdown Box"
 msgstr ""
 
-#: qtranslate_wphacks.php:42 qtranslate_wphacks.php:50
+#: qtranslate_wphacks.php:55 qtranslate_wphacks.php:63
 msgid "Category Name"
 msgstr ""
 
-#: qtranslate_wphacks.php:46
+#: qtranslate_wphacks.php:59
 msgid "Tag Name"
 msgstr ""
 
-#: qtranslate_wphacks.php:59
+#: qtranslate_wphacks.php:72
 msgid ""
 "This version of qTranslate has not been tested with your Wordpress version. "
 "To prevent Wordpress from malfunctioning, the qTranslate Editor has been "
@@ -443,13 +475,13 @@ msgid ""
 "version</a>."
 msgstr ""
 
-#: qtranslate_wphacks.php:75
+#: qtranslate_wphacks.php:88
 msgid ""
 "The qTranslate Editor could not be loaded because WYSIWYG/TinyMCE is not "
 "activated in your profile."
 msgstr ""
 
-#: qtranslate_wphacks.php:282
+#: qtranslate_wphacks.php:295
 msgid "Title"
 msgstr ""
 
