@@ -62,10 +62,10 @@ define('QT_INTEGER',	3);
 define('QT_URL_QUERY',	1);
 define('QT_URL_PATH',	2);
 define('QT_URL_DOMAIN',	3);
-define('QT_DATE_OVERRIDE',		0);
 define('QT_STRFTIME_OVERRIDE',	1);
-define('QT_DATE',				2);
-define('QT_STRFTIME',			3);
+define('QT_DATE_OVERRIDE',		2);
+define('QT_DATE',				3);
+define('QT_STRFTIME',			4);
 
 // enable the use of following languages
 $q_config['enabled_languages'] = array('en', 'de', 'zh');

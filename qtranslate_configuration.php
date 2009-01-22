@@ -219,8 +219,6 @@ function qtranslate_conf() {
 	if(isset($_POST['original_lang'])) {
 		// validate form input
 		if($_POST['language_na_message']=='')		$error = __('The Language must have a Not-Available Message!', 'qtranslate');
-		//if($_POST['language_time_format']=='')		$error = __('The Language must have a Time Format!', 'qtranslate');
-		//if($_POST['language_date_format']=='')		$error = __('The Language must have a Date Format!', 'qtranslate');
 		if(strlen($_POST['language_locale'])<2)		$error = __('The Language must have a Locale!', 'qtranslate');
 		if($_POST['language_name']=='')				$error = __('The Language must have a name!', 'qtranslate');
 		if(strlen($_POST['language_code'])!=2)		$error = __('Language Code has to be 2 characters long!', 'qtranslate');
