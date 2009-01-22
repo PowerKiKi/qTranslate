@@ -97,4 +97,63 @@ function qtrans_getAvailableLanguages($text) {
 	return $result;
 }
 
+function qtrans_convertDateFormatToStrftimeFormat($format) {
+	$mappings = array(
+		'd' => '%d',
+		'D' => '%a',
+		'j' => '%E',
+		'l' => '%A',
+		'N' => '%u',
+		'S' => '%q',
+		'w' => '%f',
+		'z' => '%F',
+		'W' => '%V',
+		'F' => '%B',
+		'm' => '%m',
+		'M' => '%b',
+		'n' => '%i',
+		't' => '%J',
+		'L' => '%k',
+		'o' => '%G',
+		'Y' => '%Y',
+		'y' => '%y',
+		'a' => '%P',
+		'A' => '%p',
+		'B' => '%K',
+		'g' => '%l',
+		'G' => '%L',
+		'h' => '%I',
+		'H' => '%H',
+		'i' => '%M',
+		's' => '%S',
+		'u' => '%N',
+		'e' => '%Q',
+		'I' => '%o',
+		'O' => '%O',
+		'P' => '%s',
+		'T' => '%v',
+		'Z' => '%1',
+		'c' => '%2',
+		'r' => '%3',
+		'U' => '%4'
+	);
+	
+	$date_parameters = array();
+	$strftime_parameters = array();
+	$date_parameters[] = '#%#'; 			$strftime_parameters[] = '%%';
+	foreach($mappings as $df => $sf) {
+		$date_parameters[] = '#(([^%\\\\])'.$df.'|^'.$df.')#';	$strftime_parameters[] = '${2}'.$sf;
+	}
+	return preg_replace($date_parameters, $strftime_parameters, $format);
+}
+
+function qtrans_convertFormat($format) {
+	global $q_config;
+	// see if format has multilingual information
+	$format = __($format);
+	if($q_config['use_strftime'])
+		return $format;
+	return qtrans_convertDateFormatToStrftimeFormat($format);
+}
+
 ?>
