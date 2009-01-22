@@ -287,6 +287,25 @@ function qtranslate_conf() {
 			$wpdb->query('UPDATE '.$wpdb->posts.' set post_content = REPLACE(post_content, "[/lang_'.$lang.']","<!--:-->")');
 		}
 		$message = "Database Update successful!";
+	} elseif(isset($_GET['markdefault'])){
+		// update language tags
+		global $wpdb;
+		$wpdb->show_errors();
+		$result = $wpdb->get_results('SELECT ID, post_title, post_content FROM '.$wpdb->posts.' WHERE NOT (post_content LIKE "%<!--:-->%" OR post_title LIKE "%<!--:-->%")');
+		foreach($result as $post) {
+			$content = qtrans_split($post->post_content);
+			$title = qtrans_split($post->post_title);
+			foreach($q_config['enabled_languages'] as $language) {
+				if($language != $q_config['default_language']) {
+					$content[$language] = "";
+					$title[$language] = "";
+				}
+			}
+			$content = qtrans_join($content);
+			$title = qtrans_join($title);
+			$wpdb->query('UPDATE '.$wpdb->posts.' set post_content = "'.mysql_escape_string($content).'", post_title = "'.mysql_escape_string($title).'" WHERE ID='.$post->ID);
+		}
+		$message = "All Posts marked as default language!";
 	} elseif(isset($_GET['edit'])){
 		$original_lang = $_GET['edit'];
 		$language_code = $_GET['edit'];
@@ -399,6 +418,7 @@ function qtranslate_conf() {
 					<label for="hide_untranslated"><input type="checkbox" name="hide_untranslated" id="hide_untranslated" value="1"<?php echo ($q_config['hide_untranslated'])?' checked="checked"':''; ?>/> <?php _e('Hide Content which is not available for the selected language.', 'qtranslate'); ?></label>
 					<br/>
 					<?php _e('When checked, posts will be hidden if the content is not available for the selected language. If unchecked, a message will appear showing all the languages the content is available in.', 'qtranslate'); ?>
+					<?php _e('This function will not work correctly if you installed qTranslate on a blog with existing entries. In this case you will need to take a look at "Convert Database" under "Advanced Settings".', 'qtranslate'); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -472,7 +492,9 @@ function qtranslate_conf() {
 			<tr>
 				<th scope="row"><?php _e('Convert Database', 'qtranslate');?></th>
 				<td>
-					<?php printf(__('If you are updating from qTranslate 1.x or Polyglot, <a href="%s">click here</a> to convert posts to the new language tag format. This process is <b>irreversible</b>! Be sure to make a full database backup before clicking the link.', 'qtranslate'), $clean_uri.'&convert=true'); ?>
+					<?php printf(__('If you are updating from qTranslate 1.x or Polyglot, <a href="%s">click here</a> to convert posts to the new language tag format.', 'qtranslate'), $clean_uri.'&convert=true'); ?>
+					<?php printf(__('If you have installed qTranslate for the first time on a Wordpress with existing posts, you can either go through all your posts manually and save them in the correct language or <a href="%s">click here</a> to mark all existing posts as written in the default language.', 'qtranslate'), $clean_uri.'&markdefault=true'); ?>
+					<?php _e('Both processes are <b>irreversible</b>! Be sure to make a full database backup before clicking one of the links.', 'qtranslate'); ?>
 				</td>
 			</tr>
 		</table>

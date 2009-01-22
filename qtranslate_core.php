@@ -646,7 +646,7 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 }
 
 // splits text with language tags into array
-function qtrans_split($text) {
+function qtrans_split($text, $quicktags = true) {
 	global $q_config;
 	
 	//init vars
@@ -669,7 +669,7 @@ function qtrans_split($text) {
 			}
 			continue;
 		// detect quicktags
-		} elseif(preg_match("#^\[:([a-z]{2})\]$#ism", $block, $matches)) {
+		} elseif($quicktags && preg_match("#^\[:([a-z]{2})\]$#ism", $block, $matches)) {
 			if(qtrans_isEnabled($matches[1])) {
 				$current_language = $matches[1];
 			} else {
@@ -702,6 +702,30 @@ function qtrans_split($text) {
 		$result[$lang] = preg_replace("#(<!--more-->|<!--nextpage-->)+$#ism","",$lang_content);
 	}
 	return $result;
+}
+
+function qtrans_join($texts) {
+	global $q_config;
+	if(!is_array($texts)) $texts = qtrans_split($texts, false);
+	$split_regex = "#<!--more-->#ism";
+	$max = 0;
+	$text = "";
+	
+	foreach($q_config['enabled_languages'] as $language) {
+		$texts[$language] = preg_split($split_regex, $texts[$language]);
+		if(sizeof($texts[$language]) > $max) $max = sizeof($texts[$language]);
+	}
+	for($i=0;$i<$max;$i++) {
+		if($i>=1) {
+			$text .= '<!--more-->';
+		}
+		foreach($q_config['enabled_languages'] as $language) {
+			if(isset($texts[$language][$i]) && $texts[$language][$i] !== '') {
+				$text .= '<!--:'.$language.'-->'.$texts[$language][$i].'<!--:-->';
+			}
+		}
+	}
+	return $text;
 }
 
 function qtrans_disableLanguage($lang) {
