@@ -240,9 +240,9 @@ function qtrans_loadConfig() {
 	if(!is_array($enabled_languages)) $enabled_languages = $q_config['enabled_languages'];
 	if(!is_array($term_name)) $term_name = $q_config['term_name'];
 	if(empty($default_language)) $default_language = $q_config['default_language'];
-	if(empty($use_strftime)) $use_strftime = $q_config['use_strftime'];
+	if(!isset($use_strftime)) $use_strftime = $q_config['use_strftime'];
 	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
-	if($flag_location==='') $flag_location = $q_config['flag_location'];
+	if(!is_string($flag_location) || $flag_location==='') $flag_location = $q_config['flag_location'];
 	$detect_browser_language = qtrans_validateBool($detect_browser_language, $q_config['detect_browser_language']);
 	$hide_untranslated = qtrans_validateBool($hide_untranslated, $q_config['hide_untranslated']);
 	$auto_update_mo = qtrans_validateBool($auto_update_mo, $q_config['auto_update_mo']);

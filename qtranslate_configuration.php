@@ -103,12 +103,12 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 <div class="form-field">
 	<label for="language_date_format"><?php _e('Date Format', 'qtranslate') ?></label>
 	<input name="language_date_format" id="language_date_format" type="text" value="<?php echo $language_date_format; ?>"/>
-    <p><?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a> by default! Use %q for day suffix (st,nd,rd,th). (Example: %A %B %e%q, %Y)', 'qtranslate'); ?></p>
+    <p><?php _e('Depending on your Date / Time Conversion Mode, you can either enter a <a href="http://www.php.net/manual/function.strftime.php">strftime</a> (use %q for day suffix (st,nd,rd,th)) or <a href="http://www.php.net/manual/function.date.php">date</a> format. This field is optional. (Example: %A %B %e%q, %Y)', 'qtranslate'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_time_format"><?php _e('Time Format', 'qtranslate') ?></label>
 	<input name="language_time_format" id="language_time_format" type="text" value="<?php echo $language_time_format; ?>"/>
-    <p><?php _e('qTranslate uses <a href="http://www.php.net/manual/function.strftime.php">strftime</a> by default! (Example: %I:%M %p)', 'qtranslate'); ?></p>
+    <p><?php _e('Depending on your Date / Time Conversion Mode, you can either enter a <a href="http://www.php.net/manual/function.strftime.php">strftime</a> or <a href="http://www.php.net/manual/function.date.php">date</a> format. This field is optional. (Example: %I:%M %p)', 'qtranslate'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_na_message"><?php _e('Not Available Message', 'qtranslate') ?></label>
@@ -209,7 +209,7 @@ function qtranslate_conf() {
 		qtrans_checkSetting('ignore_file_types',		true, QT_STRING);
 		qtrans_checkSetting('detect_browser_language',	true, QT_BOOLEAN);
 		qtrans_checkSetting('hide_untranslated',		true, QT_BOOLEAN);
-		qtrans_checkSetting('use_strftime',				true, QT_BOOLEAN);
+		qtrans_checkSetting('use_strftime',				true, QT_INTEGER);
 		qtrans_checkSetting('url_mode',					true, QT_INTEGER);
 		qtrans_checkSetting('auto_update_mo',			true, QT_BOOLEAN);
 		if($_POST['update_mo_now']=='1' && qtrans_updateGettextDatabases(true))
@@ -219,8 +219,8 @@ function qtranslate_conf() {
 	if(isset($_POST['original_lang'])) {
 		// validate form input
 		if($_POST['language_na_message']=='')		$error = __('The Language must have a Not-Available Message!', 'qtranslate');
-		if($_POST['language_time_format']=='')		$error = __('The Language must have a Time Format!', 'qtranslate');
-		if($_POST['language_date_format']=='')		$error = __('The Language must have a Date Format!', 'qtranslate');
+		//if($_POST['language_time_format']=='')		$error = __('The Language must have a Time Format!', 'qtranslate');
+		//if($_POST['language_date_format']=='')		$error = __('The Language must have a Date Format!', 'qtranslate');
 		if(strlen($_POST['language_locale'])<2)		$error = __('The Language must have a Locale!', 'qtranslate');
 		if($_POST['language_name']=='')				$error = __('The Language must have a name!', 'qtranslate');
 		if(strlen($_POST['language_code'])!=2)		$error = __('Language Code has to be 2 characters long!', 'qtranslate');
@@ -476,7 +476,7 @@ function qtranslate_conf() {
 					<label><input type="radio" name="use_strftime" value="<?php echo QT_DATE_OVERRIDE; ?>" <?php echo ($q_config['use_strftime']==QT_DATE_OVERRIDE)?' checked="checked"':''; ?>/> <?php _e('Use emulated date function and replace formats with the predefined formats for each language.', 'qtranslate'); ?></label><br />
 					<label><input type="radio" name="use_strftime" value="<?php echo QT_STRFTIME; ?>" <?php echo ($q_config['use_strftime']==QT_STRFTIME)?' checked="checked"':''; ?>/> <?php _e('Use strftime instead of date.', 'qtranslate'); ?></label><br />
 					<label><input type="radio" name="use_strftime" value="<?php echo QT_STRFTIME_OVERRIDE; ?>" <?php echo ($q_config['use_strftime']==QT_STRFTIME_OVERRIDE)?' checked="checked"':''; ?>/> <?php _e('Use strftime instead of date and replace formats with the predefined formats for each language.', 'qtranslate'); ?></label><br />
-					<?php _e('You can disable support for multilingual dates by unchecking this option. Once disabled, all date formats will need to be changed to PHP date format.', 'qtranslate'); ?>
+					<?php _e('Depending on the mode selected, additional customizations of the theme may be needed.', 'qtranslate'); ?>
 				</td>
 			</tr>
 			<tr valign="top">

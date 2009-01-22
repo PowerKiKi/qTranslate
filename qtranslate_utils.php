@@ -189,17 +189,17 @@ function qtrans_convertTimeFormat($format) {
 	return qtrans_convertFormat($format, $default_format);
 }
 
-function qtrans_formatPostDateTime($format = '') {
+function qtrans_formatPostDateTime($format) {
 	global $post;
 	return qtrans_strftime(qtrans_convertFormat($format, $format), mysql2date('U',$post->post_date), '', $before, $after);
 }
 
-function qtrans_formatCommentDateTime($format = '') {
+function qtrans_formatCommentDateTime($format) {
 	global $comment;
 	return qtrans_strftime(qtrans_convertFormat($format, $format), mysql2date('U',$post->comment_date), '', $before, $after);
 }
 
-function qtrans_formatPostModifiedDateTime($format = '') {
+function qtrans_formatPostModifiedDateTime($format) {
 	global $post;
 	return qtrans_strftime(qtrans_convertFormat($format, $format), mysql2date('U',$post->post_modified), '', $before, $after);
 }
