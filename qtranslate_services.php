@@ -19,6 +19,29 @@
 
 /* qTranslate Services */
 
+// hooks
+add_action('qtranslate_css',				'qs_css');
+add_filter('qtranslate_toolbar',			'qs_toobar');
+add_filter('qtranslate_modify_editor_js',	'qs_editor_js');
+
+function qs_toobar($content) {
+	// Create Translate Button 
+	$content .= qtrans_createEditorToolbarButton('translate', 'translate', 'init_qs', __('Translate'));
+	return $content;
+}
+
+function qs_css() {
+	echo "#qtrans_select_translate { margin-right:11px }";
+}
+
+function qs_editor_js($content) {
+	$content .= "
+		init_qs = function(action, id) {
+			alert('blub');
+		}
+		";
+	return $content;
+}
 
 
 ?>

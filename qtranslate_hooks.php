@@ -85,6 +85,7 @@ function qtrans_adminHeader() {
 	echo	"-webkit-border-top-right-radius: 6px; -webkit-border-top-left-radius: 6px; -khtml-border-top-right-radius: 6px; -khtml-border-top-left-radius: 6px;";
 	echo	"border-top-right-radius: 6px; border-top-left-radius: 6px; }\n";
 	echo "#edButtonPreview { margin-left:6px !important;}";
+	do_action('qtranslate_css');
 	echo "</style>\n";
 	return qtrans_optionFilter('disable');
 }
