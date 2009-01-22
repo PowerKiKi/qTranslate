@@ -147,13 +147,61 @@ function qtrans_convertDateFormatToStrftimeFormat($format) {
 	return preg_replace($date_parameters, $strftime_parameters, $format);
 }
 
-function qtrans_convertFormat($format) {
+function qtrans_convertFormat($format, $default_format) {
+	global $q_config;
+	switch($q_config['use_strftime']) {
+		case QT_DATE:
+			return qtrans_convertDateFormatToStrftimeFormat($format);
+		case QT_DATE_OVERRIDE:
+			return qtrans_convertDateFormatToStrftimeFormat($default_format);
+		case QT_STRFTIME:
+			return $format;
+		case QT_STRFTIME_OVERRIDE:
+			return $default_format;
+	}
+}
+
+function qtrans_convertDateFormat($format) {
 	global $q_config;
 	// see if format has multilingual information
 	$format = __($format);
-	if($q_config['use_strftime'])
-		return $format;
-	return qtrans_convertDateFormatToStrftimeFormat($format);
+	if(isset($q_config['date_format'][$q_config['language']])) {
+		$default_format = $q_config['date_format'][$q_config['language']];
+	} elseif(isset($q_config['date_format'][$q_config['default_language']])) {
+		$default_format = $q_config['date_format'][$q_config['default_language']];
+	} else {
+		$default_format = '';
+	}
+	return qtrans_convertFormat($format, $default_format);
+}
+
+function qtrans_convertTimeFormat($format) {
+	global $q_config;
+	// see if format has multilingual information
+	$format = __($format);
+	if(isset($q_config['time_format'][$q_config['language']])) {
+		$default_format = $q_config['time_format'][$q_config['language']];
+	} elseif(isset($q_config['time_format'][$q_config['default_language']])) {
+		$default_format = $q_config['time_format'][$q_config['default_language']];
+	} else {
+		$default_format = '';
+	}
+	return qtrans_convertFormat($format, $default_format);
+}
+
+function qtrans_formatPostDateTime($format = '') {
+	global $post;
+	return qtrans_strftime(qtrans_convertFormat($format, $format), mysql2date('U',$post->post_date), '', $before, $after);
+}
+
+function qtrans_formatCommentDateTime($format = '') {
+	global $comment;
+	return qtrans_strftime(qtrans_convertFormat($format, $format), mysql2date('U',$post->comment_date), '', $before, $after);
+}
+
+function qtrans_formatPostModifiedDateTime($format = '') {
+	global $post;
+	return qtrans_strftime(qtrans_convertFormat($format, $format), mysql2date('U',$post->post_modified), '', $before, $after);
 }
 
 ?>

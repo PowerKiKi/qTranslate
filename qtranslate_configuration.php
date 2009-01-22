@@ -472,8 +472,10 @@ function qtranslate_conf() {
 			<tr valign="top">
 				<th scope="row"><?php _e('Date / Time Conversion', 'qtranslate');?></th>
 				<td>
-					<label for="use_strftime"><input type="checkbox" name="use_strftime" id="use_strftime" value="1"<?php echo ($q_config['use_strftime'])?' checked="checked"':''; ?>/> <?php _e('Use strftime instead of date to allow multilingual dates and times.', 'qtranslate'); ?></label>
-					<br/>
+					<label><input type="radio" name="use_strftime" value="<?php echo QT_DATE; ?>" <?php echo ($q_config['use_strftime']==QT_DATE)?' checked="checked"':''; ?>/> <?php _e('Use emulated date function.', 'qtranslate'); ?></label><br />
+					<label><input type="radio" name="use_strftime" value="<?php echo QT_DATE_OVERRIDE; ?>" <?php echo ($q_config['use_strftime']==QT_DATE_OVERRIDE)?' checked="checked"':''; ?>/> <?php _e('Use emulated date function and replace formats with the predefined formats for each language.', 'qtranslate'); ?></label><br />
+					<label><input type="radio" name="use_strftime" value="<?php echo QT_STRFTIME; ?>" <?php echo ($q_config['use_strftime']==QT_STRFTIME)?' checked="checked"':''; ?>/> <?php _e('Use strftime instead of date.', 'qtranslate'); ?></label><br />
+					<label><input type="radio" name="use_strftime" value="<?php echo QT_STRFTIME_OVERRIDE; ?>" <?php echo ($q_config['use_strftime']==QT_STRFTIME_OVERRIDE)?' checked="checked"':''; ?>/> <?php _e('Use strftime instead of date and replace formats with the predefined formats for each language.', 'qtranslate'); ?></label><br />
 					<?php _e('You can disable support for multilingual dates by unchecking this option. Once disabled, all date formats will need to be changed to PHP date format.', 'qtranslate'); ?>
 				</td>
 			</tr>

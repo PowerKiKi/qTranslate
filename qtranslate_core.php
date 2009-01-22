@@ -240,12 +240,12 @@ function qtrans_loadConfig() {
 	if(!is_array($enabled_languages)) $enabled_languages = $q_config['enabled_languages'];
 	if(!is_array($term_name)) $term_name = $q_config['term_name'];
 	if(empty($default_language)) $default_language = $q_config['default_language'];
-	if($flag_location=='') $flag_location = $q_config['flag_location'];
-	$use_strftime = qtrans_validateBool($use_strftime, $q_config['use_strftime']);
+	if(empty($use_strftime)) $use_strftime = $q_config['use_strftime'];
+	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
+	if($flag_location==='') $flag_location = $q_config['flag_location'];
 	$detect_browser_language = qtrans_validateBool($detect_browser_language, $q_config['detect_browser_language']);
 	$hide_untranslated = qtrans_validateBool($hide_untranslated, $q_config['hide_untranslated']);
 	$auto_update_mo = qtrans_validateBool($auto_update_mo, $q_config['auto_update_mo']);
-	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
 	
 	// check for invalid permalink/url mode combinations
 	$permalink_structure = get_option('permalink_structure');
@@ -291,10 +291,7 @@ function qtrans_saveConfig() {
 	update_option('qtranslate_ignore_file_types', $q_config['ignore_file_types']);
 	update_option('qtranslate_url_mode', $q_config['url_mode']);
 	update_option('qtranslate_term_name', $q_config['term_name']);
-	if($q_config['use_strftime'])
-		update_option('qtranslate_use_strftime', '1');
-	else
-		update_option('qtranslate_use_strftime', '0');
+	update_option('qtranslate_use_strftime', $q_config['use_strftime']);
 	if($q_config['detect_browser_language'])
 		update_option('qtranslate_detect_browser_language', '1');
 	else
@@ -377,9 +374,11 @@ function qtrans_updateTermLibrary() {
 	}
 }
 
-/* BEGIN DATE FUNCTIONS */
+/* BEGIN DATE TIME FUNCTIONS */
 
-function qtrans_strftime($format, $date) {
+function qtrans_strftime($format, $date, $default = '', $before = '', $after = '') {
+	// don't do anything if format is not given
+	if($format=='') return $default;
 	// add date suffix ability (%q) to strftime
 	$day = intval(ltrim(strftime("%d",$date),'0'));
 	$search = array();
@@ -417,89 +416,43 @@ function qtrans_strftime($format, $date) {
 	$search[] = '/(([^%])%3|^%3)/'; $replace[] = '${2}'.date('r',$date); // date r
 	$search[] = '/(([^%])%4|^%4)/'; $replace[] = '${2}'.$date; // date U
 	$format = preg_replace($search,$replace,$format);
-	return strftime($format, $date);
-}
-
-function qtrans_date($date, $default = '', $format ='', $before = '', $after = '') {
-	global $q_config;
-	if($format==''&&isset($q_config['date_format'][$q_config['language']]))
-		$format = $q_config['date_format'][$q_config['language']];
-	// use format for default language if not set
-	if($format==''&&isset($q_config['date_format'][$q_config['default_language']]))
-		$format = $q_config['date_format'][$q_config['default_language']];
-	// use wordpress generated string if both are not set
-	if($format=='') return $default;
-	// return translated date
-	return $before.qtrans_strftime($format, $date).$after;
+	return $before.strftime($format, $date).$after;
 }
 
 function qtrans_dateFromPostForCurrentLanguage($old_date, $format ='', $before = '', $after = '') {
 	global $post;
-	return qtrans_date(mysql2date('U',$post->post_date), $old_date, qtrans_convertFormat($format), $before, $after);
+	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$post->post_date), $old_date, $before, $after);
 }
 
 function qtrans_dateFromCommentForCurrentLanguage($old_date, $format ='') {
 	global $comment;
-	return qtrans_date(mysql2date('U',$comment->comment_date), $old_date, qtrans_convertFormat($format));
+	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$post->comment_date), $old_date, $before, $after);
 }
 
 function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
 	global $post;
-	return qtrans_date(mysql2date('U',$post->post_modified), $old_date, qtrans_convertFormat($format));
-}
-
-// functions for template authors
-function qtrans_formatPostDateTime($format = '') {
-	global $post, $q_config;
-	return qtrans_date(mysql2date('U',$post->post_date), '', qtrans_convertFormat($format), '', '');
-}
-
-function qtrans_formatCommentDateTime($format = '') {
-	global $comment;
-	return qtrans_date(mysql2date('U',$comment->comment_date), '', qtrans_convertFormat($format), '', '');
-}
-
-function qtrans_formatPostModifiedDateTime($format = '') {
-	global $post;
-	return qtrans_date(mysql2date('U',$post->post_modified), '', qtrans_convertFormat($format), '', '');
-}
-
-/* END DATE FUNCTIONS */
-
-/* BEGIN TIME FUNCTIONS */
-
-function qtrans_time($time, $default = '', $format ='') {
-	global $q_config;
-	if($format==''&&isset($q_config['time_format'][$q_config['language']]))
-		$format = $q_config['time_format'][$q_config['language']];
-	// use format for default language if not set
-	if($format==''&&isset($q_config['time_format'][$q_config['default_language']]))
-		$format = $q_config['time_format'][$q_config['default_language']];
-	// use wordpress generated string if both are not set
-	if($format=='') return $default;
-	// return translated date
-	return $before.qtrans_strftime($format, $time).$after;
+	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$post->post_modified), $old_date, $before, $after);
 }
 
 function qtrans_timeFromCommentForCurrentLanguage($old_date, $format = '', $gmt = false) {
 	global $comment;
 	$comment_date = $gmt? $comment->comment_date_gmt : $comment->comment_date;
-	return qtrans_time(mysql2date('U',$comment_date), $old_date, qtrans_convertFormat($format));
+	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$comment_date), $old_date);
 }
 
 function qtrans_timeModifiedFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
 	global $post;
 	$post_date = $gmt? $post->post_modified_gmt : $post->post_modified;
-	return qtrans_time(mysql2date('U',$post_date), $old_date, qtrans_convertFormat($format));
+	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$post_date), $old_date);
 }
 
 function qtrans_timeFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
 	global $post;
 	$post_date = $gmt? $post->post_date_gmt : $post->post_date;
-	return qtrans_time(mysql2date('U',$post_date), $old_date, qtrans_convertFormat($format));
+	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$post_date), $old_date);
 }
 
-/* END TIME FUNCTIONS */
+/* END DATE TIME FUNCTIONS */
 
 function qtrans_useTermLib($obj) {
 	global $q_config;

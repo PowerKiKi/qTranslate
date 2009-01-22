@@ -62,6 +62,10 @@ define('QT_INTEGER',	3);
 define('QT_URL_QUERY',	1);
 define('QT_URL_PATH',	2);
 define('QT_URL_DOMAIN',	3);
+define('QT_DATE_OVERRIDE',		0);
+define('QT_STRFTIME_OVERRIDE',	1);
+define('QT_DATE',				2);
+define('QT_STRFTIME',			3);
 
 // enable the use of following languages
 $q_config['enabled_languages'] = array('en', 'de', 'zh');
@@ -138,10 +142,10 @@ $q_config['not_available']['ro'] = "Din păcate acest articol este disponibil do
 $q_config['not_available']['hu'] = "Sajnos ennek a bejegyzésnek csak %LANG:, : és % nyelvű változata van.";
 $q_config['not_available']['ja'] = "申し訳ありません、このコンテンツはただ今　%LANG:、 :と %　のみです。";
 
-// enable strftime usage
-$q_config['use_strftime'] = true;
+// enable strftime usage (backward compability)
+$q_config['use_strftime'] = QT_DATE;
 
-// Date Configuration (uses strftime)
+// Date Configuration
 $q_config['date_format']['en'] = '%A %B %e%q, %Y';
 $q_config['date_format']['de'] = '%A, der %e. %B %Y';
 $q_config['date_format']['zh'] = '%x %A';
