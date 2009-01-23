@@ -424,20 +424,15 @@ function qtrans_dateFromPostForCurrentLanguage($old_date, $format ='', $before =
 	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$post->post_date), $old_date, $before, $after);
 }
 
-function qtrans_dateFromCommentForCurrentLanguage($old_date, $format ='') {
-	global $comment;
-	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$comment->comment_date), $old_date, $before, $after);
-}
-
 function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
 	global $post;
 	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$post->post_modified), $old_date, $before, $after);
 }
 
-function qtrans_timeFromCommentForCurrentLanguage($old_date, $format = '', $gmt = false) {
-	global $comment;
-	$comment_date = $gmt? $comment->comment_date_gmt : $comment->comment_date;
-	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$comment_date), $old_date);
+function qtrans_timeFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
+	global $post;
+	$post_date = $gmt? $post->post_date_gmt : $post->post_date;
+	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$post_date), $old_date);
 }
 
 function qtrans_timeModifiedFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
@@ -446,10 +441,15 @@ function qtrans_timeModifiedFromPostForCurrentLanguage($old_date, $format = '', 
 	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$post_date), $old_date);
 }
 
-function qtrans_timeFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
-	global $post;
-	$post_date = $gmt? $post->post_date_gmt : $post->post_date;
-	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$post_date), $old_date);
+function qtrans_dateFromCommentForCurrentLanguage($old_date, $format ='') {
+	global $comment;
+	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$comment->comment_date), $old_date, $before, $after);
+}
+
+function qtrans_timeFromCommentForCurrentLanguage($old_date, $format = '', $gmt = false) {
+	global $comment;
+	$comment_date = $gmt? $comment->comment_date_gmt : $comment->comment_date;
+	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$comment_date), $old_date);
 }
 
 /* END DATE TIME FUNCTIONS */
