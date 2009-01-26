@@ -36,7 +36,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	fi by Tatu Siltanen
 	fr by Damien Choizit
 	nl by RobV
-	se by bear3556
+	se by bear3556, johdah 
 	it by Lorenzo De Tomasi
 	ro, hu by Jani Monoses
 	ja by Brian Parker
@@ -154,7 +154,7 @@ $q_config['date_format']['zh'] = '%x %A';
 $q_config['date_format']['fi'] = '%e.&m.%C';
 $q_config['date_format']['fr'] = '%A %e %B %Y';
 $q_config['date_format']['nl'] = '%d/%m/%y';
-$q_config['date_format']['se'] = '%d/%m/%y';
+$q_config['date_format']['se'] = '%Y/%m/%d';
 $q_config['date_format']['it'] = '%e %B %Y';
 $q_config['date_format']['ro'] = '%A, %e %B %Y';
 $q_config['date_format']['hu'] = '%Y %B %e, %A';
