@@ -369,7 +369,7 @@ function qtranslate_conf() {
 		}
 	}
 	// don't accidently delete/enable/disable twice
-	$clean_uri = preg_replace("/&(delete|enable|disable)=[a-z]{2}/i","",$_SERVER['REQUEST_URI']);
+	$clean_uri = preg_replace("/&(delete|enable|disable|convert|markdefault)=[^&#]*/i","",$_SERVER['REQUEST_URI']);
 
 // Generate XHTML
 
