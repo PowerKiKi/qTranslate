@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. For Problems visit the <a href="http://www.qianqin.de/qtranslate/forum/">Support Forum</a>.
-Version: 2.2.1
+Version: 2.2.2b
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
@@ -59,6 +59,8 @@ define('QT_SUPPORTED_WP_VERSION', '2.7');
 define('QT_STRING',		1);
 define('QT_BOOLEAN',	2);
 define('QT_INTEGER',	3);
+define('QT_URL',		4);
+define('QT_LANGUAGE',	5);
 define('QT_URL_QUERY',	1);
 define('QT_URL_PATH',	2);
 define('QT_URL_DOMAIN',	3);
@@ -364,14 +366,14 @@ $q_config['windows_locale']['zh'] = "Chinese";
 $q_config['windows_locale']['zu'] = "Zulu";
 
 // Load qTranslate
-require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_javascript.php");
-require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_utils.php");
-require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_core.php");
-require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_wphacks.php");
-require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_widget.php");
-require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_configuration.php");
-require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_hooks.php");
+require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_javascript.php");
+require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_utils.php");
+require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_core.php");
+require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_wphacks.php");
+require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_widget.php");
+require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_configuration.php");
+require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_hooks.php");
 if($q_config['translation_services'])
-	require_once(ABSPATH."wp-content/plugins/qtranslate/qtranslate_services.php");
+	require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_services.php");
 
 ?>

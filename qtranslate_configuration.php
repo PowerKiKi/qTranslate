@@ -31,7 +31,7 @@ function qtrans_adminMenu() {
 	
 	// generate menu with flags for every enabled language
 	foreach($q_config['enabled_languages'] as $id => $language) {
-		$menu[] = array(__($q_config['language_name'][$language], 'qtranslate'), 'read', '?lang='.$language, '', 'menu-top', 'menu-language-'.$language, get_option('home').'/'.$q_config['flag_location'].$q_config['flag'][$language]);
+		$menu[] = array(__($q_config['language_name'][$language], 'qtranslate'), 'read', '?lang='.$language, '', 'menu-top', 'menu-language-'.$language, trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]);
 	}
 	$menu[] = array( '', 'read', '', '', 'wp-menu-separator-last' );
 }
@@ -50,7 +50,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 	<label for="language_flag"><?php _e('Flag', 'qtranslate') ?></label>
 	<?php 
 	$files = array();
-	if($dir_handle = @opendir(ABSPATH.$q_config['flag_location'])) {
+	if($dir_handle = @opendir(trailingslashit(WP_CONTENT_DIR).$q_config['flag_location'])) {
 		while (false !== ($file = readdir($dir_handle))) {
 			if(preg_match("/\.(jpeg|jpg|gif|png)$/i",$file)) {
 				$files[] = $file;
@@ -81,7 +81,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 //<![CDATA[
 	function switch_flag(url) {
 		document.getElementById('preview_flag').style.display = "inline";
-		document.getElementById('preview_flag').src = "<?php echo get_option('home').'/'.$q_config['flag_location'];?>" + url;
+		document.getElementById('preview_flag').src = "<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'];?>" + url;
 	}
 	
 	switch_flag(document.getElementById('language_flag').value);
@@ -121,12 +121,15 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 <?php
 }
 
-function qtrans_checkSetting($var, $updateOption = false, $type = QT_STRING, $isLanguage = false) {
+function qtrans_checkSetting($var, $updateOption = false, $type = QT_STRING) {
 	global $q_config;
 	switch($type) {
+		case QT_URL:
+			$_POST[$var] = trailingslashit($_POST[$var]);
+		case QT_LANGUAGE:
 		case QT_STRING:
 			if(isset($_POST['submit']) && isset($_POST[$var])) {
-				if(!$isLanguage || qtrans_isEnabled($_POST[$var])) {
+				if($type != QT_LANGUAGE || qtrans_isEnabled($_POST[$var])) {
 					$q_config[$var] = $_POST[$var];
 				}
 				if($updateOption) {
@@ -204,8 +207,8 @@ function qtranslate_conf() {
 		$message = __('qTranslate has been reset.', 'qtranslate');
 	} elseif(isset($_POST['default_language'])) {
 		// save settings
-		qtrans_checkSetting('default_language',			true, QT_STRING, true);
-		qtrans_checkSetting('flag_location',			true, QT_STRING);
+		qtrans_checkSetting('default_language',			true, QT_LANGUAGE);
+		qtrans_checkSetting('flag_location',			true, QT_URL);
 		qtrans_checkSetting('ignore_file_types',		true, QT_STRING);
 		qtrans_checkSetting('detect_browser_language',	true, QT_BOOLEAN);
 		qtrans_checkSetting('hide_untranslated',		true, QT_BOOLEAN);
@@ -350,11 +353,11 @@ function qtranslate_conf() {
 		}
 	}
 	if($q_config['auto_update_mo']) {
-		if(!is_dir(ABSPATH.'wp-content/languages/') || !$ll = @fopen(ABSPATH.'wp-content/languages/qtranslate.test','a')) {
-			$message = sprintf(__('Could not write to "%s", Gettext Databases could not be downloaded!', 'qtranslate'), ABSPATH.'wp-content/languages/');
+		if(!is_dir(WP_LANG_DIR) || !$ll = @fopen(trailingslashit(WP_LANG_DIR).'qtranslate.test','a')) {
+			$message = sprintf(__('Could not write to "%s", Gettext Databases could not be downloaded!', 'qtranslate'), WP_LANG_DIR);
 		} else {
 			@fclose($ll);
-			@unlink(ABSPATH.'wp-content/languages/qtranslate.test');
+			@unlink(trailingslashit(WP_LANG_DIR).'qtranslate.test');
 		}
 	}
 	$everything_fine = ((isset($_POST['submit'])||isset($_GET['delete'])||isset($_GET['enable'])||isset($_GET['disable']))&&$error=='');
@@ -403,7 +406,7 @@ function qtranslate_conf() {
 						if ( $language == $q_config['default_language'] ) {
 							echo " checked='checked'";
 						}
-						echo ' /> <img src="' . get_option('home').'/'.$q_config['flag_location'].$q_config['flag'][$language] . '" alt="' . $q_config['language_name'][$language] . '"> ' . $q_config['language_name'][$language] . "</label><br />\n";
+						echo ' /> <img src="' . trailingslashit(WP_CONTENT_URL) .$q_config['flag_location'].$q_config['flag'][$language] . '" alt="' . $q_config['language_name'][$language] . '"> ' . $q_config['language_name'][$language] . "</label><br />\n";
 					}
 
 				?>
@@ -444,9 +447,9 @@ function qtranslate_conf() {
 			<tr valign="top">
 				<th scope="row"><?php _e('Flag Image Path', 'qtranslate');?></th>
 				<td>
-					<input type="text" name="flag_location" id="flag_location" value="<?php echo $q_config['flag_location']; ?>" style="width:100%"/>
+					<?php echo trailingslashit(WP_CONTENT_URL); ?><input type="text" name="flag_location" id="flag_location" value="<?php echo $q_config['flag_location']; ?>" style="width:50%"/>
 					<br/>
-					<?php _e('Relative path to the flag images, with trailing slash. (Default: wp-content/plugins/qtranslate/flags/)', 'qtranslate'); ?>
+					<?php _e('Path to the flag images under wp-content, with trailing slash. (Default: plugins/qtranslate/flags/)', 'qtranslate'); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -540,7 +543,7 @@ function qtranslate_conf() {
 	<tbody id="the-list" class="list:cat">
 <?php foreach($q_config['language_name'] as $lang => $language){ if($lang!='code') { ?>
     <tr>
-        <td><img src="<?php echo get_option('home').'/'.$q_config['flag_location'].$q_config['flag'][$lang]; ?>" alt="<?php echo $language; ?> Flag"></td>
+        <td><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$lang]; ?>" alt="<?php echo $language; ?> Flag"></td>
         <td><?php echo $language; ?></td>
         <td><?php if(in_array($lang,$q_config['enabled_languages'])) { ?><a class="edit" href="<?php echo $clean_uri; ?>&disable=<?php echo $lang; ?>"><?php _e('Disable', 'qtranslate'); ?></a><?php  } else { ?><a class="edit" href="<?php echo $clean_uri; ?>&enable=<?php echo $lang; ?>"><?php _e('Enable', 'qtranslate'); ?></a><?php } ?></td>
         <td><a class="edit" href="<?php echo $clean_uri; ?>&edit=<?php echo $lang; ?>"><?php _e('Edit', 'qtranslate'); ?></a></td>

@@ -29,7 +29,7 @@ function qtrans_header(){
 	echo ".qtrans_flag { height:12px; width:18px; display:block }\n";
 	echo ".qtrans_flag_and_text { padding-left:20px }\n";
 	foreach($q_config['enabled_languages'] as $language) {
-		echo ".qtrans_flag_".$language." { background:url(".get_option('home').'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
+		echo ".qtrans_flag_".$language." { background:url(".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
 	}	
 	echo "</style>\n";
 }

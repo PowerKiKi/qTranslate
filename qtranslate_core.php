@@ -247,6 +247,9 @@ function qtrans_loadConfig() {
 	$hide_untranslated = qtrans_validateBool($hide_untranslated, $q_config['hide_untranslated']);
 	$auto_update_mo = qtrans_validateBool($auto_update_mo, $q_config['auto_update_mo']);
 	
+	// url fix for upgrading users
+	$flag_location = trailingslashit(preg_replace('#^wp-content/#','',$flag_location));
+	
 	// check for invalid permalink/url mode combinations
 	$permalink_structure = get_option('permalink_structure');
 	if($permalink_structure===""||strpos($permalink_structure,'?')!==false||strpos($permalink_structure,'index.php')!==false) $url_mode = QT_URL_QUERY;
@@ -309,8 +312,8 @@ function qtrans_saveConfig() {
 
 function qtrans_updateGettextDatabases($force = false) {
 	global $q_config;
-	if(!is_dir(ABSPATH.'wp-content/languages/')) {
-		if(!@mkdir(ABSPATH.'wp-content/languages/'))
+	if(!is_dir(WP_LANG_DIR)) {
+		if(!@mkdir(WP_LANG_DIR))
 			return false;
 	}
 	$next_update = get_option('qtranslate_next_update_mo');
@@ -318,7 +321,7 @@ function qtrans_updateGettextDatabases($force = false) {
 	update_option('qtranslate_next_update_mo', time() + 7*24*60*60);
 	foreach($q_config['locale'] as $lang => $locale) {
 		if(!qtrans_isEnabled($lang)) continue;
-		if($ll = @fopen(ABSPATH.'wp-content/languages/'.$locale.'.mo','a')) {
+		if($ll = @fopen(trailingslashit(WP_LANG_DIR).$locale.'.mo','a')) {
 			// can access .mo file
 			fclose($ll);
 			// try to find a .mo file
@@ -336,7 +339,7 @@ function qtrans_updateGettextDatabases($force = false) {
 				continue;
 			}
 			// found a .mo file, update local .mo
-			$ll = fopen(ABSPATH.'wp-content/languages/'.$locale.'.mo','w');
+			$ll = fopen(trailingslashit(WP_LANG_DIR).$locale.'.mo','w');
 			while(!feof($lcr)) {
 				// try to get some more time
 				set_time_limit(30);
