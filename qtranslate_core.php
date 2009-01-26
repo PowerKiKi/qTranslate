@@ -59,7 +59,7 @@ function qtrans_init() {
 	if(defined('WP_ADMIN') && current_user_can('manage_options')) qtrans_updateTermLibrary();
 	
 	// extract url information
-	$q_config['url_info'] = qtrans_extractURL(add_query_arg('lang',$_GET['lang']), $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
+	$q_config['url_info'] = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
 	
 	// set test cookie
 	setcookie('qtrans_cookie_test', 'qTranslate Cookie Test', 0, $q_config['url_info']['home'], $q_config['url_info']['host']);
@@ -125,6 +125,9 @@ function qtrans_init() {
 	unset($_GET['lang']);
 	$_SERVER['REQUEST_URI'] = $q_config['url_info']['url'];
 	$_SERVER['HTTP_HOST'] = $q_config['url_info']['host'];
+	
+	// fix url to prevent xss
+	$q_config['url_info']['url'] = add_query_arg('lang','',$q_config['url_info']['url']);
 }
 
 // returns cleaned string and language information
@@ -731,8 +734,8 @@ function qtrans_use($lang, $text, $show_available=false) {
 		return $text;
 	}
 	
-	// prevent filtering weird data types
-	if(!is_string($text)) {
+	// prevent filtering weird data types and save some resources
+	if(!is_string($text) || $text == '') {
 		return $text;
 	}
 	
