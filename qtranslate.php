@@ -44,6 +44,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	Plugin Translation Contributers
 	en, de by Qian Qin
 	es by Alejandro Urrutia
+	fr by eriath
 */
 /*
 	Specials thanks to:
@@ -191,9 +192,6 @@ $q_config['flag_location'] = 'wp-content/plugins/qtranslate/flags/';
 
 // Don't convert URLs to this file types
 $q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js';
-
-// Activate Translation Services
-$q_config['translation_services'] = false;
 
 /* DEFAULT CONFIGURATION PART ENDS HERE */
 
@@ -373,7 +371,7 @@ require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_wphacks.php");
 require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_widget.php");
 require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_configuration.php");
 require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_hooks.php");
-if($q_config['translation_services'])
+if(file_exists(WP_PLUGIN_DIR."/qtranslate/qtranslate_services.php"))
 	require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_services.php");
 
 ?>
