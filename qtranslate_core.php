@@ -103,12 +103,14 @@ function qtrans_init() {
 		$q_config['cookie_enabled'] = false;
 	}
 	
+	/*
 	// Check for WP Secret Key Missmatch
 	global $wp_default_secret_key;
 	if(strpos($q_config['url_info']['url'],'wp-login.php')!==false && defined('AUTH_KEY') && isset($wp_default_secret_key) && $wp_default_secret_key != AUTH_KEY) {
 		global $error;
 		$error = __('Your $wp_default_secret_key is mismatchting with your AUTH_KEY. This might cause you not to be able to login anymore.','qtranslate');
 	}
+	*/
 	
 	// Filter all options for language tags
 	if(!defined('WP_ADMIN')) {
