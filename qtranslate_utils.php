@@ -206,4 +206,9 @@ function qtrans_formatPostModifiedDateTime($format) {
 	return qtrans_strftime(qtrans_convertFormat($format, $format), mysql2date('U',$post->post_modified), '', $before, $after);
 }
 
+function qtrans_realURL($url = '') {
+	global $q_config;
+	return $q_config['url_info']['original_url'];
+}
+
 ?>
