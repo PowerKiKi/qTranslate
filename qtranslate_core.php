@@ -127,7 +127,7 @@ function qtrans_init() {
 	$_SERVER['HTTP_HOST'] = $q_config['url_info']['host'];
 	
 	// fix url to prevent xss
-	$q_config['url_info']['url'] = add_query_arg('lang','',$q_config['url_info']['url']);
+	$q_config['url_info']['url'] = qtrans_convertURL(add_query_arg('lang',$q_config['default_language'],$q_config['url_info']['url']));
 }
 
 // returns cleaned string and language information
