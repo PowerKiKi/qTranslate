@@ -97,7 +97,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 	<input name="language_locale" id="language_locale" type="text" value="<?php echo $language_locale; ?>"  size="5" maxlength="5"/>
     <p>
 		<?php _e('PHP and Wordpress Locale for the language. (Example: en_US)', 'qtranslate'); ?><br />
-		<?php _e('You will need to intall the .mo file for this language.', 'qtranslate'); ?>
+		<?php _e('You will need to install the .mo file for this language.', 'qtranslate'); ?>
 	</p>
 </div>
 <div class="form-field">
