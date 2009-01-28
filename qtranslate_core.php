@@ -713,7 +713,7 @@ function qtrans_enableLanguage($lang) {
 	$q_config['enabled_languages'][] = $lang;
     sort($q_config['enabled_languages']);
 	// force update of .mo files
-	qtrans_updateGettextDatabases(true);
+	if ($q_config['auto_update_mo']) qtrans_updateGettextDatabases(true);
 	return true;
 }
 
