@@ -3,7 +3,7 @@ Contributors: chineseleper
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
 Requires at least: 2.7
 Tested up to: 2.7
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
 Adds userfriendly multilingual content management support into Wordpress.
@@ -16,13 +16,11 @@ qTranslate makes creation of multilingual content as easy as working with a sing
 
 - One-Click-Switching between the languages - Change the language as easy as switching between Visual and HTML
 - No need for adding special characters or strings to seperate your multilingual texts! - qTranslate will handle them almost everywhere for you
-- No need to edit the plugin file to get your language working! - Use the comfortable and intuitive Configuration Page
-- Comes with many languages already builtin! - English, German, Simplified Chinese and a lot of others
-- Add your language in seconds! - Thanks to the simplistic Configuration Page
 - Multilingual dates out of the box - Translates dates and time for you.
 - Comes with a lot of languages already builtin! - English, German, Simplified Chinese and a lot of others
 - No more juggling with .mo-files! - qTranslate will download them automatically for you
 - Choose one of 3 Modes to make your URLs pretty and SEO-friendly. - The everywhere compatible `?lang=en`, simple and beautiful `/en/foo/` or nice and neat `en.yoursite.com`
+- One language for each URL - Users and SEO will thank you for not mixing multilingual content.
 
 qTranslate supports infinite languages, which can be easily added/modified/deleted via the comfortable Configuration Page.
 All you need to do is activate the plugin and start writing the content!
@@ -48,6 +46,7 @@ Installation of this plugin is fairly easy:
 == Frequently Asked Questions ==
 
 The FAQ is available at the [Plugin Homepage](http://www.qianqin.de/qtranslate/)
+
 For Problems visits the [Support Forum](http://www.qianqin.de/qtranslate/forum/)
 
 == Screenshots ==
