@@ -699,7 +699,7 @@ function qtrans_disableLanguage($lang) {
 			}
 		}
 		$q_config['enabled_languages'] = $new_enabled;
-        sort($q_config['enabled_languages']);
+		sort($q_config['enabled_languages']);
 		return true;
 	}
 	return false;

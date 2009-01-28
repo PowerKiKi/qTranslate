@@ -44,7 +44,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 <div class="form-field">
 	<label for="language_code"><?php _e('Language Code', 'qtranslate') ?></label>
 	<input name="language_code" id="language_code" type="text" value="<?php echo $language_code; ?>" size="2" maxlength="2"/>
-    <p><?php _e('2-Letter <a href="http://www.w3.org/WAI/ER/IG/ert/iso639.htm#2letter">ISO Language Code</a> for the Language you want to insert. (Example: en)', 'qtranslate'); ?></p>
+	<p><?php _e('2-Letter <a href="http://www.w3.org/WAI/ER/IG/ert/iso639.htm#2letter">ISO Language Code</a> for the Language you want to insert. (Example: en)', 'qtranslate'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_flag"><?php _e('Flag', 'qtranslate') ?></label>
@@ -75,7 +75,7 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 		_e('Incorrect Flag Image Path! Please correct it!', 'qtranslate');
 	}
 	?>
-    <p><?php _e('Choose the corresponding country flag for language. (Example: gb.png)', 'qtranslate'); ?></p>
+	<p><?php _e('Choose the corresponding country flag for language. (Example: gb.png)', 'qtranslate'); ?></p>
 </div>
 <script type="text/javascript">
 //<![CDATA[
@@ -90,12 +90,12 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 <div class="form-field">
 	<label for="language_name"><?php _e('Name', 'qtranslate') ?></label>
 	<input name="language_name" id="language_name" type="text" value="<?php echo $language_name; ?>"/>
-    <p><?php _e('The Name of the language, which will be displayed on the site. (Example: English)', 'qtranslate'); ?></p>
+	<p><?php _e('The Name of the language, which will be displayed on the site. (Example: English)', 'qtranslate'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_locale"><?php _e('Locale', 'qtranslate') ?></label>
 	<input name="language_locale" id="language_locale" type="text" value="<?php echo $language_locale; ?>"  size="5" maxlength="5"/>
-    <p>
+	<p>
 		<?php _e('PHP and Wordpress Locale for the language. (Example: en_US)', 'qtranslate'); ?><br />
 		<?php _e('You will need to install the .mo file for this language.', 'qtranslate'); ?>
 	</p>
@@ -103,17 +103,17 @@ function qtranslate_language_form($lang = '', $language_code = '', $language_nam
 <div class="form-field">
 	<label for="language_date_format"><?php _e('Date Format', 'qtranslate') ?></label>
 	<input name="language_date_format" id="language_date_format" type="text" value="<?php echo $language_date_format; ?>"/>
-    <p><?php _e('Depending on your Date / Time Conversion Mode, you can either enter a <a href="http://www.php.net/manual/function.strftime.php">strftime</a> (use %q for day suffix (st,nd,rd,th)) or <a href="http://www.php.net/manual/function.date.php">date</a> format. This field is optional. (Example: %A %B %e%q, %Y)', 'qtranslate'); ?></p>
+	<p><?php _e('Depending on your Date / Time Conversion Mode, you can either enter a <a href="http://www.php.net/manual/function.strftime.php">strftime</a> (use %q for day suffix (st,nd,rd,th)) or <a href="http://www.php.net/manual/function.date.php">date</a> format. This field is optional. (Example: %A %B %e%q, %Y)', 'qtranslate'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_time_format"><?php _e('Time Format', 'qtranslate') ?></label>
 	<input name="language_time_format" id="language_time_format" type="text" value="<?php echo $language_time_format; ?>"/>
-    <p><?php _e('Depending on your Date / Time Conversion Mode, you can either enter a <a href="http://www.php.net/manual/function.strftime.php">strftime</a> or <a href="http://www.php.net/manual/function.date.php">date</a> format. This field is optional. (Example: %I:%M %p)', 'qtranslate'); ?></p>
+	<p><?php _e('Depending on your Date / Time Conversion Mode, you can either enter a <a href="http://www.php.net/manual/function.strftime.php">strftime</a> or <a href="http://www.php.net/manual/function.date.php">date</a> format. This field is optional. (Example: %I:%M %p)', 'qtranslate'); ?></p>
 </div>
 <div class="form-field">
 	<label for="language_na_message"><?php _e('Not Available Message', 'qtranslate') ?></label>
 	<input name="language_na_message" id="language_na_message" type="text" value="<?php echo $language_na_message; ?>"/>
-    <p>
+	<p>
 		<?php _e('Message to display if post is not available in the requested language. (Example: Sorry, this entry is only available in %LANG:, : and %.)', 'qtranslate'); ?><br />
 		<?php _e('%LANG:&lt;normal_seperator&gt;:&lt;last_seperator&gt;% generates a list of languages seperated by &lt;normal_seperator&gt; except for the last one, where &lt;last_seperator&gt; will be used instead.', 'qtranslate'); ?><br />
 	</p>
@@ -250,8 +250,8 @@ function qtranslate_conf() {
 							$q_config['enabled_languages'][$i] = $_POST['language_code'];
 						}
 					}
-					}
-			    if($_POST['original_lang']==$q_config['default_language'])
+				}
+				if($_POST['original_lang']==$q_config['default_language'])
 					// was default, so set modified the default
 					$q_config['default_language'] = $_POST['language_code'];
 			}
@@ -324,15 +324,13 @@ function qtranslate_conf() {
 			$error = 'No such language!';
 		if($error=='') {
 			// everything seems fine, delete language
+			qtrans_disableLanguage($_GET['delete']);
 			unset($q_config['language_name'][$_GET['delete']]);
 			unset($q_config['flag'][$_GET['delete']]);
 			unset($q_config['locale'][$_GET['delete']]);
 			unset($q_config['date_format'][$_GET['delete']]);
 			unset($q_config['time_format'][$_GET['delete']]);
 			unset($q_config['not_available'][$_GET['delete']]);
-			if(qtrans_isEnabled($_GET['delete'])) {
-				qtrans_disableLanguage($_GET['delete']);
-			}
 		}
 	} elseif(isset($_GET['enable'])) {
 		// enable validate
@@ -344,12 +342,11 @@ function qtranslate_conf() {
 		if($_GET['disable']==$q_config['default_language'])
 			$error = __('Cannot disable Default Language!', 'qtranslate');
 		if(!qtrans_isEnabled($_GET['disable']))
-			$error = __('Language is already disabled!', 'qtranslate');
 		if(!isset($q_config['language_name'][$_GET['disable']]))
 			$error = __('No such language!', 'qtranslate');
-		if($error=='') {
-			// everything seems fine, disable language
-			qtrans_disableLanguage($_GET['disable']);
+		// everything seems fine, disable language
+		if($error=='' && !qtrans_disableLanguage($_GET['disable'])) {
+			$error = __('Language is already disabled!', 'qtranslate');
 		}
 	}
 	if($q_config['auto_update_mo']) {
@@ -542,13 +539,13 @@ function qtranslate_conf() {
 
 	<tbody id="the-list" class="list:cat">
 <?php foreach($q_config['language_name'] as $lang => $language){ if($lang!='code') { ?>
-    <tr>
-        <td><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$lang]; ?>" alt="<?php echo $language; ?> Flag"></td>
-        <td><?php echo $language; ?></td>
-        <td><?php if(in_array($lang,$q_config['enabled_languages'])) { ?><a class="edit" href="<?php echo $clean_uri; ?>&disable=<?php echo $lang; ?>"><?php _e('Disable', 'qtranslate'); ?></a><?php  } else { ?><a class="edit" href="<?php echo $clean_uri; ?>&enable=<?php echo $lang; ?>"><?php _e('Enable', 'qtranslate'); ?></a><?php } ?></td>
-        <td><a class="edit" href="<?php echo $clean_uri; ?>&edit=<?php echo $lang; ?>"><?php _e('Edit', 'qtranslate'); ?></a></td>
-        <td><?php if($q_config['default_language']==$lang) { ?><?php _e('Default', 'qtranslate'); ?><?php  } else { ?><a class="delete" href="<?php echo $clean_uri; ?>&delete=<?php echo $lang; ?>"><?php _e('Delete', 'qtranslate'); ?></a><?php } ?></td>
-    </tr>
+	<tr>
+		<td><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$lang]; ?>" alt="<?php echo $language; ?> Flag"></td>
+		<td><?php echo $language; ?></td>
+		<td><?php if(in_array($lang,$q_config['enabled_languages'])) { ?><a class="edit" href="<?php echo $clean_uri; ?>&disable=<?php echo $lang; ?>"><?php _e('Disable', 'qtranslate'); ?></a><?php  } else { ?><a class="edit" href="<?php echo $clean_uri; ?>&enable=<?php echo $lang; ?>"><?php _e('Enable', 'qtranslate'); ?></a><?php } ?></td>
+		<td><a class="edit" href="<?php echo $clean_uri; ?>&edit=<?php echo $lang; ?>"><?php _e('Edit', 'qtranslate'); ?></a></td>
+		<td><?php if($q_config['default_language']==$lang) { ?><?php _e('Default', 'qtranslate'); ?><?php  } else { ?><a class="delete" href="<?php echo $clean_uri; ?>&delete=<?php echo $lang; ?>"><?php _e('Delete', 'qtranslate'); ?></a><?php } ?></td>
+	</tr>
 <?php }} ?>
 	</tbody>
 </table>
