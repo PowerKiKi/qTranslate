@@ -223,7 +223,11 @@ add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
 add_filter('plugin_action_links', 			'qtrans_links', 10, 2 );
 add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
-add_filter('the_posts',						'qtrans_postsFilter');
 add_filter('manage_language_columns',		'qtrans_language_columns');
+
+// skip this filter if on backend
+if(!defined('WP_ADMIN')) {
+	add_filter('the_posts',					'qtrans_postsFilter');
+}
 
 ?>
