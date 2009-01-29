@@ -135,6 +135,32 @@ function qtrans_links($links, $file){ // copied from Sociable Plugin
 	return $links;
 }
 
+function qtrans_languageColumnHeader($columns){
+	$new_columns = array();
+	$new_columns['cb'] = '';
+	$new_columns['title'] = '';
+	$new_columns['author'] = '';
+	$new_columns['categories'] = '';
+	$new_columns['tags'] = '';
+	$new_columns['language'] = __('Languages');
+	return array_merge($new_columns, $columns);;
+}
+
+function qtrans_languageColumn($column) {
+	global $q_config, $post;
+	$available_languages = qtrans_getAvailableLanguages($post->post_content);
+	$missing_languages = array_diff($q_config['enabled_languages'], $available_languages);
+	$available_languages_name = array();
+	$missing_languages_name = array();
+	foreach($available_languages as $language) {
+		$available_languages_name[] = $q_config['language_name'][$language];
+	}
+	$available_languages_names = join(", ", $available_languages_name);
+	
+	echo apply_filters('qtranslate_available_languages_names',$available_languages_names);
+	do_action('qtranslate_languageColumn', $available_languages, $missing_languages);
+}
+
 // Hooks (Actions)
 add_action('wp_head',						'qtrans_header');
 add_action('edit_category_form',			'qtrans_modifyCategoryForm');
@@ -218,6 +244,8 @@ add_filter('feed_link',						'qtrans_convertURL');
 add_filter('post_comments_feed_link',		'qtrans_convertURL');
 add_filter('tag_feed_link',					'qtrans_convertURL');
 add_filter('clean_url',						'qtrans_convertURL');
+add_filter('manage_posts_custom_column',	'qtrans_languageColumn');
+add_filter('manage_posts_columns',			'qtrans_languageColumnHeader');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
@@ -225,7 +253,7 @@ add_filter('plugin_action_links', 			'qtrans_links', 10, 2 );
 add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
 add_filter('manage_language_columns',		'qtrans_language_columns');
 
-// skip this filter if on backend
+// skip this filters if on backend
 if(!defined('WP_ADMIN')) {
 	add_filter('the_posts',					'qtrans_postsFilter');
 }

@@ -31,7 +31,7 @@ function qtrans_adminMenu() {
 	
 	// generate menu with flags for every enabled language
 	foreach($q_config['enabled_languages'] as $id => $language) {
-		$menu[] = array(__($q_config['language_name'][$language], 'qtranslate'), 'read', '?lang='.$language, '', 'menu-top', 'menu-language-'.$language, trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]);
+		$menu[] = array(__($q_config['language_name'][$language], 'qtranslate'), 'read', add_query_arg('lang',$language), '', 'menu-top', 'menu-language-'.$language, trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]);
 	}
 	$menu[] = array( '', 'read', '', '', 'wp-menu-separator-last' );
 }

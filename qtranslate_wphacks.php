@@ -85,7 +85,7 @@ function qtrans_modifyRichEditor($old_content) {
 	
 	// don't do anything to the editor if it's not rich
 	if(!user_can_richedit()) {
-		echo '<p class="updated">'.__('The qTranslate Editor could not be loaded because WYSIWYG/TinyMCE is not activated in your profile.').'</p>';
+		//echo '<p class="updated">'.__('The qTranslate Editor could not be loaded because WYSIWYG/TinyMCE is not activated in your profile.').'</p>';
 		return $old_content;
 	}
 	
