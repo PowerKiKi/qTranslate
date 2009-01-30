@@ -326,7 +326,7 @@ function qtrans_updateGettextDatabases($force = false) {
 	update_option('qtranslate_next_update_mo', time() + 7*24*60*60);
 	foreach($q_config['locale'] as $lang => $locale) {
 		if(!qtrans_isEnabled($lang)) continue;
-		if($ll = @fopen(trailingslashit(WP_LANG_DIR).$locale.'.mo','a')) {
+		if($ll = @fopen(trailingslashit(WP_LANG_DIR).$locale.'.mo.filepart','a')) {
 			// can access .mo file
 			fclose($ll);
 			// try to find a .mo file
@@ -353,6 +353,7 @@ function qtrans_updateGettextDatabases($force = false) {
 			}
 			fclose($lcr);
 			fclose($ll);
+			rename(trailingslashit(WP_LANG_DIR).$locale.'.mo.filepart',trailingslashit(WP_LANG_DIR).$locale.'.mo');
 		}
 	}
 	return true;
