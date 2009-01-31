@@ -39,15 +39,15 @@ function qtrans_modifyTermForm($id, $name, $term) {
 }
 
 function qtrans_modifyCategoryForm($term) {
-	return qtrans_modifyTermForm('cat_name', __('Category Name'), $term);
+	return qtrans_modifyTermForm('cat_name', __('Category Name', 'qtranslate'), $term);
 }
 
 function qtrans_modifyTagForm($term) {
-	return qtrans_modifyTermForm('name', __('Tag Name'), $term);
+	return qtrans_modifyTermForm('name', __('Tag Name', 'qtranslate'), $term);
 }
 
 function qtrans_modifyLinkCategoryForm($term) {
-	return qtrans_modifyTermForm('name', __('Category Name'), $term);
+	return qtrans_modifyTermForm('name', __('Category Name', 'qtranslate'), $term);
 }
 
 // Modifys TinyMCE to edit multilingual content
@@ -56,7 +56,7 @@ function qtrans_modifyRichEditor($old_content) {
 	$init_editor = true;
 	if($GLOBALS['wp_version'] != QT_SUPPORTED_WP_VERSION) {
 		if($_REQUEST['qtranslateincompatiblemessage']!="shown") {
-			echo '<p class="updated" id="qtrans_imsg">'.__('This version of qTranslate has not been tested with your Wordpress version. To prevent Wordpress from malfunctioning, the qTranslate Editor has been disabled. You can reenable it by <a href="javascript:qtrans_editorInit();" title="Activate qTranslate" id="qtrans_imsg_link">clicking here</a> (may cause <b>data loss</b>!). To remove this message, please update qTranslate to the <a href="http://www.qianqin.de/qtranslate/download/">corresponding version</a>.').'</p>';
+			echo '<p class="updated" id="qtrans_imsg">'.__('This version of qTranslate has not been tested with your Wordpress version. To prevent Wordpress from malfunctioning, the qTranslate Editor has been disabled. You can reenable it by <a href="javascript:qtrans_editorInit();" title="Activate qTranslate" id="qtrans_imsg_link">clicking here</a> (may cause <b>data loss</b>!). To remove this message, please update qTranslate to the <a href="http://www.qianqin.de/qtranslate/download/">corresponding version</a>.', 'qtranslate').'</p>';
 		}
 		$init_editor = false;
 	}
@@ -283,7 +283,7 @@ function qtrans_insertTitleInput($language){
 		var td = document.getElementById('titlediv');
 		var qtd = document.createElement('div');
 		var h = document.createElement('h3');
-		var l = document.createTextNode('".__("Title")." (".$q_config['language_name'][$language].")');
+		var l = document.createTextNode('".__("Title", 'qtranslate')." (".$q_config['language_name'][$language].")');
 		var tw = document.createElement('div');
 		var ti = document.createElement('input');
 		var slug = document.getElementById('edit-slug-box');

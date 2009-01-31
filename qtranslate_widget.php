@@ -84,7 +84,7 @@ function qtrans_widget_init() {
 		
 		// Collect our widget's options, or define their defaults.
 		$options = get_option('qtranslate_switch');
-		$title = empty($options['qtrans-switch-title']) ? __('Language') : $options['qtrans-switch-title'];
+		$title = empty($options['qtrans-switch-title']) ? __('Language', 'qtranslate') : $options['qtrans-switch-title'];
 
 		 // It's important to use the $before_widget, $before_title,
 		 // $after_title and $after_widget variables in your output.
@@ -117,13 +117,13 @@ function qtrans_widget_init() {
 		// The HTML below is the control form for editing options.
 		?>
 		<div>
-			<label for="qtrans-switch-title" style="line-height:35px;display:block;"><?php _e('Title:'); ?> <input type="text" id="qtrans-switch-title" name="qtrans-switch-title" value="<?php echo $title; ?>" /></label>
-			<label for="qtrans-switch-hide-title" style="line-height:35px;display:block;"><?php _e('Hide Title:'); ?> <input type="checkbox" id="qtrans-switch-hide-title" name="qtrans-switch-hide-title" <?php echo ($hide_title=='on')?'checked="checked"':''; ?>/></label>
-			<?php _e('Display:'); ?> <br />
-				<label for="qtrans-switch-type1"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type1" value="text"<?php echo ($type=='text')?' checked="checked"':'' ?>/><?php _e('Text only'); ?></label><br />
-				<label for="qtrans-switch-type2"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type2" value="image"<?php echo ($type=='image')?' checked="checked"':'' ?>/><?php _e('Image only'); ?></label><br />
-				<label for="qtrans-switch-type3"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type3" value="both"<?php echo ($type=='both')?' checked="checked"':'' ?>/><?php _e('Text and Image'); ?></label><br />
-				<label for="qtrans-switch-type4"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type4" value="dropdown"<?php echo ($type=='dropdown')?' checked="checked"':'' ?>/><?php _e('Dropdown Box'); ?></label><br />
+			<label for="qtrans-switch-title" style="line-height:35px;display:block;"><?php _e('Title:', 'qtranslate'); ?> <input type="text" id="qtrans-switch-title" name="qtrans-switch-title" value="<?php echo $title; ?>" /></label>
+			<label for="qtrans-switch-hide-title" style="line-height:35px;display:block;"><?php _e('Hide Title:', 'qtranslate'); ?> <input type="checkbox" id="qtrans-switch-hide-title" name="qtrans-switch-hide-title" <?php echo ($hide_title=='on')?'checked="checked"':''; ?>/></label>
+			<?php _e('Display:', 'qtranslate'); ?> <br />
+				<label for="qtrans-switch-type1"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type1" value="text"<?php echo ($type=='text')?' checked="checked"':'' ?>/><?php _e('Text only', 'qtranslate'); ?></label><br />
+				<label for="qtrans-switch-type2"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type2" value="image"<?php echo ($type=='image')?' checked="checked"':'' ?>/><?php _e('Image only', 'qtranslate'); ?></label><br />
+				<label for="qtrans-switch-type3"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type3" value="both"<?php echo ($type=='both')?' checked="checked"':'' ?>/><?php _e('Text and Image', 'qtranslate'); ?></label><br />
+				<label for="qtrans-switch-type4"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type4" value="dropdown"<?php echo ($type=='dropdown')?' checked="checked"':'' ?>/><?php _e('Dropdown Box', 'qtranslate'); ?></label><br />
 			<input type="hidden" name="qtrans-switch-submit" id="qtrans-switch-submit" value="1" />
 		</div>
 		<?php

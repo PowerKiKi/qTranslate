@@ -178,7 +178,7 @@ function qtrans_convertDateFormat($format) {
 	global $q_config;
 	// see if format has multilingual information
 	if($format != '') 
-		$format = __($format);
+		$format = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($format);
 	if(isset($q_config['date_format'][$q_config['language']])) {
 		$default_format = $q_config['date_format'][$q_config['language']];
 	} elseif(isset($q_config['date_format'][$q_config['default_language']])) {
@@ -193,7 +193,7 @@ function qtrans_convertTimeFormat($format) {
 	global $q_config;
 	// see if format has multilingual information
 	if($format != '') 
-		$format = __($format);
+		$format = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($format);
 	if(isset($q_config['time_format'][$q_config['language']])) {
 		$default_format = $q_config['time_format'][$q_config['language']];
 	} elseif(isset($q_config['time_format'][$q_config['default_language']])) {

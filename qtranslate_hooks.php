@@ -129,7 +129,7 @@ function qtrans_links($links, $file){ // copied from Sociable Plugin
 	if (!$this_plugin) $this_plugin = plugin_basename(dirname(__FILE__).'/qtranslate.php');
 	
 	if ($file == $this_plugin){
-		$settings_link = '<a href="options-general.php?page=qtranslate">' . __('Settings') . '</a>';
+		$settings_link = '<a href="options-general.php?page=qtranslate">' . __('Settings', 'qtranslate') . '</a>';
 		array_unshift( $links, $settings_link ); // before other links
 	}
 	return $links;
@@ -142,7 +142,7 @@ function qtrans_languageColumnHeader($columns){
 	$new_columns['author'] = '';
 	$new_columns['categories'] = '';
 	$new_columns['tags'] = '';
-	$new_columns['language'] = __('Languages');
+	$new_columns['language'] = __('Languages', 'qtranslate');
 	return array_merge($new_columns, $columns);;
 }
 
