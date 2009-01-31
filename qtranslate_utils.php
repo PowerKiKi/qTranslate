@@ -19,6 +19,19 @@
 
 /* qTranslate Utilitys */
 
+// PHP 4 compatibility copied from php.net
+if (!function_exists('htmlspecialchars_decode')) {
+	function htmlspecialchars_decode($str, $options="") {
+		$trans = get_html_translation_table(HTML_SPECIALCHARS, $options);
+		$decode = ARRAY();
+		foreach ($trans AS $char=>$entity) {
+			$decode[$entity] = $char;
+		}
+		$str = strtr($str, $decode);
+		return $str;
+	}
+}
+
 function qtrans_parseURL($url) {
     $r  = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?';
     $r .= '(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
@@ -53,7 +66,7 @@ function qtrans_insertDropDownElement($language, $url, $id){
     if($q_config['language']==$language)
         $html .= "o.selected = 'selected';";
     $html .= "
-        o.value = '".$url."';
+        o.value = '".addslashes(htmlspecialchars_decode($url, ENT_NOQUOTES))."';
         o.appendChild(l);
         sb.appendChild(o);
         ";

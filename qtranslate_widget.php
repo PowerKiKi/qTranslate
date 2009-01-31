@@ -50,7 +50,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 				echo "lc.parentNode.insertBefore(s,lc);";
 				// create dropdown fields for each language
 				foreach($q_config['enabled_languages'] as $language) {
-					echo qtrans_insertDropDownElement($language,qtrans_convertURL('', $language),$id);
+					echo qtrans_insertDropDownElement($language, qtrans_convertURL('', $language), $id);
 				}
 				// hide html language chooser text
 				echo "s.onchange = function() { document.location.href = this.value;}\n";

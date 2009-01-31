@@ -19,19 +19,6 @@
 
 /* Modifications Hacks to get Wordpress work the way it should */
 
-// PHP 4 compatibility copied from php.net
-if (!function_exists('htmlspecialchars_decode')) {
-	function htmlspecialchars_decode($str, $options="") {
-		$trans = get_html_translation_table(HTML_SPECIALCHARS, $options);
-		$decode = ARRAY();
-		foreach ($trans AS $char=>$entity) {
-			$decode[$entity] = $char;
-		}
-		$str = strtr($str, $decode);
-		return $str;
-	}
-}
-
 // modifys term form to support multilingual content
 function qtrans_modifyTermForm($id, $name, $term) {
 	global $q_config;
