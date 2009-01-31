@@ -344,7 +344,7 @@ function qtrans_updateGettextDatabases($force = false) {
 				continue;
 			}
 			// found a .mo file, update local .mo
-			$ll = fopen(trailingslashit(WP_LANG_DIR).$locale.'.mo','w');
+			$ll = fopen(trailingslashit(WP_LANG_DIR).$locale.'.mo.filepart','w');
 			while(!feof($lcr)) {
 				// try to get some more time
 				set_time_limit(30);
