@@ -277,6 +277,7 @@ function qtrans_loadConfig() {
 	$q_config['auto_update_mo'] = $auto_update_mo;
 	$q_config['term_name'] = $term_name;
 	
+	do_action('qtranslate_loadConfig');
 }
 
 // saves entire configuration
@@ -313,6 +314,7 @@ function qtrans_saveConfig() {
 	else
 		update_option('qtranslate_auto_update_mo', '0');
 		
+	do_action('qtranslate_saveConfig');
 }
 
 function qtrans_updateGettextDatabases($force = false) {

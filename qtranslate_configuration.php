@@ -184,8 +184,6 @@ function qtrans_language_columns($columns) {
 				);
 }
 
-
-
 function qtranslate_conf() {
 	global $q_config, $wpdb;
 	
@@ -201,6 +199,8 @@ function qtranslate_conf() {
 	$language_flag = '';
 	$language_default = '';
 	$altered_table = false;
+	
+	do_action('qtranslate_configuration_pre');
 	
 	// check for action
 	if(isset($_POST['qtranslate_reset']) && isset($_POST['qtranslate_reset2'])) {
@@ -428,7 +428,7 @@ function qtranslate_conf() {
 				</td>
 			</tr>
 		</table>
-		<h3><?php _e('Advanced Settings', 'qtranslate') ?><span id="qtranslate-show-advanced" style="display:none"> (<a href="#" onclick="showAdvanced();"><?php _e('Show', 'qtranslate'); ?></a>)</span></h3>
+		<h3><?php _e('Advanced Settings', 'qtranslate') ?><span id="qtranslate-show-advanced" style="display:none"> (<a name="advanced_settings" href="#advanced_settings" onclick="showAdvanced();"><?php _e('Show', 'qtranslate'); ?></a>)</span></h3>
 		<table class="form-table" id="qtranslate-advanced">
 			<tr>
 				<th scope="row"><?php _e('URL Modification Mode', 'qtranslate') ?></th>
@@ -510,6 +510,7 @@ function qtranslate_conf() {
 			document.getElementById('qtranslate-advanced').style.display='none';
 		// ]]>
 		</script>
+<?php do_action('qtranslate_configuration'); ?>
 		<p class="submit">
 			<input type="submit" name="submit" class="button-primary" value="<?php _e('Save Changes', 'qtranslate') ?>" />
 		</p>

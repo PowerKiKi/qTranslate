@@ -151,6 +151,9 @@ $q_config['not_available']['hu'] = "Sajnos ennek a bejegyzésnek csak %LANG:, : 
 $q_config['not_available']['ja'] = "申し訳ありません、このコンテンツはただ今　%LANG:、 :と %　のみです。";
 $q_config['not_available']['es'] = "Disculpa, pero esta entrada está disponible sólo en %LANG:, : y %.";
 
+// qTranslate Services
+$q_config['services'] = false;
+
 // strftime usage (backward compability)
 $q_config['use_strftime'] = QT_DATE;
 
