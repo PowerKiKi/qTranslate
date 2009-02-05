@@ -47,6 +47,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	es by Alejandro Urrutia
 	fr by eriath
 	tr by freeuser
+	it by shecky
 */
 /*
 	Specials thanks to:
