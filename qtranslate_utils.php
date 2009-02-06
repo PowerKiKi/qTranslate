@@ -164,6 +164,7 @@ function qtrans_convertFormat($format, $default_format) {
 	global $q_config;
 	switch($q_config['use_strftime']) {
 		case QT_DATE:
+			if($format=='') $format = $default_format;
 			return qtrans_convertDateFormatToStrftimeFormat($format);
 		case QT_DATE_OVERRIDE:
 			return qtrans_convertDateFormatToStrftimeFormat($default_format);
