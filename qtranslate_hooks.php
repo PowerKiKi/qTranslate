@@ -189,6 +189,8 @@ add_filter('the_excerpt_rss',				'qtrans_useCurrentLanguageIfNotFoundShowAvailab
 add_filter('the_title',						'qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('the_category',					'qtrans_useTermLib', 0);
 add_filter('sanitize_title',				'qtrans_useDefaultLanguage',0);
+add_filter('comment_moderation_subject',	'qtrans_useDefaultLanguage',0);
+add_filter('comment_moderation_text',		'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',				'qtrans_dateFromCommentForCurrentLanguage',0,2);
 add_filter('get_comment_time',				'qtrans_timeFromCommentForCurrentLanguage',0,3);
 add_filter('get_the_modified_date',			'qtrans_dateModifiedFromPostForCurrentLanguage',0,2);
