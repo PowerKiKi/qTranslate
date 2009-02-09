@@ -157,7 +157,13 @@ function qtrans_convertDateFormatToStrftimeFormat($format) {
 	foreach($mappings as $df => $sf) {
 		$date_parameters[] = '#(([^%\\\\])'.$df.'|^'.$df.')#';	$strftime_parameters[] = '${2}'.$sf;
 	}
-	return preg_replace($date_parameters, $strftime_parameters, $format);
+	// convert everything
+	$format = preg_replace($date_parameters, $strftime_parameters, $format);
+	// remove single backslashes from dates
+	$format = preg_replace('#\\\\([^\\\\]{1})#','${1}',$format);
+	// remove double backslashes from dates
+	$format = preg_replace('#\\\\\\\\#','\\\\',$format);
+	return $format;
 }
 
 function qtrans_convertFormat($format, $default_format) {
