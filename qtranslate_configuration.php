@@ -349,20 +349,20 @@ function qtranslate_conf() {
 			$error = __('Language is already disabled!', 'qtranslate');
 		}
 	}
-	if($q_config['auto_update_mo']) {
-		if(!is_dir(WP_LANG_DIR) || !$ll = @fopen(trailingslashit(WP_LANG_DIR).'qtranslate.test','a')) {
-			$message = sprintf(__('Could not write to "%s", Gettext Databases could not be downloaded!', 'qtranslate'), WP_LANG_DIR);
-		} else {
-			@fclose($ll);
-			@unlink(trailingslashit(WP_LANG_DIR).'qtranslate.test');
-		}
-	}
 	$everything_fine = ((isset($_POST['submit'])||isset($_GET['delete'])||isset($_GET['enable'])||isset($_GET['disable']))&&$error=='');
 	if($everything_fine) {
 		// settings might have changed, so save
 		qtrans_saveConfig();
 		if(empty($message)) {
 			$message = __('Options saved.', 'qtranslate');
+		}
+	}
+	if($q_config['auto_update_mo']) {
+		if(!is_dir(WP_LANG_DIR) || !$ll = @fopen(trailingslashit(WP_LANG_DIR).'qtranslate.test','a')) {
+			$error = sprintf(__('Could not write to "%s", Gettext Databases could not be downloaded!', 'qtranslate'), WP_LANG_DIR);
+		} else {
+			@fclose($ll);
+			@unlink(trailingslashit(WP_LANG_DIR).'qtranslate.test');
 		}
 	}
 	// don't accidently delete/enable/disable twice
