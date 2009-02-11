@@ -32,6 +32,25 @@ define('QS_VERIFY',								'verify');
 define('QS_GET_SERVICES',						'get_services');
 define('QS_INIT_TRANSLATION',					'init_translation');
 define('QS_RETRIEVE_TRANSLATION',				'retrieve_translation');
+define('QS_STATE_OPEN',							'open');
+define('QS_STATE_ERROR',						'error');
+define('QS_STATE_CLOSED',						'closed');
+define('QS_ERROR_INVALID_LANGUAGE',				'QS_ERROR_INVALID_LANGUAGE');
+define('QS_ERROR_NOT_SUPPORTED_LANGUAGE',		'QS_ERROR_NOT_SUPPORTED_LANGUAGE');
+define('QS_ERROR_INVALID_SERVICE',				'QS_ERROR_INVALID_SERVICE');
+define('QS_ERROR_INVALID_ORDER',				'QS_ERROR_INVALID_ORDER');
+define('QS_ERROR_SERVICE_GENERIC',				'QS_ERROR_SERVICE_GENERIC');
+define('QS_ERROR_SERVICE_UNKNOWN',				'QS_ERROR_SERVICE_UNKNOWN');
+define('QS_DEBUG',								'QS_DEBUG');
+
+// error messages
+$qs_error_messages[QS_ERROR_INVALID_LANGUAGE] =			__('The language/s do not have a valid ISO 639-1 representation.','qtranslate');
+$qs_error_messages[QS_ERROR_NOT_SUPPORTED_LANGUAGE] =	__('The language/s you used are not supported by the service.','qtranslate');
+$qs_error_messages[QS_ERROR_INVALID_SERVICE] =			__('There is no such service.','qtranslate');
+$qs_error_messages[QS_ERROR_INVALID_ORDER] =			__('The system could not process your order.','qtranslate');
+$qs_error_messages[QS_ERROR_SERVICE_GENERIC] =			__('There has been an error with the selected service.','qtranslate');
+$qs_error_messages[QS_ERROR_SERVICE_UNKNOWN] =			__('An unknown error occured with the selected service.','qtranslate');
+$qs_error_messages[QS_DEBUG] =							__('The server returned a debugging message.','qtranslate');
 
 // hooks
 add_action('qtranslate_languageColumn',			'qs_translateButtons', 10, 2);
@@ -43,7 +62,7 @@ add_action('qtranslate_configuration',			'qs_config_hook');
 add_action('qtranslate_loadConfig',				'qs_load');
 add_action('qtranslate_saveConfig',				'qs_save');
 
-add_filter('manage_order_columns',		'qs_order_columns');
+add_filter('manage_order_columns',				'qs_order_columns');
 
 // serializing/deserializing functions
 function qs_base64_serialize($var) {
@@ -96,8 +115,14 @@ function qs_queryQS($action, $data='') {
 	preg_match("#^Content-Length:\s*([0-9]+)\s*$#ism",$res, $match);
 	$content_length = $match[1];
 	$content = substr($res, -$content_length, $content_length);
+	$debug = $content;
 	$content = qs_base64_unserialize($content);
 	openssl_open($content['data'], $content, $content['key'], $private_key);
+	if($content===false) {
+		echo "<pre>DEBUG:\n";
+		echo $debug;
+		echo "</pre>";
+	}
 	openssl_free_key($key);
 	return qs_cleanup(qs_base64_unserialize($content),$action);
 }
@@ -120,6 +145,7 @@ function qs_css() {
 	echo "#qtranslate-services h4 { margin-top:0 }";
 	echo "#qtranslate-services h5 { margin-bottom:0 }";
 	echo "#qtranslate-services .description { font-size:11px }";
+	echo "#qtrans_select_translate { margin-right:11px }";
 }
 
 function qs_load() {
@@ -127,6 +153,10 @@ function qs_load() {
 	$qtranslate_services = get_option('qtranslate_qtranslate_services');
 	$qtranslate_services = qtrans_validateBool($qtranslate_services, $q_config['qtranslate_services']);
 	$q_config['qtranslate_services'] = $qtranslate_services;
+	if($q_config['qtranslate_services']) {
+		add_filter('qtranslate_toolbar',			'qs_toobar');
+		add_filter('qtranslate_modify_editor_js',	'qs_editor_js');
+	}
 }
 
 function qs_save() {
@@ -153,6 +183,11 @@ function qs_cleanup($var, $action) {
 				$var[$service_id]['service_required_fields'] = $fields;
 			}
 		break;
+	}
+	if(isset($var['error']) && $var['error'] == QS_DEBUG) {
+		echo "<pre>Debug message received from Server: \n";
+		var_dump($var['message']);
+		echo "</pre>";
 	}
 	return $var;
 }
@@ -307,7 +342,7 @@ function qs_cron() {
 	$orders = get_option('qs_orders');
 	foreach($orders as $key => $order) {
 		$order['order']['order_url'] = get_option('home');
-		if($result = qs_queryQS(QS_RETRIEVE_TRANSLATION, $order['order'])) {
+		if($result = qs_queryQS(QS_RETRIEVE_TRANSLATION, $order['order'])&&$result['order_status']==QS_STATE_CLOSED) {
 			$order['post_id'] = intval($order['post_id']);
 			$post = &get_post($order['post_id']);
 			$title = qtrans_split($post->post_title);
@@ -325,15 +360,15 @@ function qs_cron() {
 	}
 }
 
-qs_cron();
-
 function qs_service() {
-	global $q_config, $qs_public_key;
+	qs_cron();
+	global $q_config, $qs_public_key, $qs_error_messages;
 	$post_id = intval($_REQUEST['post']);
 	if(qtrans_isEnabled($_REQUEST['source_language']))
 		$translate_from = $_REQUEST['source_language'];
 	if(qtrans_isEnabled($_REQUEST['target_language']))
 		$translate_to = $_REQUEST['target_language'];
+	if($translate_to == $translate_from) $translate_to = '';
 	$post = &get_post($post_id);
 	if(!$post) return;
 	$default_service = intval(get_option('qs_default_service'));
@@ -346,8 +381,14 @@ function qs_service() {
 <?php
 		return;
 	}
+	// try to guess source and target language
+	if(!in_array($translate_from,$available_languages)) $translate_from = '';
 	$missing_languages = array_diff($q_config['enabled_languages'], $available_languages);
-	if(!$translate_from && in_array($q_config['default_language'], $available_languages)) $translate_from = $q_config['default_language'];
+	if(empty($translate_from) && in_array($q_config['default_language'], $available_languages)) $translate_from = $q_config['default_language'];
+	if(empty($translate_to) && sizeof($missing_languages)==1) $translate_to = $missing_languages[0];
+	if(in_array($translate_to, $available_languages)) {
+		$message = __('The Post already has content for the selected target language. If a translation request is send, the current text for the target language will be overwritten.','qtranslate');
+	}
 	if(sizeof($available_languages)==1) $translate_from = $available_languages[0];
 	$post_title = qtrans_use($translate_from,$post->post_title);
 	$post_content = qtrans_use($translate_from,$post->post_content);
@@ -375,13 +416,31 @@ function qs_service() {
 				'order_source_language' => $translate_from,
 				'order_target_language' => $translate_to
 			);
+		// check for additional fields
+		if(is_array($service_settings[$service_id])) {
+			$request['order_required_field'] = array();
+			foreach($service_settings[$service_id] as $setting => $value) {
+				$request['order_required_field'][$setting] = $value;
+			}
+		}
 		$answer = qs_queryQS(QS_INIT_TRANSLATION, $request);
+		if(isset($answer['error'])) {
+?>
+<p class="error"><?php printf(__('An error occured: %s', 'qtranslate'), $qs_error_messages[$answer['error']]); ?></p>
+<?php
+			if($answer['message']!='') {
+?>
+<p class="error"><?php printf(__('Additional information: %s', 'qtranslate'), qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($answer['message'])); ?></p>
+<?php
+			}
+			return;
+		}
 		if(isset($answer['order_id'])) {
 			$orders = get_option('qs_orders');
 			if(!is_array($orders)) $orders = array();
 			$orders[] = array('post_id'=>$post_id, 'service_id' => $service_id, 'source_language'=>$translate_from, 'target_language'=>$translate_to, 'order' => array('order_key' => $order_key, 'order_id' => $answer['order_id']));
 			update_option('qs_orders', $orders);
-			$message = __('Order has been received.');
+			$message = __('Order has been received.','qtranslate');
 		}
 	}
 ?>
@@ -399,36 +458,60 @@ if(!empty($message)) {
 <p><?php
 	if(sizeof($available_languages)>1) {
 		$available_languages_name = array();
+		$url_link = add_query_arg('post', $post_id);
+		if(!empty($translate_to)) $url_link = add_query_arg('target_language', $translate_to, $url_link);
 		foreach(array_diff($available_languages,array($translate_from)) as $language) {
-			$available_languages_name[] = '<a href="'.add_query_arg('source_language',$language).'">'.$q_config['language_name'][$language].'</a>';
+			$available_languages_name[] = '<a href="'.add_query_arg('source_language',$language, $url_link).'">'.$q_config['language_name'][$language].'</a>';
 		}
 		$available_languages_names = join(", ", $available_languages_name);
 		printf(__('Your article is available in multiple languages. If you do not want to translate from %1$s, you can switch to one of the following languages: %2$s', 'qtranslate'),$q_config['language_name'][$translate_from],$available_languages_names);
 	}
 ?></p>
+<input type="hidden" name="post" value="<?php echo $post_id; ?>"/>
+<input type="hidden" name="source_language" value="<?php echo $translate_from; ?>"/>
+<?php
+	if(empty($translate_to)) {
+?>
+<p><?php _e('Please choose the language you want to translate to:', 'qtranslate');?></p>
+<ul>
+<?php 
+		foreach($q_config['enabled_languages'] as $language) {
+			if($translate_from == $language) continue;
+?>
+	<li><label><input type="radio" name="target_language" value="<?php echo $language;?>" /> <?php echo $q_config['language_name'][$language]; ?></li>
+<?php
+		}
+?>
+</ul>
+	<p class="submit">
+		<input type="submit" name="submit" class="button-primary" value="<?php _e('Continue', 'qtranslate') ?>" />
+	</p>
+<?php
+	} else {
+?>
 <p><?php printf(__('Please review your article and <a href="%s">edit</a> it if needed.', 'qtranslate'),'post.php?action=edit&post='.$post_id); ?></p>
 <textarea name="qs_content_preview" id="qs_content_preview" readonly="readonly"><?php echo $post_content; ?></textarea>
 <?php
-	$timestamp = time();
-	if($timestamp != qs_queryQS(QS_VERIFY, $timestamp)) {
+		$timestamp = time();
+		if($timestamp != qs_queryQS(QS_VERIFY, $timestamp)) {
 ?>
 <p class="error"><?php _e('ERROR: Could not connect to qTranslate Services. Please try again later.', 'qtranslate');?></p>
 <?php
-		return;
-	}
+			return;
+		}
 	
 ?>
 <h4><?php _e('Use the following Translation Service:', 'qtranslate'); ?></h4>
 <ul>
 <?php
-	if($services = qs_queryQS(QS_GET_SERVICES)) {
-		foreach($services as $service_id => $service) {
-			// check if we have data for all required fields
-			$requirements_matched = true;
-			foreach($service['service_required_fields'] as $field) {
-				if(!isset($service_settings[$service_id][$field['name']]) || $service_settings[$service_id][$field['name']] == '') $requirements_matched = false;
-			}
-			if(!$requirements_matched) {
+		if($services = qs_queryQS(QS_GET_SERVICES)) {
+			foreach($services as $service_id => $service) {
+				// check if we have data for all required fields
+				$requirements_matched = true;
+				foreach($service['service_required_fields'] as $field) {
+					if(!isset($service_settings[$service_id][$field['name']]) || $service_settings[$service_id][$field['name']] == '') $requirements_matched = false;
+				}
+				if(!$requirements_matched) {
 ?>
 <li>
 	<label><input type="radio" name="service_id" disabled="disabled" /> <b><?php echo qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($service['service_name']); ?></b> ( <a href="<?php echo $service['service_url']; ?>" target="_blank"><?php _e('Website', 'qtranslate'); ?></a> )</label>
@@ -436,35 +519,27 @@ if(!empty($message)) {
 	<p class="service_description"><?php echo qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($service['service_description']); ?></p>
 </li>
 <?php
-			} else {
+				} else {
 ?>
 <li><label><input type="radio" name="service_id" <?php if($default_service==$service['service_id']) echo 'checked="checked"';?> value="<?php echo $service['service_id'];?>" /> <b><?php echo qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($service['service_name']); ?></b> ( <a href="<?php echo $service['service_url']; ?>" target="_blank"><?php _e('Website', 'qtranslate'); ?></a> )</label><p class="service_description"><?php echo qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($service['service_description']); ?></p></li>
 <?php
+				}
 			}
-		}
 ?>
 </ul>
 <p><?php _e('Your article will be SSL encrypted and securly sent to qTranslate Services, which will forward your text to the chosen Translation Service. Once qTranslate Services receives the translated text, it will automatically appear on your blog.', 'qtranslate'); ?></p>
 	<p class="submit">
-		<input type="hidden" name="post" value="<?php echo $post_id; ?>"/>
-		<input type="hidden" name="source_language" value="<?php echo $translate_from; ?>"/>
 		<input type="hidden" name="target_language" value="<?php echo $translate_to; ?>"/>
 		<input type="submit" name="submit" class="button-primary" value="<?php _e('Request Translation', 'qtranslate') ?>" />
 	</p>
 <?php
+		}
 	}
 ?>
 </div>
 </form>
 <?php
 }
-
-/*
-add_filter('qtranslate_toolbar',			'qs_toobar');
-add_filter('qtranslate_modify_editor_js',	'qs_editor_js');
-
-
-
 
 function qs_toobar($content) {
 	// Create Translate Button 
@@ -475,11 +550,10 @@ function qs_toobar($content) {
 function qs_editor_js($content) {
 	$content .= "
 		init_qs = function(action, id) {
-			alert('blub');
+			document.location.href = 'edit.php?page=qtranslate_services&post=".intval($_REQUEST['post'])."';
 		}
 		";
 	return $content;
 }
-*/
 
 ?>
