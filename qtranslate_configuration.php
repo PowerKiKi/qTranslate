@@ -200,7 +200,7 @@ function qtranslate_conf() {
 	$language_default = '';
 	$altered_table = false;
 	
-	do_action('qtranslate_configuration_pre');
+	$message = apply_filters('qtranslate_configuration_pre','');
 	
 	// check for action
 	if(isset($_POST['qtranslate_reset']) && isset($_POST['qtranslate_reset2'])) {
@@ -367,6 +367,7 @@ function qtranslate_conf() {
 	}
 	// don't accidently delete/enable/disable twice
 	$clean_uri = preg_replace("/&(delete|enable|disable|convert|markdefault)=[^&#]*/i","",$_SERVER['REQUEST_URI']);
+	$clean_uri = apply_filters('qtranslate_clean_uri', $clean_uri);
 
 // Generate XHTML
 
@@ -510,7 +511,7 @@ function qtranslate_conf() {
 			document.getElementById('qtranslate-advanced').style.display='none';
 		// ]]>
 		</script>
-<?php do_action('qtranslate_configuration'); ?>
+<?php do_action('qtranslate_configuration', $clean_uri); ?>
 		<p class="submit">
 			<input type="submit" name="submit" class="button-primary" value="<?php _e('Save Changes', 'qtranslate') ?>" />
 		</p>

@@ -57,12 +57,13 @@ add_action('qtranslate_languageColumn',			'qs_translateButtons', 10, 2);
 add_action('admin_page_qtranslate_services',	'qs_service');
 add_action('qtranslate_css',					'qs_css');
 add_action('qs_cron_hook',						'qs_cron');
-add_action('qtranslate_configuration_pre',		'qs_config_pre_hook');
 add_action('qtranslate_configuration',			'qs_config_hook');
 add_action('qtranslate_loadConfig',				'qs_load');
 add_action('qtranslate_saveConfig',				'qs_save');
+add_action('qtranslate_clean_uri',				'qs_clean_uri');
 
 add_filter('manage_order_columns',				'qs_order_columns');
+add_filter('qtranslate_configuration_pre',		'qs_config_pre_hook');
 
 // serializing/deserializing functions
 function qs_base64_serialize($var) {
@@ -127,6 +128,9 @@ function qs_queryQS($action, $data='') {
 	return qs_cleanup(qs_base64_unserialize($content),$action);
 }
 
+function qs_clean_uri($clean_uri) {
+	return preg_replace("/&(qs_delete|qs_cron)=[^&#]*/i","",$_SERVER['REQUEST_URI']);
+}
 
 function qs_translateButtons($available_languages, $missing_languages) {
 	global $q_config, $post;
@@ -146,6 +150,8 @@ function qs_css() {
 	echo "#qtranslate-services h5 { margin-bottom:0 }";
 	echo "#qtranslate-services .description { font-size:11px }";
 	echo "#qtrans_select_translate { margin-right:11px }";
+	echo ".qs_status { border:0 }";
+	echo ".qs_no-bottom-border { border-bottom:0 !important }";
 }
 
 function qs_load() {
@@ -192,10 +198,10 @@ function qs_cleanup($var, $action) {
 	return $var;
 }
 
-function qs_config_pre_hook() {
+function qs_config_pre_hook($message) {
 	global $q_config;
 	if(isset($_POST['qtranslate_services'])) {
-		qtrans_checkSetting('qtranslate_services',			true, QT_BOOLEAN);
+		qtrans_checkSetting('qtranslate_services', true, QT_BOOLEAN);
 		if($q_config['qtranslate_services']) {
 			$services = qs_queryQS(QS_GET_SERVICES);
 			$service_settings = get_option('qs_service_settings');
@@ -216,7 +222,25 @@ function qs_config_pre_hook() {
 			}
 			update_option('qs_service_settings', $service_settings);
 		}
-	}	
+	}
+	if(isset($_GET['qs_delete'])) {
+		$_GET['qs_delete'] = intval($_GET['qs_delete']);
+		$orders = get_option('qs_orders');
+		if(is_array($orders)) {
+			foreach($orders as $key => $order) {
+				if($orders[$key]['order']['order_id'] == $_GET['qs_delete']) {
+					unset($orders[$key]);
+					update_option('qs_orders',$orders);
+				}
+			}
+		}
+		$message = __('Order deleted.','qtranslate');
+	}
+	if(isset($_GET['qs_cron'])) {
+		qs_cron();
+		$message = __('Status updated for all open orders.','qtranslate');
+	}
+	return $message;
 }
 
 
@@ -225,11 +249,12 @@ function qs_order_columns($columns) {
 				'title' => __('Post Title', 'qtranslate'),
 				'service' => __('Service', 'qtranslate'),
 				'source_language' => __('Source Language', 'qtranslate'),
-				'target_language' => __('Target Language', 'qtranslate')
+				'target_language' => __('Target Language', 'qtranslate'),
+				'action' => __('Action', 'qtranslate')
 				);
 }
 
-function qs_config_hook() {
+function qs_config_hook($request_uri) {
 	global $q_config;
 ?>
 <h3><?php _e('qTranslate Services Settings', 'qtranslate') ?><span id="qtranslate-show-services" style="display:none"> (<a name="qtranslate_service_settings" href="#qtranslate_service_settings" onclick="showServices();"><?php _e('Show', 'qtranslate'); ?></a>)</span></h3>
@@ -272,16 +297,27 @@ function qs_config_hook() {
 			$post->post_title = wp_specialchars(qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($post->post_title));
 ?>
 				<tr>
-					<td><a href="post.php?action=edit&post=<?php echo $order['post_id']; ?>" title="<?php printf(__('Edit %s', 'qtranslate'),$post->post_title); ?>"><?php echo $post->post_title; ?></a></td>
-					<td><a href="<?php echo $services[$order['service_id']]['service_url']; ?>" title="<?php _e('Website', 'qtranslate'); ?>"><?php echo $services[$order['service_id']]['service_name']; ?></a></td>
-					<td><?php echo $q_config['language_name'][$order['source_language']]; ?></td>
-					<td><?php echo $q_config['language_name'][$order['target_language']]; ?></td>
+					<td class="qs_no-bottom-border"><a href="post.php?action=edit&post=<?php echo $order['post_id']; ?>" title="<?php printf(__('Edit %s', 'qtranslate'),$post->post_title); ?>"><?php echo $post->post_title; ?></a></td>
+					<td class="qs_no-bottom-border"><a href="<?php echo $services[$order['service_id']]['service_url']; ?>" title="<?php _e('Website', 'qtranslate'); ?>"><?php echo $services[$order['service_id']]['service_name']; ?></a></td>
+					<td class="qs_no-bottom-border"><?php echo $q_config['language_name'][$order['source_language']]; ?></td>
+					<td class="qs_no-bottom-border"><?php echo $q_config['language_name'][$order['target_language']]; ?></td>
+					<td class="qs_no-bottom-border"><a class="delete" href="<?php echo add_query_arg('qs_delete', $order['order']['order_id'], $request_uri); ?>#qtranslate_service_settings">Delete</a></td>
+				</tr>
+<?php 
+			if(isset($order['status'])) {
+?>
+				<tr class="qs_status">
+					<td colspan="5">
+						<?php printf(__('Current Status: %s','qtranslate'), $order['status']); ?>
+					</td>
 				</tr>
 <?php
+			}
 		}
 ?>
 			</table>
-			<p><?php _e('qTranslate Services will check every hour whether the translations are finished and update your posts accordingly.','qtranslate'); ?></p>
+			<p><?php printf(__('qTranslate Services will automatically check every hour whether the translations are finished and update your posts accordingly. You can always <a href="%s">check manually</a>.','qtranslate'),'options-general.php?page=qtranslate&qs_cron=true#qtranslate_service_settings'); ?></p>
+			<p><?php _e('Deleting an open order doesn\'t cancel it. You will have to logon to the service homepage and cancel it there.','qtranslate'); ?></p>
 <?php } else { ?>
 			<p><?php _e('No open orders.','qtranslate'); ?></p>
 <?php } ?>
@@ -340,9 +376,11 @@ function qs_cron() {
 	global $wpdb;
 	// poll translations
 	$orders = get_option('qs_orders');
+	if(!is_array($orders)) return;
 	foreach($orders as $key => $order) {
 		$order['order']['order_url'] = get_option('home');
-		if($result = qs_queryQS(QS_RETRIEVE_TRANSLATION, $order['order'])&&$result['order_status']==QS_STATE_CLOSED) {
+		$result = qs_queryQS(QS_RETRIEVE_TRANSLATION, $order['order']);
+		if(isset($result['order_status']) && $result['order_status']==QS_STATE_CLOSED) {
 			$order['post_id'] = intval($order['post_id']);
 			$post = &get_post($order['post_id']);
 			$title = qtrans_split($post->post_title);
@@ -357,11 +395,12 @@ function qs_cron() {
 			unset($orders[$key]);
 			update_option('qs_orders',$orders);
 		}
+		$orders[$key]['status'] = $result['order_comment'];
 	}
+	update_option('qs_orders',$orders);
 }
 
 function qs_service() {
-	qs_cron();
 	global $q_config, $qs_public_key, $qs_error_messages;
 	$post_id = intval($_REQUEST['post']);
 	if(qtrans_isEnabled($_REQUEST['source_language']))
@@ -376,10 +415,7 @@ function qs_service() {
 	// Detect available Languages and possible target languages
 	$available_languages = qtrans_getAvailableLanguages($post->post_content);
 	if(sizeof($available_languages)==0) {
-?>
-<p class="error"><?php _e('The requested Post has no content, no Translation possible.', 'qtranslate'); ?></p>
-<?php
-		return;
+		$error = __('The requested Post has no content, no Translation possible.', 'qtranslate');
 	}
 	// try to guess source and target language
 	if(!in_array($translate_from,$available_languages)) $translate_from = '';
@@ -390,6 +426,13 @@ function qs_service() {
 		$message = __('The Post already has content for the selected target language. If a translation request is send, the current text for the target language will be overwritten.','qtranslate');
 	}
 	if(sizeof($available_languages)==1) $translate_from = $available_languages[0];
+	
+	// link to current page with get variables
+	$url_link = add_query_arg('post', $post_id);
+	if(!empty($translate_to)) $url_link = add_query_arg('target_language', $translate_to, $url_link);
+	if(!empty($translate_from)) $url_link = add_query_arg('source_language', $translate_from, $url_link);
+	
+	// get correct title and content
 	$post_title = qtrans_use($translate_from,$post->post_title);
 	$post_content = qtrans_use($translate_from,$post->post_content);
 	if(isset($translate_from) && isset($translate_to)) {
@@ -425,13 +468,9 @@ function qs_service() {
 		}
 		$answer = qs_queryQS(QS_INIT_TRANSLATION, $request);
 		if(isset($answer['error'])) {
-?>
-<p class="error"><?php printf(__('An error occured: %s', 'qtranslate'), $qs_error_messages[$answer['error']]); ?></p>
-<?php
+			$error = sprintf(__('An error occured: %s', 'qtranslate'), $qs_error_messages[$answer['error']]);
 			if($answer['message']!='') {
-?>
-<p class="error"><?php printf(__('Additional information: %s', 'qtranslate'), qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($answer['message'])); ?></p>
-<?php
+				$error.='<br />'.sprintf(__('Additional information: %s', 'qtranslate'), qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($answer['message']));
 			}
 			return;
 		}
@@ -440,8 +479,46 @@ function qs_service() {
 			if(!is_array($orders)) $orders = array();
 			$orders[] = array('post_id'=>$post_id, 'service_id' => $service_id, 'source_language'=>$translate_from, 'target_language'=>$translate_to, 'order' => array('order_key' => $order_key, 'order_id' => $answer['order_id']));
 			update_option('qs_orders', $orders);
-			$message = __('Order has been received.','qtranslate');
+			if(empty($answer['message'])) {
+				$order_completed_message = '';
+			} else {
+				$order_completed_message = htmlspecialchars($answer['message']);
+			}
 		}
+	}
+	if(isset($error)) {
+?>
+<div class="wrap">
+<h2><?php _e('qTranslate Services', 'qtranslate'); ?></h2>
+<div id="message" class="error fade"><p><?php echo $error; ?></p></div>
+<p><?php printf(__('An serious error occured and qTranslate Services cannot proceed. For help, please visit the <a href="%s">Support Forum</a>','qtranslate'), 'http://www.qianqin.de/qtranslate/forum/');?></p>
+</div>
+<?php
+	return;
+	}
+	if(isset($order_completed_message)) {
+?>
+<div class="wrap">
+<h2><?php _e('qTranslate Services', 'qtranslate'); ?></h2>
+<div id="message" class="updated fade"><p><?php _e('Order successfully sent.', 'qtranslate'); ?></p></div>
+<p><?php _e('Your translation order has been successfully transfered to the selected service.','qtranslate'); ?></p>
+<?php
+		if(!empty($order_completed_message)) {
+?>
+<p><?php printf(__('The service returned this message: %s','qtranslate'), $order_completed_message);?></p>
+<?php
+		}
+?>
+<p><?php _e('Feel free to choose an action:', 'qtranslate'); ?></p>
+<ul>
+	<li><a href="<?php echo add_query_arg('target_language', null, $url_link); ?>"><?php _e('Translate this post to another language', 'qtranslate'); ?></a></li>
+	<li><a href="edit.php"><?php _e('Translate a different post', 'qtranslate'); ?></a></li>
+	<li><a href="options-general.php?page=qtranslate#qtranslate_service_settings"><?php _e('View all open orders', 'qtranslate'); ?></a></li>
+	<li><a href="options-general.php?page=qtranslate&qs_cron=true#qtranslate_service_settings"><?php _e('Let qTranslate Services check if any open orders are finished.', 'qtranslate'); ?></a></li>
+</ul>
+</div>
+<?php
+		return;
 	}
 ?>
 <div class="wrap">
@@ -449,7 +526,7 @@ function qs_service() {
 <?php
 if(!empty($message)) {
 ?>
-<p class="updated"><?php echo $message; ?></p>
+<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
 <?php
 }
 ?>
@@ -458,8 +535,6 @@ if(!empty($message)) {
 <p><?php
 	if(sizeof($available_languages)>1) {
 		$available_languages_name = array();
-		$url_link = add_query_arg('post', $post_id);
-		if(!empty($translate_to)) $url_link = add_query_arg('target_language', $translate_to, $url_link);
 		foreach(array_diff($available_languages,array($translate_from)) as $language) {
 			$available_languages_name[] = '<a href="'.add_query_arg('source_language',$language, $url_link).'">'.$q_config['language_name'][$language].'</a>';
 		}
