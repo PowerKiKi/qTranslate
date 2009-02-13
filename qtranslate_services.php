@@ -290,7 +290,7 @@ function qs_config_hook($request_uri) {
 <?php print_column_headers('order', false); ?>
 				</tr>
 				</tfoot>
-<?php 
+<?php
 		foreach($orders as $order) { 
 			$post = &get_post($order['post_id']);
 			if(!$post) continue;
@@ -378,8 +378,23 @@ function qs_cron() {
 	$orders = get_option('qs_orders');
 	if(!is_array($orders)) return;
 	foreach($orders as $key => $order) {
+		qs_UpdateOrder($order['order']['order_id']);
+	}
+}
+
+function qs_UpdateOrder($order_id) {
+	global $wpdb;
+	$orders = get_option('qs_orders');
+	if(!is_array($orders)) return false;
+	foreach($orders as $key => $order) {
+		// search for wanted order
+		if($order['order']['order_id']!=$order_id) continue;
+		
+		// query server for updates
 		$order['order']['order_url'] = get_option('home');
 		$result = qs_queryQS(QS_RETRIEVE_TRANSLATION, $order['order']);
+		$orders[$key]['status'] = $result['order_comment'];
+		// update db if post is updated
 		if(isset($result['order_status']) && $result['order_status']==QS_STATE_CLOSED) {
 			$order['post_id'] = intval($order['post_id']);
 			$post = &get_post($order['post_id']);
@@ -393,11 +408,11 @@ function qs_cron() {
 			$wpdb->query('UPDATE '.$wpdb->posts.' SET post_title="'.mysql_escape_string($post->post_title).'", post_content = "'.mysql_escape_string($post->post_content).'" WHERE ID = "'.$post->ID.'"');
 			wp_cache_add($post->ID, $post, 'posts');
 			unset($orders[$key]);
-			update_option('qs_orders',$orders);
 		}
-		$orders[$key]['status'] = $result['order_comment'];
+		update_option('qs_orders',$orders);
+		return true;
 	}
-	update_option('qs_orders',$orders);
+	return false;
 }
 
 function qs_service() {
@@ -409,7 +424,10 @@ function qs_service() {
 		$translate_to = $_REQUEST['target_language'];
 	if($translate_to == $translate_from) $translate_to = '';
 	$post = &get_post($post_id);
-	if(!$post) return;
+	if(!$post) {
+		printf(__('Post with id "%s" not found!','qtranslate'), $post_id);
+		return;
+	}
 	$default_service = intval(get_option('qs_default_service'));
 	$service_settings = get_option('qs_service_settings');
 	// Detect available Languages and possible target languages
@@ -472,7 +490,6 @@ function qs_service() {
 			if($answer['message']!='') {
 				$error.='<br />'.sprintf(__('Additional information: %s', 'qtranslate'), qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($answer['message']));
 			}
-			return;
 		}
 		if(isset($answer['order_id'])) {
 			$orders = get_option('qs_orders');
@@ -484,6 +501,7 @@ function qs_service() {
 			} else {
 				$order_completed_message = htmlspecialchars($answer['message']);
 			}
+			qs_UpdateOrder($answer['order_id']);
 		}
 	}
 	if(isset($error)) {
