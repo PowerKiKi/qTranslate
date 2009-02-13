@@ -1,8 +1,8 @@
 === qTranslate ===
 Contributors: chineseleper
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher
-Requires at least: 2.7
-Tested up to: 2.7
+Requires at least: 2.7.1
+Tested up to: 2.7.1
 Stable tag: 2.2.4
 Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
@@ -14,6 +14,7 @@ Writing multilingual content is already hard enough, why make the plugin even mo
 
 qTranslate makes creation of multilingual content as easy as working with a single language.
 
+- Introducing qTranslate Services - Professional human and automated machine translation
 - One-Click-Switching between the languages - Change the language as easy as switching between Visual and HTML
 - No need for adding special characters or strings to seperate your multilingual texts! - qTranslate will handle them almost everywhere for you
 - Multilingual dates out of the box - Translates dates and time for you.
