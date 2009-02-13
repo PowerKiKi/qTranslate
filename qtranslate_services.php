@@ -129,7 +129,7 @@ function qs_queryQS($action, $data='') {
 }
 
 function qs_clean_uri($clean_uri) {
-	return preg_replace("/&(qs_delete|qs_cron)=[^&#]*/i","",$_SERVER['REQUEST_URI']);
+	return preg_replace("/&(qs_delete|qs_cron)=[^&#]*/i","",$clean_uri);
 }
 
 function qs_translateButtons($available_languages, $missing_languages) {
