@@ -284,9 +284,6 @@ function qtrans_loadConfig() {
 function qtrans_saveConfig() {
 	global $q_config;
 	
-	// sort enabled languages to prevent language tab position jumps
-	sort($q_config['enabled_languages']);
-	
 	// save everything
 	update_option('qtranslate_language_names', $q_config['language_name']);
 	update_option('qtranslate_enabled_languages', $q_config['enabled_languages']);
@@ -706,7 +703,6 @@ function qtrans_disableLanguage($lang) {
 			}
 		}
 		$q_config['enabled_languages'] = $new_enabled;
-		sort($q_config['enabled_languages']);
 		return true;
 	}
 	return false;
@@ -718,7 +714,6 @@ function qtrans_enableLanguage($lang) {
 		return false;
 	}
 	$q_config['enabled_languages'][] = $lang;
-    sort($q_config['enabled_languages']);
 	// force update of .mo files
 	if ($q_config['auto_update_mo']) qtrans_updateGettextDatabases(true);
 	return true;

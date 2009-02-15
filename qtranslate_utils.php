@@ -231,4 +231,17 @@ function qtrans_realURL($url = '') {
 	return $q_config['url_info']['original_url'];
 }
 
+function qtrans_getSortedLanguages($reverse = false) {
+	global $q_config;
+	$languages = $q_config['enabled_languages'];
+	ksort($languages);
+	// fix broken order
+	$clean_languages = array();
+	foreach($languages as $lang) {
+		$clean_languages[] = $lang;
+	}
+	if($reverse) krsort($clean_languages);
+	return $clean_languages;
+}
+
 ?>

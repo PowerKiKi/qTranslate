@@ -101,12 +101,11 @@ function qtrans_modifyRichEditor($old_content) {
 	$content .= $q_config['js']['qtrans_get_active_language'];
 
 	// insert language, visual and html buttons
-	$el = $q_config['enabled_languages'];
-	sort($el);
+	$el = qtrans_getSortedLanguages();
 	foreach($el as $language) {
 		$content .= qtrans_insertTitleInput($language);
 	}
-	rsort($el);
+	$el = qtrans_getSortedLanguages(true);
 	foreach($el as $language) {
 		$content .= qtrans_createEditorToolbarButton($language, $id);
 	}

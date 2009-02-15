@@ -29,7 +29,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 		case 'text':
 		case 'dropdown':
 			echo '<ul class="qtrans_language_chooser" id="'.$id.'">';
-			foreach($q_config['enabled_languages'] as $language) {
+			foreach(qtrans_getSortedLanguages() as $language) {
 				echo '<li';
 				if($language == $q_config['language'])
 					echo ' class="active"';
@@ -49,7 +49,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 				echo "s.id = 'qtrans_select_".$id."';\n";
 				echo "lc.parentNode.insertBefore(s,lc);";
 				// create dropdown fields for each language
-				foreach($q_config['enabled_languages'] as $language) {
+				foreach(qtrans_getSortedLanguages() as $language) {
 					echo qtrans_insertDropDownElement($language, qtrans_convertURL('', $language), $id);
 				}
 				// hide html language chooser text
@@ -60,7 +60,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 			break;
 		case 'both':
 			echo '<ul class="qtrans_language_chooser" id="'.$id.'">';
-			foreach($q_config['enabled_languages'] as $language) {
+			foreach(qtrans_getSortedLanguages() as $language) {
 				echo '<li';
 				if($language == $q_config['language'])
 					echo ' class="active"';

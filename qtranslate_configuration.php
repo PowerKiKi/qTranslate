@@ -348,8 +348,41 @@ function qtranslate_conf() {
 		if($error=='' && !qtrans_disableLanguage($_GET['disable'])) {
 			$error = __('Language is already disabled!', 'qtranslate');
 		}
+	} elseif(isset($_GET['moveup'])) {
+		$languages = qtrans_getSortedLanguages();
+		$message = __('No such language!', 'qtranslate');
+		foreach($languages as $key => $language) {
+			if($language==$_GET['moveup']) {
+				if($key==0) {
+					$message = __('Language is already first!', 'qtranslate');
+					break;
+				}
+				$languages[$key] = $languages[$key-1];
+				$languages[$key-1] = $language;
+				$q_config['enabled_languages'] = $languages;
+				$message = __('New order saved.', 'qtranslate');
+				break;
+			}
+		}
+	} elseif(isset($_GET['movedown'])) {
+		$languages = qtrans_getSortedLanguages();
+		$message = __('No such language!', 'qtranslate');
+		foreach($languages as $key => $language) {
+			if($language==$_GET['movedown']) {
+				if($key==sizeof($languages)-1) {
+					$message = __('Language is already last!', 'qtranslate');
+					break;
+				}
+				$languages[$key] = $languages[$key+1];
+				$languages[$key+1] = $language;
+				$q_config['enabled_languages'] = $languages;
+				$message = __('New order saved.', 'qtranslate');
+				break;
+			}
+		}
 	}
-	$everything_fine = ((isset($_POST['submit'])||isset($_GET['delete'])||isset($_GET['enable'])||isset($_GET['disable']))&&$error=='');
+	
+	$everything_fine = ((isset($_POST['submit'])||isset($_GET['delete'])||isset($_GET['enable'])||isset($_GET['disable'])||isset($_GET['moveup'])||isset($_GET['movedown']))&&$error=='');
 	if($everything_fine) {
 		// settings might have changed, so save
 		qtrans_saveConfig();
@@ -366,7 +399,7 @@ function qtranslate_conf() {
 		}
 	}
 	// don't accidently delete/enable/disable twice
-	$clean_uri = preg_replace("/&(delete|enable|disable|convert|markdefault)=[^&#]*/i","",$_SERVER['REQUEST_URI']);
+	$clean_uri = preg_replace("/&(delete|enable|disable|convert|markdefault|moveup|movedown)=[^&#]*/i","",$_SERVER['REQUEST_URI']);
 	$clean_uri = apply_filters('qtranslate_clean_uri', $clean_uri);
 
 // Generate XHTML
@@ -395,19 +428,25 @@ function qtranslate_conf() {
 		<h3><?php _e('General Settings', 'qtranslate') ?></h3>
 		<table class="form-table">
 			<tr>
-				<th scope="row"><?php _e('Default Language', 'qtranslate') ?></th>
+				<th scope="row"><?php _e('Default Language / Order', 'qtranslate') ?></th>
 				<td>
 					<fieldset><legend class="hidden"><?php _e('Default Language', 'qtranslate') ?></legend>
 				<?php
-					foreach ( $q_config['enabled_languages'] as $language ) {
+					foreach ( qtrans_getSortedLanguages() as $key => $language ) {
 						echo "\t<label title='" . $q_config['language_name'][$language] . "'><input type='radio' name='default_language' value='" . $language . "'";
 						if ( $language == $q_config['default_language'] ) {
 							echo " checked='checked'";
 						}
-						echo ' /> <img src="' . trailingslashit(WP_CONTENT_URL) .$q_config['flag_location'].$q_config['flag'][$language] . '" alt="' . $q_config['language_name'][$language] . '"> ' . $q_config['language_name'][$language] . "</label><br />\n";
+						echo ' />';
+						echo ' <a href="'.add_query_arg('moveup', $language, $clean_uri).'"><img src="'.WP_PLUGIN_URL.'/qtranslate/arrowup.png" alt="up" /></a>';
+						echo ' <a href="'.add_query_arg('movedown', $language, $clean_uri).'"><img src="'.WP_PLUGIN_URL.'/qtranslate/arrowdown.png" alt="down" /></a>';
+						echo ' <img src="' . trailingslashit(WP_CONTENT_URL) .$q_config['flag_location'].$q_config['flag'][$language] . '" alt="' . $q_config['language_name'][$language] . '"> ';
+						echo ' '.$q_config['language_name'][$language] . "</label><br />\n";
 					}
 
 				?>
+					</br>
+					<?php printf(__('Choose the default language of your blog. This is the language which will be shown on %s. You can also change the order the languages by clicking on the arrows above.', 'qtranslate'), get_bloginfo('url')); ?>
 					</fieldset>
 				</td>
 			</tr>

@@ -73,8 +73,12 @@ define('QT_DATE_OVERRIDE',		2);
 define('QT_DATE',				3);
 define('QT_STRFTIME',			4);
 
-// enable the use of following languages
-$q_config['enabled_languages'] = array('en', 'de', 'zh');
+// enable the use of following languages (order=>language)
+$q_config['enabled_languages'] = array(
+		'0' => 'de',
+		'1' => 'en', 
+		'2' => 'zh'
+	);
 
 // sets default language
 $q_config['default_language'] = 'en';
