@@ -51,7 +51,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 */
 /*
 	Specials thanks to:
-	Carmen (Present), Jean-Pierre (Postcard), Bruno (Present), Andrea (Present), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
+	Roger (Donation), Carmen (Present), Jean-Pierre (Postcard), Bruno (Present), Andrea (Present), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
 */
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
