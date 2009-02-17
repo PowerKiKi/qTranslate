@@ -54,7 +54,6 @@ $qs_error_messages[QS_ERROR_SERVICE_UNKNOWN] =			__('An unknown error occured wi
 $qs_error_messages[QS_DEBUG] =							__('The server returned a debugging message.','qtranslate');
 
 // hooks
-add_action('qtranslate_languageColumn',			'qs_translateButtons', 10, 2);
 add_action('admin_page_qtranslate_services',	'qs_service');
 add_action('qtranslate_css',					'qs_css');
 add_action('qs_cron_hook',						'qs_cron');
@@ -184,6 +183,8 @@ function qs_init() {
 	*/
 		add_meta_box('translatediv', __('Translate to','qtranslate'), 'qs_translate_box', 'post', 'side', 'core');
 		add_meta_box('translatediv', __('Translate to','qtranslate'), 'qs_translate_box', 'page', 'side', 'core');
+		
+		add_action('qtranslate_languageColumn',			'qs_translateButtons', 10, 2);
 	}
 }
 

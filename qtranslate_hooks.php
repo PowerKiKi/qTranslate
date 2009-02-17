@@ -137,11 +137,11 @@ function qtrans_links($links, $file){ // copied from Sociable Plugin
 
 function qtrans_languageColumnHeader($columns){
 	$new_columns = array();
-	$new_columns['cb'] = '';
-	$new_columns['title'] = '';
-	$new_columns['author'] = '';
-	$new_columns['categories'] = '';
-	$new_columns['tags'] = '';
+	if(isset($columns['cb']))			$new_columns['cb'] = '';
+	if(isset($columns['title']))		$new_columns['title'] = '';
+	if(isset($columns['author']))		$new_columns['author'] = '';
+	if(isset($columns['categories']))	$new_columns['categories'] = '';
+	if(isset($columns['tags']))			$new_columns['tags'] = '';
 	$new_columns['language'] = __('Languages', 'qtranslate');
 	return array_merge($new_columns, $columns);;
 }
@@ -255,8 +255,10 @@ add_filter('feed_link',						'qtrans_convertURL');
 add_filter('post_comments_feed_link',		'qtrans_convertURL');
 add_filter('tag_feed_link',					'qtrans_convertURL');
 add_filter('clean_url',						'qtrans_convertURL');
-add_filter('manage_posts_custom_column',	'qtrans_languageColumn');
 add_filter('manage_posts_columns',			'qtrans_languageColumnHeader');
+add_filter('manage_posts_custom_column',	'qtrans_languageColumn');
+add_filter('manage_pages_columns',			'qtrans_languageColumnHeader');
+add_filter('manage_pages_custom_column',	'qtrans_languageColumn');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
