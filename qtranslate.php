@@ -138,7 +138,7 @@ $q_config['locale']['se'] = "sv_SE";
 $q_config['locale']['it'] = "it_IT";
 $q_config['locale']['ro'] = "ro_RO";
 $q_config['locale']['hu'] = "hu_HU";
-$q_config['locale']['ja'] = "ja_JA";
+$q_config['locale']['ja'] = "ja";
 $q_config['locale']['es'] = "es_ES";
 
 // Language not available messages
