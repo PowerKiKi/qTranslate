@@ -340,7 +340,7 @@ function qtrans_updateGettextDatabases($force = false, $only_for_language = '') 
 			if(!$lcr = @fopen('http://svn.automattic.com/wordpress-i18n/'.$locale.'/trunk/messages/'.$locale.'.mo','r')) 
 			if(!$lcr = @fopen('http://svn.automattic.com/wordpress-i18n/'.substr($locale,0,2).'/trunk/messages/'.$locale.'.mo','r')) {
 				// couldn't find a .mo file
-				if(filesize(ABSPATH.'wp-content/languages/'.$locale.'.mo.filepart')==0) unlink(ABSPATH.'wp-content/languages/'.$locale.'.mo.filepart');
+				if(filesize(trailingslashit(WP_LANG_DIR).$locale.'.mo.filepart')==0) unlink(trailingslashit(WP_LANG_DIR).$locale.'.mo.filepart');
 				continue;
 			}
 			// found a .mo file, update local .mo
