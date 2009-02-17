@@ -28,6 +28,7 @@ if (!wp_next_scheduled('qs_cron_hook')) {
 	wp_schedule_event( time(), 'hourly', 'qs_cron_hook' );
 }
 
+define('QS_FAST_TIMEOUT',						10);
 define('QS_VERIFY',								'verify');
 define('QS_GET_SERVICES',						'get_services');
 define('QS_INIT_TRANSLATION',					'init_translation');
@@ -61,6 +62,7 @@ add_action('qtranslate_configuration',			'qs_config_hook');
 add_action('qtranslate_loadConfig',				'qs_load');
 add_action('qtranslate_saveConfig',				'qs_save');
 add_action('qtranslate_clean_uri',				'qs_clean_uri');
+add_action('admin_menu',						'qs_init');
 
 add_filter('manage_order_columns',				'qs_order_columns');
 add_filter('qtranslate_configuration_pre',		'qs_config_pre_hook');
@@ -89,7 +91,7 @@ function qs_base64_unserialize($var) {
 }
 
 // sends a encrypted message to qTranslate Services and decrypts the received data
-function qs_queryQS($action, $data='') {
+function qs_queryQS($action, $data='', $fast = false) {
 	global $qs_public_key;
 	// generate new private key
 	$key = openssl_pkey_new();
@@ -100,7 +102,16 @@ function qs_queryQS($action, $data='') {
 	openssl_seal($message, $message, $server_key, array($qs_public_key));
 	$message = qs_base64_serialize(array('key'=>$server_key[0], 'data'=>$message));
 	$data = "message=".$message;
-	$fp = fsockopen('www.qianqin.de', 80);
+	
+	// connect to qts
+	if($fast) {
+		$fp = fsockopen('www.qianqin.de', 80, $errno, $errstr, QS_FAST_TIMEOUT);
+		stream_set_timeout($fp, QS_FAST_TIMEOUT);
+	} else {
+		$fp = fsockopen('www.qianqin.de', 80);
+	}
+	if(!$fp) return false;
+	
 	fputs($fp, "POST /qtranslate/services/$action HTTP/1.1\r\n");
 	fputs($fp, "Host: www.qianqin.de\r\n");
 	fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n");
@@ -111,6 +122,9 @@ function qs_queryQS($action, $data='') {
 	while(!feof($fp)) {
 		$res .= fgets($fp, 128);
 	}
+	// check for timeout
+	$info = stream_get_meta_data($fp);
+	if($info['timed_out']) return false;
 	fclose($fp);
 	
 	preg_match("#^Content-Length:\s*([0-9]+)\s*$#ism",$res, $match);
@@ -125,7 +139,7 @@ function qs_queryQS($action, $data='') {
 		echo "</pre>";
 	}
 	openssl_free_key($key);
-	return qs_cleanup(qs_base64_unserialize($content),$action);
+	return qs_cleanup(qs_base64_unserialize($content), $action);
 }
 
 function qs_clean_uri($clean_uri) {
@@ -159,9 +173,17 @@ function qs_load() {
 	$qtranslate_services = get_option('qtranslate_qtranslate_services');
 	$qtranslate_services = qtrans_validateBool($qtranslate_services, $q_config['qtranslate_services']);
 	$q_config['qtranslate_services'] = $qtranslate_services;
+}
+
+function qs_init() {
+	global $q_config;
 	if($q_config['qtranslate_services']) {
+	/* disabled for meta box
 		add_filter('qtranslate_toolbar',			'qs_toobar');
 		add_filter('qtranslate_modify_editor_js',	'qs_editor_js');
+	*/
+		add_meta_box('translatediv', __('Translate to','qtranslate'), 'qs_translate_box', 'post', 'side', 'core');
+		add_meta_box('translatediv', __('Translate to','qtranslate'), 'qs_translate_box', 'page', 'side', 'core');
 	}
 }
 
@@ -243,6 +265,23 @@ function qs_config_pre_hook($message) {
 	return $message;
 }
 
+function qs_translate_box($post) {
+	global $q_config;
+	$languages = qtrans_getSortedLanguages();
+?>
+<p>
+	<ul>
+<?php
+	foreach($languages as $language) {
+?>
+		<li><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]; ?>" alt="<?php echo $q_config['language_name'][$language]; ?>"> <a href="edit.php?page=qtranslate_services&post=<?php echo intval($_REQUEST['post']); ?>&target_language=<?php echo $language; ?>"><?php echo $q_config['language_name'][$language]; ?></li>
+<?php
+	}
+?>
+	</ul>
+</p>
+<?php
+}
 
 function qs_order_columns($columns) {
 	return array(
@@ -435,15 +474,30 @@ function qs_service() {
 	if(sizeof($available_languages)==0) {
 		$error = __('The requested Post has no content, no Translation possible.', 'qtranslate');
 	}
+	
 	// try to guess source and target language
-	if(!in_array($translate_from,$available_languages)) $translate_from = '';
+	if(!in_array($translate_from, $available_languages)) $translate_from = '';
 	$missing_languages = array_diff($q_config['enabled_languages'], $available_languages);
-	if(empty($translate_from) && in_array($q_config['default_language'], $available_languages)) $translate_from = $q_config['default_language'];
+	if(empty($translate_from) && in_array($q_config['default_language'], $available_languages) && $translate_to!=$q_config['default_language']) $translate_from = $q_config['default_language'];
 	if(empty($translate_to) && sizeof($missing_languages)==1) $translate_to = $missing_languages[0];
 	if(in_array($translate_to, $available_languages)) {
 		$message = __('The Post already has content for the selected target language. If a translation request is send, the current text for the target language will be overwritten.','qtranslate');
 	}
-	if(sizeof($available_languages)==1) $translate_from = $available_languages[0];
+	if(sizeof($available_languages)==1) {
+		if($available_languages[0] == $translate_to) {
+			$translate_to = '';
+		}
+		$translate_from = $available_languages[0];
+	} elseif($translate_from == '' && sizeof($available_languages) > 1) {
+		$languages = qtrans_getSortedLanguages();
+		foreach($languages as $language) {
+			if($language != $translate_to && in_array($language, $available_languages)) {
+				$translate_from = $language;
+				break;
+			}
+		}
+	}
+	
 	
 	// link to current page with get variables
 	$url_link = add_query_arg('post', $post_id);
@@ -533,6 +587,7 @@ function qs_service() {
 	<li><a href="edit.php"><?php _e('Translate a different post', 'qtranslate'); ?></a></li>
 	<li><a href="options-general.php?page=qtranslate#qtranslate_service_settings"><?php _e('View all open orders', 'qtranslate'); ?></a></li>
 	<li><a href="options-general.php?page=qtranslate&qs_cron=true#qtranslate_service_settings"><?php _e('Let qTranslate Services check if any open orders are finished.', 'qtranslate'); ?></a></li>
+	<li><a href="<?php get_permalink($post_id); ?> "><?php _e('View this post.', 'qtranslate'); ?></a></li>
 </ul>
 </div>
 <?php

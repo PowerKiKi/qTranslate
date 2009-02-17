@@ -440,7 +440,7 @@ function qtranslate_conf() {
 						echo ' />';
 						echo ' <a href="'.add_query_arg('moveup', $language, $clean_uri).'"><img src="'.WP_PLUGIN_URL.'/qtranslate/arrowup.png" alt="up" /></a>';
 						echo ' <a href="'.add_query_arg('movedown', $language, $clean_uri).'"><img src="'.WP_PLUGIN_URL.'/qtranslate/arrowdown.png" alt="down" /></a>';
-						echo ' <img src="' . trailingslashit(WP_CONTENT_URL) .$q_config['flag_location'].$q_config['flag'][$language] . '" alt="' . $q_config['language_name'][$language] . '"> ';
+						echo ' <img src="' . trailingslashit(WP_CONTENT_URL) .$q_config['flag_location'].$q_config['flag'][$language] . '" alt="' . $q_config['language_name'][$language] . '" /> ';
 						echo ' '.$q_config['language_name'][$language] . "</label><br />\n";
 					}
 
