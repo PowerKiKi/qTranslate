@@ -541,13 +541,14 @@ function qtranslate_conf() {
 				<th scope="row"><?php _e('Debugging Information', 'qtranslate');?></th>
 				<td>
 					<p><?php printf(__('If you encounter any problems and you are unable to solve them yourself, you can visit the <a href="%s">Support Forum</a>. Posting the following Content will help other detect any misconfigurations.', 'qtranslate'), 'http://www.qianqin.de/qtranslate/forum/'); ?></p>
-					<textarea id="qtranslate_debug"><?php
+					<textarea readonly="readonly" id="qtranslate_debug"><?php
 						$q_config_copy = $q_config;
 						// remove information to keep data anonymous and other not needed things
 						unset($q_config_copy['url_info']);
 						unset($q_config_copy['js']);
 						unset($q_config_copy['windows_locale']);
 						unset($q_config_copy['pre_domain']);
+						unset($q_config_copy['term_name']);
 						echo htmlspecialchars(print_r($q_config_copy, true));
 					?></textarea>
 				</td>
