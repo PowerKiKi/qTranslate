@@ -314,7 +314,7 @@ function qtrans_saveConfig() {
 	do_action('qtranslate_saveConfig');
 }
 
-function qtrans_updateGettextDatabases($force = false) {
+function qtrans_updateGettextDatabases($force = false, $only_for_language = '') {
 	global $q_config;
 	if(!is_dir(WP_LANG_DIR)) {
 		if(!@mkdir(WP_LANG_DIR))
@@ -324,6 +324,7 @@ function qtrans_updateGettextDatabases($force = false) {
 	if(time() < $next_update && !$force) return true;
 	update_option('qtranslate_next_update_mo', time() + 7*24*60*60);
 	foreach($q_config['locale'] as $lang => $locale) {
+		if(qtrans_isEnabled($only_for_language) && $lang != $only_for_language) continue;
 		if(!qtrans_isEnabled($lang)) continue;
 		if($ll = @fopen(trailingslashit(WP_LANG_DIR).$locale.'.mo.filepart','a')) {
 			// can access .mo file
@@ -715,7 +716,7 @@ function qtrans_enableLanguage($lang) {
 	}
 	$q_config['enabled_languages'][] = $lang;
 	// force update of .mo files
-	if ($q_config['auto_update_mo']) qtrans_updateGettextDatabases(true);
+	if ($q_config['auto_update_mo']) qtrans_updateGettextDatabases(true, $lang);
 	return true;
 }
 

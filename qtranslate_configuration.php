@@ -537,6 +537,21 @@ function qtranslate_conf() {
 					<?php _e('Both processes are <b>irreversible</b>! Be sure to make a full database backup before clicking one of the links.', 'qtranslate'); ?>
 				</td>
 			</tr>
+			<tr>
+				<th scope="row"><?php _e('Debugging Information', 'qtranslate');?></th>
+				<td>
+					<p><?php printf(__('If you encounter any problems and you are unable to solve them yourself, you can visit the <a href="%s">Support Forum</a>. Posting the following Content will help other detect any misconfigurations.', 'qtranslate'), 'http://www.qianqin.de/qtranslate/forum/'); ?></p>
+					<textarea id="qtranslate_debug"><?php
+						$q_config_copy = $q_config;
+						// remove information to keep data anonymous and other not needed things
+						unset($q_config_copy['url_info']);
+						unset($q_config_copy['js']);
+						unset($q_config_copy['windows_locale']);
+						unset($q_config_copy['pre_domain']);
+						echo htmlspecialchars(print_r($q_config_copy, true));
+					?></textarea>
+				</td>
+			</tr>
 		</table>
 		<script type="text/javascript">
 		// <![CDATA[
@@ -546,8 +561,10 @@ function qtranslate_conf() {
 				return false;
 			}
 			
-			document.getElementById('qtranslate-show-advanced').style.display='inline';
-			document.getElementById('qtranslate-advanced').style.display='none';
+			if(location.hash!='#advanced_settings') {
+					document.getElementById('qtranslate-show-advanced').style.display='inline';
+					document.getElementById('qtranslate-advanced').style.display='none';
+			}
 		// ]]>
 		</script>
 <?php do_action('qtranslate_configuration', $clean_uri); ?>
@@ -590,6 +607,7 @@ function qtranslate_conf() {
 <?php }} ?>
 	</tbody>
 </table>
+<p><?php _e('Enabling a language will cause qTranslate to update the Gettext-Database for the language, which can take a while depending on your server\'s connection speed.','qtranslate');?></p>
 </div>
 </div><!-- /col-right -->
 

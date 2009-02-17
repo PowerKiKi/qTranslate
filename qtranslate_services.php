@@ -403,7 +403,7 @@ function qs_config_hook($request_uri) {
 		return false;
 	}
 	
-	if(location.hash=='') {
+	if(location.hash!='#qtranslate_service_settings') {
 	document.getElementById('qtranslate-show-services').style.display='inline';
 	document.getElementById('qtranslate-services').style.display='none';
 	}

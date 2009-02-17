@@ -157,7 +157,7 @@ $q_config['not_available']['ja'] = "申し訳ありません、このコンテ�
 $q_config['not_available']['es'] = "Disculpa, pero esta entrada está disponible sólo en %LANG:, : y %.";
 
 // qTranslate Services
-$q_config['services'] = false;
+$q_config['qtranslate_services'] = false;
 
 // strftime usage (backward compability)
 $q_config['use_strftime'] = QT_DATE;
