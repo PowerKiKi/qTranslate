@@ -231,20 +231,6 @@ function qtrans_initJS() {
 		}
 		";
 		
-	$q_config['js']['qtrans_send_to_Editor'] = "
-		send_to_editor = function(h) {
-			var win = window.opener ? window.opener : window.dialogArguments;
-			if ( !win )
-				win = top;
-			tinyMCE = win.tinyMCE;
-			if ( typeof tinyMCE != 'undefined' && ( ed = tinyMCE.getInstanceById('qtrans_textarea_content') ) && !ed.isHidden() ) {
-				tinyMCE.selectedInstance.getWin().focus();
-				tinyMCE.execCommand('mceInsertContent', false, h);
-			} else
-				win.edInsertContent(win.edCanvas, h);
-		}
-		";
-		
 	$q_config['js']['qtrans_disable_old_editor'] = "
 		switchEditors.edInit = function() {
 			var h = tinymce.util.Cookie.getHash('TinyMCE_content_size');

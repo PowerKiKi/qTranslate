@@ -65,7 +65,7 @@ function qtrans_init() {
 	setcookie('qtrans_cookie_test', 'qTranslate Cookie Test', 0, $q_config['url_info']['home'], $q_config['url_info']['host']);
 	// check cookies for admin
 	if(defined('WP_ADMIN')) {
-		if(qtrans_isEnabled($_GET['lang'])) {
+		if(isset($_GET['lang']) && qtrans_isEnabled($_GET['lang'])) {
 			$q_config['language'] = $q_config['url_info']['language'];
 			setcookie('qtrans_admin_language', $q_config['language'], time()+60*60*24*30);
 		} elseif(isset($_COOKIE['qtrans_admin_language']) && qtrans_isEnabled($_COOKIE['qtrans_admin_language'])) {
@@ -136,7 +136,9 @@ function qtrans_init() {
 function qtrans_extractURL($url, $host = '', $referer = '') {
 	global $q_config;
 	$home = qtrans_parseURL(get_option('home'));
+	$home['path'] = trailingslashit($home['path']);
 	$referer = qtrans_parseURL($referer);
+	
 	$result = array();
 	$result['language'] = $q_config['default_language'];
 	$result['url'] = $url;
@@ -144,8 +146,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 	$result['host'] = $host;
 	$result['redirect'] = false;
 	$result['internal_referer'] = false;
-	
-	$home['path'] = trailingslashit($home['path']);
+	$result['home'] = $home['path'];
 	
 	switch($q_config['url_mode']) {
 		case QT_URL_PATH:
@@ -362,6 +363,7 @@ function qtrans_updateGettextDatabases($force = false, $only_for_language = '') 
 
 function qtrans_updateTermLibrary() {
 	global $q_config;
+	if(!isset($_POST['action'])) return;
 	switch($_POST['action']) {
 		case 'editedtag':
 		case 'addtag':

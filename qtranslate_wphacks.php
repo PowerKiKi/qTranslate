@@ -161,16 +161,6 @@ function qtrans_modifyRichEditor($old_content) {
 	return $content.$old_content.$content_append;
 }
 
-function qtrans_modifyUpload() {
-	global $q_config;
-	$content = "";
-	$content .="<script type=\"text/javascript\">\n// <![CDATA[\n";
-	$content .= $q_config['js']['qtrans_sendToEditor'];
-	$content .="addLoadEvent( function() { if(typeof(theFileList)!='undefined') { theFileList.sendToEditor = qtrans_sendToEditor; } });\n";
-	$content .="// ]]>\n</script>\n";
-	echo $content;
-}
-
 function qtrans_insertTermInput($id,$name,$term,$language){
 	global $q_config;
 	$html ="

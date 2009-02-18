@@ -179,7 +179,6 @@ add_action('edit_tag_form',					'qtrans_modifyTagForm');
 add_action('edit_link_category_form',		'qtrans_modifyLinkCategoryForm');
 add_action('plugins_loaded',				'qtrans_widget_init'); 
 add_action('plugins_loaded',				'qtrans_init'); 
-add_action('admin_print_scripts',			'qtrans_modifyUpload',99);
 add_action('admin_head',					'qtrans_adminHeader');
 add_action('_admin_menu',					'qtrans_adminMenu');
 
