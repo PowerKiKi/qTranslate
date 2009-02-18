@@ -168,6 +168,9 @@ function qtrans_convertDateFormatToStrftimeFormat($format) {
 
 function qtrans_convertFormat($format, $default_format) {
 	global $q_config;
+	// check for multilang formats
+	$format = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($format);
+	$default_format = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($default_format);
 	switch($q_config['use_strftime']) {
 		case QT_DATE:
 			if($format=='') $format = $default_format;
@@ -183,9 +186,6 @@ function qtrans_convertFormat($format, $default_format) {
 
 function qtrans_convertDateFormat($format) {
 	global $q_config;
-	// see if format has multilingual information
-	if($format != '') 
-		$format = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($format);
 	if(isset($q_config['date_format'][$q_config['language']])) {
 		$default_format = $q_config['date_format'][$q_config['language']];
 	} elseif(isset($q_config['date_format'][$q_config['default_language']])) {
@@ -198,9 +198,6 @@ function qtrans_convertDateFormat($format) {
 
 function qtrans_convertTimeFormat($format) {
 	global $q_config;
-	// see if format has multilingual information
-	if($format != '') 
-		$format = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($format);
 	if(isset($q_config['time_format'][$q_config['language']])) {
 		$default_format = $q_config['time_format'][$q_config['language']];
 	} elseif(isset($q_config['time_format'][$q_config['default_language']])) {
