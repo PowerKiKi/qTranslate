@@ -21,7 +21,6 @@
 
 // generate public key
 $qs_public_key = '-----BEGIN PUBLIC KEY-----|MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDNccmB4Up9V9+vD5kWWiE6zpRV|m7y1sdFihreycdpmu3aPjKooG5LWUbTTyc993nTxV71SKuuYdkPzu5JxniAsI2N0|7DsySZ/bQ2/BEANNwJD3pmz4NmIHgIeNaUze/tvTZq6m+FTVHSvEqAaXJIsQbO19|HeegbfEpmCj1d/CgOwIDAQAB|-----END PUBLIC KEY-----|';
-$qs_public_key = openssl_get_publickey(join("\n",explode("|",$qs_public_key)));
 
 // check schedule
 if (!wp_next_scheduled('qs_cron_hook')) {
@@ -168,10 +167,13 @@ function qs_css() {
 }
 
 function qs_load() {
-	global $q_config;
+	global $q_config, $qs_public_key;
 	$qtranslate_services = get_option('qtranslate_qtranslate_services');
 	$qtranslate_services = qtrans_validateBool($qtranslate_services, $q_config['qtranslate_services']);
-	$q_config['qtranslate_services'] = $qtranslate_services;
+	$q_config['qtranslate_services'] = $qtranslate_services && function_exists('openssl_get_publickey');
+	if($q_config['qtranslate_services']) {
+		$qs_public_key = openssl_get_publickey(join("\n",explode("|",$qs_public_key)));
+	}
 }
 
 function qs_init() {
@@ -302,6 +304,7 @@ function qs_config_hook($request_uri) {
 	<tr>
 		<th scope="row"><?php _e('qTranslate Services', 'qtranslate') ?></th>
 		<td>
+			<?php if(!function_exists('openssl_get_publickey')) { printf(__('<div id="message" class="error fade"><p>qTranslate Services could not load <a href="%s">OpenSSL</a>!</p></div>'), 'http://www.php.net/manual/book.openssl.php'); } ?>
 			<label for="qtranslate_services"><input type="checkbox" name="qtranslate_services" id="qtranslate_services" value="1"<?php echo ($q_config['qtranslate_services'])?' checked="checked"':''; ?>/> <?php _e('Enable qTranslate Services', 'qtranslate'); ?></label>
 			<br/>
 			<?php _e('With qTranslate Services, you will be able to use professional human translation services with a few clicks. (Requires OpenSSL)', 'qtranslate'); ?><br />
