@@ -584,11 +584,11 @@ function qs_service() {
 ?>
 <p><?php _e('Feel free to choose an action:', 'qtranslate'); ?></p>
 <ul>
-	<li><a href="<?php echo add_query_arg('target_language', null, $url_link); ?>"><?php _e('Translate this post to another language', 'qtranslate'); ?></a></li>
-	<li><a href="edit.php"><?php _e('Translate a different post', 'qtranslate'); ?></a></li>
-	<li><a href="options-general.php?page=qtranslate#qtranslate_service_settings"><?php _e('View all open orders', 'qtranslate'); ?></a></li>
+	<li><a href="<?php echo add_query_arg('target_language', null, $url_link); ?>"><?php _e('Translate this post to another language.', 'qtranslate'); ?></a></li>
+	<li><a href="edit.php"><?php _e('Translate a different post.', 'qtranslate'); ?></a></li>
+	<li><a href="options-general.php?page=qtranslate#qtranslate_service_settings"><?php _e('View all open orders.', 'qtranslate'); ?></a></li>
 	<li><a href="options-general.php?page=qtranslate&qs_cron=true#qtranslate_service_settings"><?php _e('Let qTranslate Services check if any open orders are finished.', 'qtranslate'); ?></a></li>
-	<li><a href="<?php get_permalink($post_id); ?> "><?php _e('View this post.', 'qtranslate'); ?></a></li>
+	<li><a href="<?php echo get_permalink($post_id); ?> "><?php _e('View this post.', 'qtranslate'); ?></a></li>
 </ul>
 </div>
 <?php
