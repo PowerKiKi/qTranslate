@@ -533,7 +533,9 @@ function qs_service() {
 				'order_title' => $post_title,
 				'order_text' => $post_content,
 				'order_source_language' => $translate_from,
-				'order_target_language' => $translate_to
+				'order_source_locale' => $q_config['locale'][$translate_from],
+				'order_target_language' => $translate_to,
+				'order_target_locale' => $q_config['locale'][$translate_to]
 			);
 		// check for additional fields
 		if(is_array($service_settings[$service_id])) {
