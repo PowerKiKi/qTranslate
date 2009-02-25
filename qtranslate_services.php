@@ -171,7 +171,7 @@ function qs_load() {
 	$qtranslate_services = get_option('qtranslate_qtranslate_services');
 	$qtranslate_services = qtrans_validateBool($qtranslate_services, $q_config['qtranslate_services']);
 	$q_config['qtranslate_services'] = $qtranslate_services && function_exists('openssl_get_publickey');
-	if($q_config['qtranslate_services']) {
+	if($q_config['qtranslate_services'] && is_string($qs_public_key)) {
 		$qs_public_key = openssl_get_publickey(join("\n",explode("|",$qs_public_key)));
 	}
 }
@@ -225,8 +225,9 @@ function qs_cleanup($var, $action) {
 
 function qs_config_pre_hook($message) {
 	global $q_config;
-	if(isset($_POST['qtranslate_services'])) {
+	if(isset($_POST['default_language'])) {
 		qtrans_checkSetting('qtranslate_services', true, QT_BOOLEAN);
+		qs_load();
 		if($q_config['qtranslate_services']) {
 			$services = qs_queryQS(QS_GET_SERVICES);
 			$service_settings = get_option('qs_service_settings');
