@@ -56,7 +56,7 @@ function qtrans_init() {
 	if(defined('WP_ADMIN') && $q_config['auto_update_mo']) qtrans_updateGettextDatabases();
 	
 	// update definitions if neccesary
-	if(defined('WP_ADMIN') && current_user_can('manage_options')) qtrans_updateTermLibrary();
+	if(defined('WP_ADMIN') && current_user_can('manage_categories')) qtrans_updateTermLibrary();
 	
 	// extract url information
 	$q_config['url_info'] = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
