@@ -114,6 +114,20 @@ function qtrans_excludeUntranslatedPosts($where) {
 	return $where;
 }
 
+function qtrans_excludePages($pages) {
+	global $wpdb, $q_config;
+	static $exclude = 0;
+	if(!$q_config['hide_untranslated']) return $pages;
+	if(is_array($exclude)) return array_merge($exclude, $pages);
+	$query = "SELECT id FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish' AND NOT ($wpdb->posts.post_content LIKE '%<!--:".qtrans_getLanguage()."-->%')" ;
+	$hide_pages = $wpdb->get_results($query);
+	$exclude = array();
+	foreach($hide_pages as $page) {
+		$exclude[] = $page->id;
+	}
+	return array_merge($exclude, $pages);
+}
+
 function qtrans_postsFilter($posts) {
 	if(is_array($posts)) {
 		foreach($posts as $post) {
@@ -265,6 +279,7 @@ add_filter('manage_posts_columns',			'qtrans_languageColumnHeader');
 add_filter('manage_posts_custom_column',	'qtrans_languageColumn');
 add_filter('manage_pages_columns',			'qtrans_languageColumnHeader');
 add_filter('manage_pages_custom_column',	'qtrans_languageColumn');
+add_filter('wp_list_pages_excludes',	    'qtrans_excludePages');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
