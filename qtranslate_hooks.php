@@ -52,7 +52,7 @@ function qtrans_localeForCurrentLanguage($locale){
 }
 
 function qtrans_optionFilter($do='enable') {
-	$options = array('option_widget_pages',
+	$options = array(	'option_widget_pages',
 						'option_widget_archives',
 						'option_widget_meta',
 						'option_widget_calendar',
@@ -240,7 +240,6 @@ add_filter('the_title_rss',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLa
 add_filter('the_content_rss',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('gettext',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('get_pages',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('widget_text',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('category_description',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('bloginfo_rss',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('the_category_rss',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
@@ -250,12 +249,9 @@ add_filter('wp_generate_tag_cloud',			'qtrans_useCurrentLanguageIfNotFoundUseDef
 add_filter('term_links-post_tag',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('link_name',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('link_description',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-add_filter('widget_title',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('pre_option_rss_language',		'qtrans_getLanguage',0);
 add_filter('wp_get_object_terms',			'qtrans_useTermLib',0);
 add_filter('the_author',			    	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-// Compability with Default Widgets
-qtrans_optionFilter();
 
 // Hooks (execution time non-critical filters) 
 add_filter('author_feed_link',				'qtrans_convertURL');
@@ -291,6 +287,10 @@ add_filter('core_version_check_locale',		'qtrans_versionLocale');
 // skip this filters if on backend
 if(!defined('WP_ADMIN')) {
 	add_filter('the_posts',					'qtrans_postsFilter');
+	// Compability with Default Widgets
+	qtrans_optionFilter();
+	add_filter('widget_title',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+	add_filter('widget_text',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 }
 
 ?>
