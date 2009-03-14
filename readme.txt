@@ -12,16 +12,16 @@ Adds userfriendly multilingual content management and translation support into W
 
 Writing multilingual content is already hard enough, why make the plugin even more complicated? I created qTranslate to let Wordpress have an easy to use interface for managing a multilingual web site.
 
-qTranslate makes creation of multilingual content as easy as working with a single language.
+qTranslate makes creation of multilingual content as easy as working with a single language. Here are some features:
 
 - qTranslate Services - Professional human and automated machine translation with two clicks
 - One-Click-Switching between the languages - Change the language as easy as switching between Visual and HTML
-- No need for adding special characters or strings to seperate your multilingual texts! - qTranslate will handle them almost everywhere for you
-- Multilingual dates out of the box - Translates dates and time for you.
+- Language customizations without changing the .mo files - Use Quick-Tags instead for easy localization
+- Multilingual dates out of the box - Translates dates and time for you
 - Comes with a lot of languages already builtin! - English, German, Simplified Chinese and a lot of others
 - No more juggling with .mo-files! - qTranslate will download them automatically for you
 - Choose one of 3 Modes to make your URLs pretty and SEO-friendly. - The everywhere compatible `?lang=en`, simple and beautiful `/en/foo/` or nice and neat `en.yoursite.com`
-- One language for each URL - Users and SEO will thank you for not mixing multilingual content.
+- One language for each URL - Users and SEO will thank you for not mixing multilingual content
 
 qTranslate supports infinite languages, which can be easily added/modified/deleted via the comfortable Configuration Page.
 All you need to do is activate the plugin and start writing the content!
