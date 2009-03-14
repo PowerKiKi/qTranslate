@@ -172,6 +172,10 @@ function qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage($conten
 	}
 }
 
+function qtrans_versionLocale() {
+	return 'en_US';
+}
+
 // Hooks (Actions)
 add_action('wp_head',						'qtrans_header');
 add_action('edit_category_form',			'qtrans_modifyCategoryForm');
@@ -235,6 +239,7 @@ add_filter('link_description',				'qtrans_useCurrentLanguageIfNotFoundUseDefault
 add_filter('widget_title',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('pre_option_rss_language',		'qtrans_getLanguage',0);
 add_filter('wp_get_object_terms',			'qtrans_useTermLib',0);
+add_filter('the_author',			    	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 // Compability with Default Widgets
 qtrans_optionFilter();
 
@@ -266,6 +271,7 @@ add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
 add_filter('plugin_action_links', 			'qtrans_links', 10, 2 );
 add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
 add_filter('manage_language_columns',		'qtrans_language_columns');
+add_filter('core_version_check_locale',		'qtrans_versionLocale');
 
 // skip this filters if on backend
 if(!defined('WP_ADMIN')) {
