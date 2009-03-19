@@ -190,6 +190,12 @@ function qtrans_versionLocale() {
 	return 'en_US';
 }
 
+function qtrans_useRawTitle($title, $raw_title) {
+	$raw_title = qtrans_useDefaultLanguage($raw_title);
+	$title = strip_tags($raw_title); 
+	return $title;
+}
+
 // Hooks (Actions)
 add_action('wp_head',						'qtrans_header');
 add_action('edit_category_form',			'qtrans_modifyCategoryForm');
@@ -207,7 +213,7 @@ add_filter('the_excerpt',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable'
 add_filter('the_excerpt_rss',				'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_title',						'qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('the_category',					'qtrans_useTermLib', 0);
-add_filter('sanitize_title',				'qtrans_useDefaultLanguage',0);
+add_filter('sanitize_title',				'qtrans_useRawTitle',0, 2);
 add_filter('comment_moderation_subject',	'qtrans_useDefaultLanguage',0);
 add_filter('comment_moderation_text',		'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',				'qtrans_dateFromCommentForCurrentLanguage',0,2);
