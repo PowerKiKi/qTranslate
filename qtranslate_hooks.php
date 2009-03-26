@@ -190,7 +190,8 @@ function qtrans_versionLocale() {
 	return 'en_US';
 }
 
-function qtrans_useRawTitle($title, $raw_title) {
+function qtrans_useRawTitle($title, $raw_title = '') {
+	if($raw_title=='') $raw_title = $title;
 	$raw_title = qtrans_useDefaultLanguage($raw_title);
 	$title = strip_tags($raw_title); 
 	return $title;
