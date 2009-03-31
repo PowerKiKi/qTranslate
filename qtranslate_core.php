@@ -769,7 +769,7 @@ function qtrans_use($lang, $text, $show_available=false) {
 		foreach($content as $language => $lang_text) {
 			$lang_text = trim($lang_text);
 			if(!empty($lang_text)) {
-				return $lang_text;
+				return "(".$q_config['language_name'][$language].") ".$lang_text;
 			}
 		}
 	}

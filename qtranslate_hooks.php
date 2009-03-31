@@ -304,7 +304,7 @@ if(!defined('WP_ADMIN')) {
 	add_filter('widget_text',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 	
 	// don't filter untranslated posts in admin
-	add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
+	add_filter('posts_where_request',		'qtrans_excludeUntranslatedPosts');
 }
 
 ?>
