@@ -113,7 +113,7 @@ function qtrans_useDefaultLanguage($content) {
 
 function qtrans_excludeUntranslatedPosts($where) {
 	global $q_config, $wpdb;
-	if($q_config['hide_untranslated'] && !is_singular() && !is_admin()) {
+	if($q_config['hide_untranslated'] && !is_singular()) {
 		$where .= " AND $wpdb->posts.post_content LIKE '%<!--:".qtrans_getLanguage()."-->%'";
 	}
 	return $where;
@@ -292,7 +292,6 @@ add_filter('wp_list_pages_excludes',	    'qtrans_excludePages');
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
 add_filter('plugin_action_links', 			'qtrans_links', 10, 2 );
-add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
 add_filter('manage_language_columns',		'qtrans_language_columns');
 add_filter('core_version_check_locale',		'qtrans_versionLocale');
 
@@ -303,6 +302,9 @@ if(!defined('WP_ADMIN')) {
 	qtrans_optionFilter();
 	add_filter('widget_title',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 	add_filter('widget_text',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+	
+	// don't filter untranslated posts in admin
+	add_filter('posts_where_request',			'qtrans_excludeUntranslatedPosts');
 }
 
 ?>
