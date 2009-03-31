@@ -34,6 +34,8 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 				if($language == $q_config['language'])
 					echo ' class="active"';
 				echo '><a href="'.qtrans_convertURL('', $language).'"';
+				// set hreflang
+				echo ' hreflang="'.$language.'"';
 				if($style=='image')
 					echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
 				echo '><span';

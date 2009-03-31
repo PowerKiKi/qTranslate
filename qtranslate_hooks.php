@@ -32,6 +32,11 @@ function qtrans_header(){
 		echo ".qtrans_flag_".$language." { background:url(".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
 	}	
 	echo "</style>\n";
+	// set links to translations of current page
+	foreach($q_config['enabled_languages'] as $language) {
+		if($language != qtrans_getLanguage())
+			echo '<link hreflang="'.$language.'" href="'.qtrans_convertURL('',$language).'" rel="alternate" rev="alternate" />'."\n";
+	}	
 }
 
 function qtrans_localeForCurrentLanguage($locale){
