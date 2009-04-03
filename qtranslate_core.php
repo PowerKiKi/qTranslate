@@ -97,7 +97,7 @@ function qtrans_init() {
 		}
 	}
 	
-	if($_COOKIE['qtrans_cookie_test']) {
+	if(isset($_COOKIE['qtrans_cookie_test'])) {
 		$q_config['cookie_enabled'] = true;
 	} else  {
 		$q_config['cookie_enabled'] = false;
