@@ -59,7 +59,7 @@ function qtrans_init() {
 	if(defined('WP_ADMIN') && current_user_can('manage_categories')) qtrans_updateTermLibrary();
 	
 	// extract url information
-	$q_config['url_info'] = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], $_SERVER["HTTP_REFERER"]);
+	$q_config['url_info'] = qtrans_extractURL($_SERVER['REQUEST_URI'], $_SERVER["HTTP_HOST"], isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
 	
 	// set test cookie
 	setcookie('qtrans_cookie_test', 'qTranslate Cookie Test', 0, $q_config['url_info']['home'], $q_config['url_info']['host']);
