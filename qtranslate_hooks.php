@@ -202,6 +202,17 @@ function qtrans_useRawTitle($title, $raw_title = '') {
 	return $title;
 }
 
+// Hooks for Plugin compatibility
+
+function wpsupercache_supercache_dir($uri) {
+	global $q_config;
+	$uri = preg_replace('/[ <>\'\"\r\n\t\(\)]/', '', str_replace( '/index.php', '/', str_replace( '..', '', preg_replace("/(\?.*)?$/", '', $q_config['url_info']['original_url'] ) ) ) );
+	$uri = str_replace( '\\', '', $uri );
+	$uri = strtolower(preg_replace('/:.*$/', '',  $_SERVER["HTTP_HOST"])) . $uri; // To avoid XSS attacs
+	return $uri;
+}
+add_filter('supercache_dir',					'wpsupercache_supercache_dir',0);
+
 // Hooks (Actions)
 add_action('wp_head',						'qtrans_header');
 add_action('edit_category_form',			'qtrans_modifyCategoryForm');
