@@ -168,17 +168,20 @@ function qtrans_languageColumnHeader($columns){
 
 function qtrans_languageColumn($column) {
 	global $q_config, $post;
-	$available_languages = qtrans_getAvailableLanguages($post->post_content);
-	$missing_languages = array_diff($q_config['enabled_languages'], $available_languages);
-	$available_languages_name = array();
-	$missing_languages_name = array();
-	foreach($available_languages as $language) {
-		$available_languages_name[] = $q_config['language_name'][$language];
+	if ($column == 'language') {
+		$available_languages = qtrans_getAvailableLanguages($post->post_content);
+		$missing_languages = array_diff($q_config['enabled_languages'], $available_languages);
+		$available_languages_name = array();
+		$missing_languages_name = array();
+		foreach($available_languages as $language) {
+			$available_languages_name[] = $q_config['language_name'][$language];
+		}
+		$available_languages_names = join(", ", $available_languages_name);
+		
+		echo apply_filters('qtranslate_available_languages_names',$available_languages_names);
+		do_action('qtranslate_languageColumn', $available_languages, $missing_languages);
 	}
-	$available_languages_names = join(", ", $available_languages_name);
-	
-	echo apply_filters('qtranslate_available_languages_names',$available_languages_names);
-	do_action('qtranslate_languageColumn', $available_languages, $missing_languages);
+	return $column;
 }
 
 function qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage($content) {
