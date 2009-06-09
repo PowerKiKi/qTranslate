@@ -215,7 +215,7 @@ function qtranslate_conf() {
 		qtrans_checkSetting('use_strftime',				true, QT_INTEGER);
 		qtrans_checkSetting('url_mode',					true, QT_INTEGER);
 		qtrans_checkSetting('auto_update_mo',			true, QT_BOOLEAN);
-		if($_POST['update_mo_now']=='1' && qtrans_updateGettextDatabases(true))
+		if(isset($_POST['update_mo_now']) && $_POST['update_mo_now']=='1' && qtrans_updateGettextDatabases(true))
 			$message = __('Gettext databases updated.', 'qtranslate');
 	}
 	

@@ -206,9 +206,11 @@ function qs_cleanup($var, $action) {
 				$fields = array();
 				$required_fields = explode('|',$service['service_required_fields']);
 				foreach($required_fields as $required_field) {
-					list($fieldname, $title) = explode(' ', $required_field, 2);
-					if($fieldname!='') {
-						$fields[] = array('name' => $fieldname, 'value' => '', 'title' => $title);
+					if(strpos($required_field, " ")!==false) {
+						list($fieldname, $title) = explode(' ', $required_field, 2);
+						if($fieldname!='') {
+							$fields[] = array('name' => $fieldname, 'value' => '', 'title' => $title);
+						}
 					}
 				}
 				$var[$service_id]['service_required_fields'] = $fields;

@@ -48,6 +48,11 @@ function qtrans_init() {
 		}
 	}
 	qtrans_loadConfig();
+	if(isset($_COOKIE['qtrans_cookie_test'])) {
+		$q_config['cookie_enabled'] = true;
+	} else  {
+		$q_config['cookie_enabled'] = false;
+	}
 	
 	// init Javascript functions
 	qtrans_initJS();
@@ -101,12 +106,6 @@ function qtrans_init() {
 				}
 			}
 		}
-	}
-	
-	if(isset($_COOKIE['qtrans_cookie_test'])) {
-		$q_config['cookie_enabled'] = true;
-	} else  {
-		$q_config['cookie_enabled'] = false;
 	}
 	
 	/*
