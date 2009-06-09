@@ -209,7 +209,12 @@ function qtrans_useRawTitle($title, $raw_title = '') {
 
 function wpsupercache_supercache_dir($uri) {
 	global $q_config;
-	$uri = preg_replace('/[ <>\'\"\r\n\t\(\)]/', '', str_replace( '/index.php', '/', str_replace( '..', '', preg_replace("/(\?.*)?$/", '', $q_config['url_info']['original_url'] ) ) ) );
+	if(isset($q_config['url_info']['original_url'])) {
+		$uri = $q_config['url_info']['original_url'];
+	} else {
+		$uri = $_SERVER['REQUEST_URI'];
+	}
+	$uri = preg_replace('/[ <>\'\"\r\n\t\(\)]/', '', str_replace( '/index.php', '/', str_replace( '..', '', preg_replace("/(\?.*)?$/", '', $uri ) ) ) );
 	$uri = str_replace( '\\', '', $uri );
 	$uri = strtolower(preg_replace('/:.*$/', '',  $_SERVER["HTTP_HOST"])) . $uri; // To avoid XSS attacs
 	return $uri;

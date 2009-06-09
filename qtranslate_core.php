@@ -81,9 +81,15 @@ function qtrans_init() {
 	if($q_config['detect_browser_language'] && $q_config['url_info']['redirect'] && !isset($_COOKIE['qtrans_cookie_test']) && $q_config['url_info']['language'] == $q_config['default_language']) {
 		$prefered_languages = array();
 		if(preg_match_all("#([^;,]+)(;[^,0-9]*([0-9\.]+)[^,]*)?#i",$_SERVER["HTTP_ACCEPT_LANGUAGE"], $matches, PREG_SET_ORDER)) {
+			$priority = 1.0;
 			foreach($matches as $match) {
-				$prefered_languages[$match[1]] = floatval($match[3]);
-				if($match[3]==NULL) $prefered_languages[$match[1]] = 1.0;
+				if(!isset($match[3])) {
+					$pr = $priority;
+					$priority -= 0.001;
+				} else {
+					$pr = floatval($match[3]);
+				}
+				$prefered_languages[$match[1]] = $pr;
 			}
 			arsort($prefered_languages, SORT_NUMERIC);
 			foreach($prefered_languages as $language => $priority) {
