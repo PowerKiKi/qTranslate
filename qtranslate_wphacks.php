@@ -138,11 +138,10 @@ function qtrans_modifyRichEditor($old_content) {
 
 	$content_append .="function qtrans_editorInit3() {\n";
 	// make tinyMCE get the correct data
-	$content_append .= $q_config['js']['qtrans_tinyMCEOverload'];
+	$content_append .=$q_config['js']['qtrans_tinyMCEOverload'];
 	$content_append .="}\n";
 	if($init_editor) {
-		$content_append .="qtrans_editorInit2();\n";
-		$content_append .="qtrans_editorInit3();\n";
+		$content_append .=$q_config['js']['qtrans_wpOnload'];
 	} else {
 		$content_append .="var qtmsg = document.getElementById('qtrans_imsg');\n";
 		$content_append .="var et = document.getElementById('editor-toolbar');\n";

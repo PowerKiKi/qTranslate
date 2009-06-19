@@ -229,32 +229,27 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_disable_old_editor'] = "
-		switchEditors.edInit = function() {
-			var h = tinymce.util.Cookie.getHash('TinyMCE_content_size');
-			var vta = document.getElementById('qtrans_textarea_content');
+		jQuery(document).ready(function($){
+			var h = wpCookies.getHash('TinyMCE_content_size');
 			var ta = document.getElementById('content');
-			ta.value = this.pre_wpautop(ta.value);
+			ta.value = switchEditors.pre_wpautop(ta.value);
 			
 			try {
 				tinyMCE.execCommand('mceRemoveControl', false, 'content');
 			} catch(e){};
 			
 			if ( getUserSetting( 'editor' ) == 'html' ) {
-				var H;
-				if ( H = tinymce.util.Cookie.getHash('TinyMCE_content_size') ) {
-					vta.style.height = H.ch - 30 + 'px';
-				}
-				vta.style.display = 'block';
+				if ( h )
+				$('#qtrans_textarea_content').css('height', h.ch - 15 + 'px').show();
 			} else {
+				$('#qtrans_textarea_content').css('color', 'white');
+				$('#quicktags').hide();
 				// Activate TinyMCE if it's the user's default editor
-				try {
-					this.I('quicktags').style.display = 'none';
-				} catch(e){};
-				ta.style.display = 'none';
-				vta.style.display = 'block';
+				$('#content').hide();
+				$('#qtrans_textarea_content').show();
 				tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
 			}
-		}
+		});
 		";
 		
 	$q_config['js']['qtrans_tinyMCEOverload'] = "
@@ -278,7 +273,18 @@ function qtrans_initJS() {
 			}
 		}
 		";
-		
+	
+	$q_config['js']['qtrans_wpOnload'] = "
+		if(typeof wpOnload=='function') {
+			qt_wpOnload = wpOnload;
+		}
+		wpOnload = function() {
+			qtrans_editorInit2();
+			qtrans_editorInit3();
+			if(typeof qt_wpOnload=='function') qt_wpOnload();
+		}
+		";
+	
 	$q_config['js']['qtrans_get_active_language'] = "
 	
 		qtrans_get_active_language = function() {
