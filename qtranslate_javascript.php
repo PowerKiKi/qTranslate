@@ -240,7 +240,8 @@ function qtrans_initJS() {
 			
 			if ( getUserSetting( 'editor' ) == 'html' ) {
 				if ( h )
-				$('#qtrans_textarea_content').css('height', h.ch - 15 + 'px').show();
+					$('#qtrans_textarea_content').css('height', h.ch - 15 + 'px');
+				$('#qtrans_textarea_content').show();
 			} else {
 				$('#qtrans_textarea_content').css('color', 'white');
 				$('#quicktags').hide();
