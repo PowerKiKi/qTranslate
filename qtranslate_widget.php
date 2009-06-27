@@ -19,6 +19,52 @@
 
 /* qTranslate Widget */
 
+class qTranslateWidget extends WP_Widget {
+	function qTranslateWidget() {
+		$widget_ops = array('classname' => 'widget_qtranslate', 'description' => __('Allows your visitors to choose a Language.','qtranslate') );
+		$this->WP_Widget('qtranslate', __('qTranslate Language Chooser','qtranslate'), $widget_ops);
+	}
+	
+	function widget($args, $instance) {
+		extract($args);
+		
+		echo $before_widget;
+		$title = empty($instance['title']) ? __('Language', 'qtranslate') : apply_filters('widget_title', $instance['title']);
+		$hide_title = empty($instance['hide-title']) ? false : 'on';
+		$type = $instance['type'];
+		if($type!='text'&&$type!='image'&&$type!='both'&&$type!='dropdown') $type='text';
+
+		if($hide_title!='on') { echo $before_title . $title . $after_title; };
+		qtrans_generateLanguageSelectCode($type, $this->id);
+		echo $after_widget;
+	}
+	
+	function update($new_instance, $old_instance) {
+		$instance = $old_instance;
+		$instance['title'] = $new_instance['title'];
+		$instance['hide-title'] = $new_instance['hide-title'];
+		$instance['type'] = $new_instance['type'];
+
+		return $instance;
+	}
+	
+	function form($instance) {
+		$instance = wp_parse_args( (array) $instance, array( 'title' => '', 'hide-title' => false, 'type' => 'text' ) );
+		$title = $instance['title'];
+		$hide_title = $instance['hide-title'];
+		$type = $instance['type'];
+?>
+		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'qtranslate'); ?> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('hide-title'); ?>"><?php _e('Hide Title:', 'qtranslate'); ?> <input type="checkbox" id="<?php echo $this->get_field_id('hide-title'); ?>" name="<?php echo $this->get_field_name('hide-title'); ?>" <?php echo ($hide_title=='on')?'checked="checked"':''; ?>/></label></p>
+		<p><?php _e('Display:', 'qtranslate'); ?></p>
+		<p><label for="<?php echo $this->get_field_id('type'); ?>1"><input type="radio" name="<?php echo $this->get_field_name('type'); ?>" id="<?php echo $this->get_field_id('type'); ?>1" value="text"<?php echo ($type=='text')?' checked="checked"':'' ?>/> <?php _e('Text only', 'qtranslate'); ?></label></p>
+		<p><label for="<?php echo $this->get_field_id('type'); ?>2"><input type="radio" name="<?php echo $this->get_field_name('type'); ?>" id="<?php echo $this->get_field_id('type'); ?>2" value="image"<?php echo ($type=='image')?' checked="checked"':'' ?>/> <?php _e('Image only', 'qtranslate'); ?></label></p>
+		<p><label for="<?php echo $this->get_field_id('type'); ?>3"><input type="radio" name="<?php echo $this->get_field_name('type'); ?>" id="<?php echo $this->get_field_id('type'); ?>3" value="both"<?php echo ($type=='both')?' checked="checked"':'' ?>/> <?php _e('Text and Image', 'qtranslate'); ?></label></p>
+		<p><label for="<?php echo $this->get_field_id('type'); ?>4"><input type="radio" name="<?php echo $this->get_field_name('type'); ?>" id="<?php echo $this->get_field_id('type'); ?>4" value="dropdown"<?php echo ($type=='dropdown')?' checked="checked"':'' ?>/> <?php _e('Dropdown Box', 'qtranslate'); ?></label></p>
+<?php
+	}
+}
+
 // Language Select Code for non-Widget users
 function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_chooser') {
 	global $q_config;
@@ -76,63 +122,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_choos
 }
 
 function qtrans_widget_init() {
-	// Check to see required Widget API functions are defined...
-	if ( !function_exists('register_sidebar_widget') || !function_exists('register_widget_control') )
-		return; // ...and if not, exit gracefully from the script.
-	
-	function qtrans_widget_switch($args) {
-		global $q_config;
-		extract($args);
-		
-		// Collect our widget's options, or define their defaults.
-		$options = get_option('qtranslate_switch');
-		$title = empty($options['qtrans-switch-title']) ? __('Language', 'qtranslate') : $options['qtrans-switch-title'];
-
-		 // It's important to use the $before_widget, $before_title,
-		 // $after_title and $after_widget variables in your output.
-		echo $before_widget;
-		if($options['qtrans-switch-hide-title']!='on')
-			echo $before_title . qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($title) . $after_title;
-		qtrans_generateLanguageSelectCode($options['qtrans-switch-type']);
-		echo $after_widget;	 
-	}
-	
-	function qtrans_widget_switch_control() {
-
-		// Collect our widget's options.
-		$options = get_option('qtranslate_switch');
-		// This is for handing the control form submission.
-		if ( $_POST['qtrans-switch-submit'] ) {
-			// Clean up control form submission options
-			$options['qtrans-switch-title'] = strip_tags(stripslashes($_POST['qtrans-switch-title']));
-			$options['qtrans-switch-hide-title'] = strip_tags(stripslashes($_POST['qtrans-switch-hide-title']));
-			$options['qtrans-switch-type'] = strip_tags(stripslashes($_POST['qtrans-switch-type']));
-			update_option('qtranslate_switch', $options);
-		}
-
-		// Format options as valid HTML. Hey, why not.
-		$title = htmlspecialchars($options['qtrans-switch-title'], ENT_QUOTES);
-		$hide_title = htmlspecialchars($options['qtrans-switch-hide-title'], ENT_QUOTES);
-		$type = $options['qtrans-switch-type'];
-		if($type!='text'&&$type!='image'&&$type!='both'&&$type!='dropdown') $type='text';
-
-		// The HTML below is the control form for editing options.
-		?>
-		<div>
-			<label for="qtrans-switch-title" style="line-height:35px;display:block;"><?php _e('Title:', 'qtranslate'); ?> <input type="text" id="qtrans-switch-title" name="qtrans-switch-title" value="<?php echo $title; ?>" /></label>
-			<label for="qtrans-switch-hide-title" style="line-height:35px;display:block;"><?php _e('Hide Title:', 'qtranslate'); ?> <input type="checkbox" id="qtrans-switch-hide-title" name="qtrans-switch-hide-title" <?php echo ($hide_title=='on')?'checked="checked"':''; ?>/></label>
-			<?php _e('Display:', 'qtranslate'); ?> <br />
-				<label for="qtrans-switch-type1"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type1" value="text"<?php echo ($type=='text')?' checked="checked"':'' ?>/><?php _e('Text only', 'qtranslate'); ?></label><br />
-				<label for="qtrans-switch-type2"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type2" value="image"<?php echo ($type=='image')?' checked="checked"':'' ?>/><?php _e('Image only', 'qtranslate'); ?></label><br />
-				<label for="qtrans-switch-type3"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type3" value="both"<?php echo ($type=='both')?' checked="checked"':'' ?>/><?php _e('Text and Image', 'qtranslate'); ?></label><br />
-				<label for="qtrans-switch-type4"><input type="radio" name="qtrans-switch-type" id="qtrans-switch-type4" value="dropdown"<?php echo ($type=='dropdown')?' checked="checked"':'' ?>/><?php _e('Dropdown Box', 'qtranslate'); ?></label><br />
-			<input type="hidden" name="qtrans-switch-submit" id="qtrans-switch-submit" value="1" />
-		</div>
-		<?php
-	}
-	
-	register_sidebar_widget('qTranslate Language Chooser', 'qtrans_widget_switch');
-	register_widget_control('qTranslate Language Chooser', 'qtrans_widget_switch_control');
+	register_widget('qTranslateWidget');
 }
 
 ?>

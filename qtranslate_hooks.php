@@ -227,7 +227,7 @@ add_action('edit_category_form',			'qtrans_modifyCategoryForm');
 add_action('add_tag_form',					'qtrans_modifyTagForm');
 add_action('edit_tag_form',					'qtrans_modifyTagForm');
 add_action('edit_link_category_form',		'qtrans_modifyLinkCategoryForm');
-add_action('plugins_loaded',				'qtrans_widget_init'); 
+add_action('widgets_init',					'qtrans_widget_init'); 
 add_action('plugins_loaded',				'qtrans_init'); 
 add_action('admin_head',					'qtrans_adminHeader');
 add_action('_admin_menu',					'qtrans_adminMenu');
