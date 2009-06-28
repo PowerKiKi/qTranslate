@@ -22,7 +22,7 @@ function qtrans_adminMenu() {
 	global $menu, $submenu, $q_config;
 	
 	/* Configuration Page */
-	add_options_page(__('Language Management', 'qtranslate'), __('Languages', 'qtranslate'), 8, 'qtranslate', 'qtranslate_conf');
+	add_options_page(__('Language Management', 'qtranslate'), __('Languages', 'qtranslate'), 'manage_options', 'qtranslate', 'qtranslate_conf');
 	
 	/* Language Switcher for Admin */
 	
@@ -31,9 +31,8 @@ function qtrans_adminMenu() {
 	
 	// generate menu with flags for every enabled language
 	foreach($q_config['enabled_languages'] as $id => $language) {
-		$menu[] = array(__($q_config['language_name'][$language], 'qtranslate'), 'read', add_query_arg('lang',$language), '', 'menu-top', 'menu-language-'.$language, trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]);
+		add_menu_page(__($q_config['language_name'][$language], 'qtranslate'), __($q_config['language_name'][$language], 'qtranslate'), 'read', add_query_arg('lang',$language), NULL, trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]);
 	}
-	$menu[] = array( '', 'read', '', '', 'wp-menu-separator-last' );
 }
 
 function qtranslate_language_form($lang = '', $language_code = '', $language_name = '', $language_locale = '', $language_date_format = '', $language_time_format = '', $language_flag ='', $language_na_message = '', $language_default = '', $original_lang='') {

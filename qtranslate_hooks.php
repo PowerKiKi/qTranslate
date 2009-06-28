@@ -230,7 +230,7 @@ add_action('edit_link_category_form',		'qtrans_modifyLinkCategoryForm');
 add_action('widgets_init',					'qtrans_widget_init'); 
 add_action('plugins_loaded',				'qtrans_init'); 
 add_action('admin_head',					'qtrans_adminHeader');
-add_action('_admin_menu',					'qtrans_adminMenu');
+add_action('admin_menu',					'qtrans_adminMenu');
 
 // Hooks (execution time critical filters) 
 add_filter('the_content',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
