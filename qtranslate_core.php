@@ -377,7 +377,7 @@ function qtrans_updateTermLibrary() {
 		case 'add-cat':
 		case 'add-tag':
 		case 'add-link-cat':
-			if($_POST['qtrans_term_'.$q_config['default_language']]!='') {
+			if(isset($_POST['qtrans_term_'.$q_config['default_language']]) && $_POST['qtrans_term_'.$q_config['default_language']]!='') {
 				$default = htmlspecialchars(qtrans_stripSlashesIfNecessary($_POST['qtrans_term_'.$q_config['default_language']]), ENT_NOQUOTES);
 				if(!is_array($q_config['term_name'][$default])) $q_config['term_name'][$default] = array();
 				foreach($q_config['enabled_languages'] as $lang) {

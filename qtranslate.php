@@ -53,7 +53,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 */
 /*
 	Specials thanks to:
-	Pierre (Donation), Data Test Lab bvba (Donation), Rural China Education Fundation (Donation), Dimitri (Donation), Tammo (Donation), Benjamin (Donation), Jacques (Donation), Robert (Donation), Alexis (Gift), Roger (Donation), Carmen (Gift), Jean-Pierre (Postcard), Bruno (Gift), Andrea (Gift), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
+	Johannes (Donation), Pierre (Donation), Data Test Lab bvba (Donation), Rural China Education Fundation (Donation), Dimitri (Donation), Tammo (Donation), Benjamin (Donation), Jacques (Donation), Robert (Donation), Alexis (Gift), Roger (Donation), Carmen (Gift), Jean-Pierre (Postcard), Bruno (Gift), Andrea (Gift), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
 */
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
@@ -61,7 +61,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 
 // qTranslate Editor will only activated for the given version of Wordpress.
 // Can be changed to use with other versions but might cause problems and/or data loss!
-define('QT_SUPPORTED_WP_VERSION', '2.8');
+define('QT_SUPPORTED_WP_VERSION', '2.8.1');
 define('QT_STRING',		1);
 define('QT_BOOLEAN',	2);
 define('QT_INTEGER',	3);
