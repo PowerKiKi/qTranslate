@@ -94,6 +94,9 @@ $q_config['hide_untranslated'] = false;
 // automatically update .mo files
 $q_config['auto_update_mo'] = true;
 
+// hide language tag for default language
+$q_config['hide_default_language'] = true;
+
 // sets default url mode 
 // QT_URL_QUERY - query (questionmark)
 // QT_URL_PATH - pre-path

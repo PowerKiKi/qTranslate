@@ -24,10 +24,14 @@ function qtrans_modifyTermForm($id, $name, $term) {
 	global $q_config;
 	echo "<script type=\"text/javascript\">\n// <![CDATA[\r\n";
 	// ' workaround
-	$termname = $term->name;
+	if(is_object($term)&&isset($term->name)) {
+		$termname = $term->name;
+	} else {
+		$termname = "";
+	}
 	// create input fields for each language
 	foreach($q_config['enabled_languages'] as $language) {
-		if($_GET['action']=='edit') {
+		if(isset($_GET['action']) && $_GET['action']=='edit') {
 			echo qtrans_insertTermInput2($id, $name, $termname, $language);
 		} else {
 			echo qtrans_insertTermInput($id, $name, $termname, $language);

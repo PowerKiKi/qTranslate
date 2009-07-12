@@ -43,6 +43,7 @@ function qtrans_init() {
 		delete_option('qtranslate_hide_untranslated');
 		delete_option('qtranslate_auto_update_mo');
 		delete_option('qtranslate_next_update_mo');
+		delete_option('qtranslate_hide_default_language');
 		if(isset($_POST['qtranslate_reset3'])) {
 			delete_option('qtranslate_term_name');
 		}
@@ -99,7 +100,7 @@ function qtrans_init() {
 			arsort($prefered_languages, SORT_NUMERIC);
 			foreach($prefered_languages as $language => $priority) {
 				if(qtrans_isEnabled($language)) {
-					if($language == $q_config['default_language']) break;
+					if($q_config['hide_default_language'] && $language == $q_config['default_language']) break;
 					$target = qtrans_convertURL(get_option('home'),$language);
 					header("Location: ".$target);
 					exit;
@@ -184,7 +185,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 	
 	// check if referer is internal
 	if($referer['host']==$result['host'] && qtrans_startsWith($referer['path'], $home['path'])) {
-		// user coming from external link
+		// user coming from internal link
 		$result['internal_referer'] = true;
 	}
 	
@@ -194,7 +195,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 		$result['url'] = preg_replace("#(&|\?)lang=".$result['language']."&?#i","$1",$result['url']);
 		$result['url'] = preg_replace("#[\?\&]+$#i","",$result['url']);
 	} elseif($home['host'] == $result['host'] && $home['path'] == $result['url']) {
-		if(empty($referer['host'])) {
+		if(empty($referer['host'])||!$q_config['hide_default_language']) {
 			$result['redirect'] = true;
 		} else {
 			// check if activating language detection is possible
@@ -239,6 +240,7 @@ function qtrans_loadConfig() {
 	$hide_untranslated = get_option('qtranslate_hide_untranslated');
 	$auto_update_mo = get_option('qtranslate_auto_update_mo');
 	$term_name = get_option('qtranslate_term_name');
+	$hide_default_language = get_option('qtranslate_hide_default_language');
 	
 	// default if not set
 	if(!is_array($ignore_file_types)) $ignore_file_types = $q_config['ignore_file_types'];
@@ -257,6 +259,7 @@ function qtrans_loadConfig() {
 	$detect_browser_language = qtrans_validateBool($detect_browser_language, $q_config['detect_browser_language']);
 	$hide_untranslated = qtrans_validateBool($hide_untranslated, $q_config['hide_untranslated']);
 	$auto_update_mo = qtrans_validateBool($auto_update_mo, $q_config['auto_update_mo']);
+	$hide_default_language = qtrans_validateBool($hide_default_language, $q_config['hide_default_language']);
 	
 	// url fix for upgrading users
 	$flag_location = trailingslashit(preg_replace('#^wp-content/#','',$flag_location));
@@ -281,6 +284,7 @@ function qtrans_loadConfig() {
 	$q_config['detect_browser_language'] = $detect_browser_language;
 	$q_config['hide_untranslated'] = $hide_untranslated;
 	$q_config['auto_update_mo'] = $auto_update_mo;
+	$q_config['hide_default_language'] = $hide_default_language;
 	$q_config['term_name'] = $term_name;
 	
 	do_action('qtranslate_loadConfig');
@@ -316,6 +320,10 @@ function qtrans_saveConfig() {
 		update_option('qtranslate_auto_update_mo', '1');
 	else
 		update_option('qtranslate_auto_update_mo', '0');
+	if($q_config['hide_default_language'])
+		update_option('qtranslate_hide_default_language', '1');
+	else
+		update_option('qtranslate_hide_default_language', '0');
 		
 	do_action('qtranslate_saveConfig');
 }
@@ -379,7 +387,7 @@ function qtrans_updateTermLibrary() {
 		case 'add-link-cat':
 			if(isset($_POST['qtrans_term_'.$q_config['default_language']]) && $_POST['qtrans_term_'.$q_config['default_language']]!='') {
 				$default = htmlspecialchars(qtrans_stripSlashesIfNecessary($_POST['qtrans_term_'.$q_config['default_language']]), ENT_NOQUOTES);
-				if(!is_array($q_config['term_name'][$default])) $q_config['term_name'][$default] = array();
+				if(!isset($q_config['term_name'][$default]) || !is_array($q_config['term_name'][$default])) $q_config['term_name'][$default] = array();
 				foreach($q_config['enabled_languages'] as $lang) {
 					$_POST['qtrans_term_'.$lang] = qtrans_stripSlashesIfNecessary($_POST['qtrans_term_'.$lang]);
 					if($_POST['qtrans_term_'.$lang]!='') {
@@ -451,6 +459,7 @@ function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
 
 function qtrans_timeFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
 	global $post;
+	if(!is_object($post)) return $old_date;
 	$post_date = $gmt? $post->post_date_gmt : $post->post_date;
 	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$post_date), $old_date);
 }
@@ -585,13 +594,13 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 					$url = substr($url, 3);
 				}
 			}
-			if($lang!=$q_config['default_language']) $url = $lang."/".$url;
+			if(!$q_config['hide_default_language']||$lang!=$q_config['default_language']) $url = $lang."/".$url;
 			break;
 		case QT_URL_DOMAIN:	// pre domain 
-			if($lang!=$q_config['default_language']) $home = preg_replace("#//#","//".$lang.".",$home,1);
+			if(!$q_config['hide_default_language']||$lang!=$q_config['default_language']) $home = preg_replace("#//#","//".$lang.".",$home,1);
 			break;
 		default: // query
-			if($lang!=$q_config['default_language']){
+			if(!$q_config['hide_default_language']||$lang!=$q_config['default_language']){
 				if(strpos($url,'?')===false) {
 					$url .= '?';
 				} else {
@@ -602,7 +611,7 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 	}
 	
 	// see if cookies are activated
-	if(!$q_config['cookie_enabled'] && !$q_config['url_info']['internal_referer'] && $urlinfo['path'] == '' && $lang == $q_config['default_language'] && $q_config['language'] != $q_config['default_language']) {
+	if(!$q_config['cookie_enabled'] && !$q_config['url_info']['internal_referer'] && $urlinfo['path'] == '' && $lang == $q_config['default_language'] && $q_config['language'] != $q_config['default_language'] && $q_config['hide_default_language']) {
 		// :( now we have to make unpretty URLs
 		$url = preg_replace("#(&|\?)lang=".$match[2]."&?#i","$1",$url);
 		if(strpos($url,'?')===false) {
