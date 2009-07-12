@@ -145,12 +145,7 @@ function qtrans_initJS() {
 	$q_config['js']['qtrans_save'] = "
 		qtrans_save = function(text) {
 			var ta = document.getElementById('content');
-		";
-	foreach($q_config['enabled_languages'] as $language)
-		$q_config['js']['qtrans_save'].= "
 			ta.value = qtrans_integrate(qtrans_get_active_language(),text,ta.value);
-			";
-	$q_config['js']['qtrans_save'].= "
 			return ta.value;
 		}
 		";
@@ -229,28 +224,7 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_disable_old_editor'] = "
-		jQuery(document).ready(function($){
-			var h = wpCookies.getHash('TinyMCE_content_size');
-			var ta = document.getElementById('content');
-			ta.value = switchEditors.pre_wpautop(ta.value);
-			
-			try {
-				tinyMCE.execCommand('mceRemoveControl', false, 'content');
-			} catch(e){};
-			
-			if ( getUserSetting( 'editor' ) == 'html' ) {
-				if ( h )
-					$('#qtrans_textarea_content').css('height', h.ch - 15 + 'px');
-				$('#qtrans_textarea_content').show();
-			} else {
-				$('#qtrans_textarea_content').css('color', 'white');
-				$('#quicktags').hide();
-				// Activate TinyMCE if it's the user's default editor
-				$('#content').hide();
-				$('#qtrans_textarea_content').show();
-				tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
-			}
-		});
+		jQuery('#content').removeClass('theEditor');
 		";
 		
 	$q_config['js']['qtrans_tinyMCEOverload'] = "
@@ -261,18 +235,6 @@ function qtrans_initJS() {
 				return this.get2('qtrans_textarea_content');
 			return this.get2(id);
 		}
-		
-		if (typeof window.onload == 'function') {
-			qtrans_onload = window.onload;
-			window.onload = function() {
-				qtrans_onload();
-				edCanvas = document.getElementById('qtrans_textarea_content');
-			}
-		} else {
-			window.onload = function() {
-				edCanvas = document.getElementById('qtrans_textarea_content');
-			}
-		}
 		";
 	
 	$q_config['js']['qtrans_wpOnload'] = "
@@ -280,8 +242,23 @@ function qtrans_initJS() {
 			qt_wpOnload = wpOnload;
 		}
 		wpOnload = function() {
-			qtrans_editorInit2();
-			qtrans_editorInit3();
+			qtrans_editorInit();
+			var h = wpCookies.getHash('TinyMCE_content_size');
+			var ta = document.getElementById('content');
+			edCanvas = document.getElementById('qtrans_textarea_content'); 
+			ta.value = switchEditors.pre_wpautop(ta.value);
+			
+			if ( getUserSetting( 'editor' ) == 'html' ) {
+				if ( h )
+					jQuery('#qtrans_textarea_content').css('height', h.ch - 15 + 'px');
+				jQuery('#qtrans_textarea_content').show();
+			} else {
+				jQuery('#qtrans_textarea_content').css('color', 'white');
+				jQuery('#quicktags').hide();
+				// Activate TinyMCE if it's the user's default editor
+				jQuery('#content').hide();
+				jQuery('#qtrans_textarea_content').show().addClass('theEditor');
+			}
 			if(typeof qt_wpOnload=='function') qt_wpOnload();
 		}
 		";
@@ -330,7 +307,7 @@ function qtrans_initJS() {
 				vta.style.height = inst.getContentAreaContainer().offsetHeight + 6 + 'px';
 				inst.hide();
 				qt.style.display = 'block';
-				vta.style.color = '';
+				vta.style.color = '#000';
 				document.getElementById('edButtonHTML').className = 'active';
 				document.getElementById('edButtonPreview').className = '';
 				setUserSetting( 'editor', 'html' );

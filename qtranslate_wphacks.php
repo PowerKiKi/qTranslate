@@ -119,7 +119,6 @@ function qtrans_modifyRichEditor($old_content) {
 	$content .= "document.getElementById('titlediv').style.display='none';\n";
 	
 	$content .="}\n";
-	if($init_editor) $content .="qtrans_editorInit1();\n ";
 	$content .="// ]]>\n</script>\n";
 	
 	$content_append .="<script type=\"text/javascript\">\n// <![CDATA[\n";
@@ -140,19 +139,19 @@ function qtrans_modifyRichEditor($old_content) {
 	// make tinyMCE get the correct data
 	$content_append .=$q_config['js']['qtrans_tinyMCEOverload'];
 	$content_append .="}\n";
+	$content_append .="function qtrans_editorInit() {\n";
+	$content_append .="qtrans_editorInit1();\n";
+	$content_append .="qtrans_editorInit2();\n";
+	$content_append .="jQuery('#qtrans_imsg').hide();\n";
+	$content_append .="switchEditors.edInit();\n";
+	$content_append .="qtrans_editorInit3();\n";
+	$content_append .="}\n";
 	if($init_editor) {
 		$content_append .=$q_config['js']['qtrans_wpOnload'];
 	} else {
 		$content_append .="var qtmsg = document.getElementById('qtrans_imsg');\n";
 		$content_append .="var et = document.getElementById('editor-toolbar');\n";
 		$content_append .="et.parentNode.insertBefore(qtmsg, et);\n";
-		$content_append .="function qtrans_editorInit() {\n";
-		$content_append .="qtrans_editorInit1();\n";
-		$content_append .="qtrans_editorInit2();\n";
-		$content_append .="document.getElementById('qtrans_imsg').style.display='none';\n";
-		$content_append .="switchEditors.edInit();\n";
-		$content_append .="qtrans_editorInit3();\n";
-		$content_append .="}\n";
 	}
 	$content_append = apply_filters('qtranslate_modify_editor_js', $content_append);
 	$content_append .="// ]]>\n</script>\n";
