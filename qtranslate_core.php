@@ -585,6 +585,11 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 		return $home."/".$url;
 	}
 	
+	// dirty hack for wp-login.php
+	if(strpos($url,"wp-login.php")!==false) {
+		return $home."/".$url;
+	}
+	
 	switch($q_config['url_mode']) {
 		case QT_URL_PATH:	// pre url
 			// might already have language information
