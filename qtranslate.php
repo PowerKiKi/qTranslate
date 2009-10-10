@@ -393,17 +393,17 @@ $q_config['windows_locale']['zh'] = "Chinese";
 $q_config['windows_locale']['zu'] = "Zulu";
 
 // Load qTranslate
-require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_javascript.php");
-require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_utils.php");
-require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_core.php");
-require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_wphacks.php");
-require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_widget.php");
-require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_configuration.php");
+require_once(dirname(__FILE__)."/qtranslate_javascript.php");
+require_once(dirname(__FILE__)."/qtranslate_utils.php");
+require_once(dirname(__FILE__)."/qtranslate_core.php");
+require_once(dirname(__FILE__)."/qtranslate_wphacks.php");
+require_once(dirname(__FILE__)."/qtranslate_widget.php");
+require_once(dirname(__FILE__)."/qtranslate_configuration.php");
 
 // load qTranslate Services if available
-if(file_exists(WP_PLUGIN_DIR."/qtranslate/qtranslate_services.php"))
-	require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_services.php");
+if(file_exists(dirname(__FILE__)."/qtranslate_services.php"))
+	require_once(dirname(__FILE__)."/qtranslate_services.php");
 
 // set hooks at the end
-require_once(WP_PLUGIN_DIR."/qtranslate/qtranslate_hooks.php");
+require_once(dirname(__FILE__)."/qtranslate_hooks.php");
 ?>
