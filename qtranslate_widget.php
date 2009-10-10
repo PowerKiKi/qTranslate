@@ -66,9 +66,10 @@ class qTranslateWidget extends WP_Widget {
 }
 
 // Language Select Code for non-Widget users
-function qtrans_generateLanguageSelectCode($style='', $id='qtrans_language_chooser') {
+function qtrans_generateLanguageSelectCode($style='', $id='qtranslate') {
 	global $q_config;
 	if($style=='') $style='text';
+	if($id!='') $id .= '-chooser';
 	if(is_bool($style)&&$style) $style='image';
 	switch($style) {
 		case 'image':

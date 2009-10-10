@@ -361,7 +361,7 @@ function qtrans_updateGettextDatabases($force = false, $only_for_language = '') 
 			$ll = fopen(trailingslashit(WP_LANG_DIR).$locale.'.mo.filepart','w');
 			while(!feof($lcr)) {
 				// try to get some more time
-				set_time_limit(30);
+				@set_time_limit(30);
 				$lc = fread($lcr, 8192);
 				fwrite($ll,$lc);
 			}
