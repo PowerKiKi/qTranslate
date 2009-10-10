@@ -53,7 +53,6 @@ $qs_error_messages[QS_ERROR_SERVICE_UNKNOWN] =			__('An unknown error occured wi
 $qs_error_messages[QS_DEBUG] =							__('The server returned a debugging message.','qtranslate');
 
 // hooks
-add_action('admin_page_qtranslate_services',	'qs_service');
 add_action('qtranslate_css',					'qs_css');
 add_action('qs_cron_hook',						'qs_cron');
 add_action('qtranslate_configuration',			'qs_config_hook');
@@ -187,6 +186,7 @@ function qs_init() {
 		add_meta_box('translatediv', __('Translate to','qtranslate'), 'qs_translate_box', 'page', 'side', 'core');
 		
 		add_action('qtranslate_languageColumn',			'qs_translateButtons', 10, 2);
+		add_posts_page(__('Translate','qtranslate'), __('Translate','qtranslate'), 'edit_published_posts', 'qtranslate_services', 'qs_service');
 	}
 }
 
@@ -463,10 +463,16 @@ function qs_UpdateOrder($order_id) {
 
 function qs_service() {
 	global $q_config, $qs_public_key, $qs_error_messages;
+	if(!isset($_REQUEST['post'])) {
+		echo '<script type="text/javascript">document.location="edit.php";</script>';
+		printf(__('To translate a post, please go to the <a href="%s">edit posts overview</a>.','qtranslate'), 'edit.php');
+		exit();
+	}
 	$post_id = intval($_REQUEST['post']);
-	if(qtrans_isEnabled($_REQUEST['source_language']))
+	$translate_from  = '';
+	if(isset($_REQUEST['source_language'])&&qtrans_isEnabled($_REQUEST['source_language']))
 		$translate_from = $_REQUEST['source_language'];
-	if(qtrans_isEnabled($_REQUEST['target_language']))
+	if(isset($_REQUEST['target_language'])&&qtrans_isEnabled($_REQUEST['target_language']))
 		$translate_to = $_REQUEST['target_language'];
 	if($translate_to == $translate_from) $translate_to = '';
 	$post = &get_post($post_id);
