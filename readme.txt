@@ -54,3 +54,4 @@ For Problems visits the [Support Forum](http://www.qianqin.de/qtranslate/forum/)
 
 1. Wordpress Editor with qTranslate
 2. Language Management Interface
+3. qTranslate Services (Translation)
