@@ -276,6 +276,21 @@ function qtrans_initJS() {
 		}
 		";
 		
+	$q_config['js']['qtrans_switch_postbox'] = "
+		function qtrans_switch_postbox(parent, target, lang) {
+	";
+	foreach($q_config['enabled_languages'] as $language)
+		$q_config['js']['qtrans_switch_postbox'].= "
+				jQuery('#'+target).val(qtrans_integrate('".$language."', jQuery('#qtrans_textarea_'+target+'_'+'".$language."').val(), jQuery('#'+target).val()));
+				jQuery('#'+parent+' .qtranslate_lang_div').removeClass('active');
+				jQuery('#qtrans_textarea_'+target+'_'+'".$language."').hide();
+			";
+	$q_config['js']['qtrans_switch_postbox'].= "
+			jQuery('#qtrans_switcher_'+parent+'_'+lang).addClass('active');
+			jQuery('#qtrans_textarea_'+target+'_'+lang).show();
+		}
+	";
+		
 	$q_config['js']['qtrans_switch'] = "
 		switchEditors.go = function(id, lang) {
 			var inst = tinyMCE.get('qtrans_textarea_' + id);

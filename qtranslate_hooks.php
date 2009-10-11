@@ -91,6 +91,9 @@ function qtrans_adminHeader() {
 	echo	"border-top-right-radius: 6px; border-top-left-radius: 6px; }\n";
 	echo "#edButtonPreview { margin-left:6px !important;}";
 	echo "#qtranslate_debug { width:100%; height:200px }";
+	echo "#postexcerpt textarea { height:4em; margin:0; width:98% }";
+	echo ".qtranslate_lang_div { float:right; height:12px; width:18px; padding:6px 5px 8px 5px; cursor:pointer }";
+	echo ".qtranslate_lang_div.active { background: #DFDFDF; border-left:1px solid #D0D0D0; border-right: 1px solid #F7F7F7; padding:6px 4px 8px 4px }";
 	do_action('qtranslate_css');
 	echo "</style>\n";
 	return qtrans_optionFilter('disable');
@@ -309,6 +312,7 @@ add_filter('manage_pages_custom_column',	'qtrans_languageColumn');
 add_filter('wp_list_pages_excludes',	    'qtrans_excludePages');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
+add_filter('admin_footer',					'qtrans_modifyExcerpt');
 add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
 add_filter('plugin_action_links', 			'qtrans_links', 10, 2 );
 add_filter('manage_language_columns',		'qtrans_language_columns');

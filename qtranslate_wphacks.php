@@ -163,6 +163,49 @@ function qtrans_modifyRichEditor($old_content) {
 	return $content.$old_content.$content_append;
 }
 
+function qtrans_modifyExcerpt() {
+	global $q_config;
+	echo "<script type=\"text/javascript\">\n// <![CDATA[\n";
+	echo "if(jQuery('#excerpt').size()>0) {";
+	echo $q_config['js']['qtrans_is_array'];
+	echo $q_config['js']['qtrans_xsplit'];
+	echo $q_config['js']['qtrans_split'];
+	echo $q_config['js']['qtrans_integrate'];
+	echo $q_config['js']['qtrans_switch_postbox'];
+	echo $q_config['js']['qtrans_use'];
+	$el = qtrans_getSortedLanguages();
+	foreach($el as $language) {
+		echo qtrans_createTitlebarButton('postexcerpt', $language, 'excerpt', 'qtrans_switcher_postexcerpt_'.$language);
+		echo qtrans_createTextArea('postexcerpt', $language, 'excerpt', 'qtrans_switcher_postexcerpt_'.$language);
+	}
+	echo "qtrans_switch_postbox('postexcerpt','excerpt','".$q_config['default_language']."');";
+	echo "jQuery('#excerpt').hide();";
+	echo "}";
+	echo "// ]]>\n</script>\n";
+}
+
+function qtrans_createTitlebarButton($parent, $language, $target, $id) {
+	global $q_config;
+	$html = "
+		jQuery('#".$parent." .handlediv').after('<div class=\"qtranslate_lang_div\" id=\"".$id."\"><img alt=\"".$language."\" title=\"".$q_config['language_name'][$language]."\" src=\"".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language]."\" /></div>');
+		jQuery('#".$id."').click(function() {qtrans_switch_postbox('".$parent."','".$target."','".$language."');});
+		";
+	return $html;
+}
+
+function qtrans_createTextArea($parent, $language, $target, $id) {
+	global $q_config;
+	$html = "
+		jQuery('#".$target."').after('<textarea name=\"qtrans_textarea_".$target."_".$language."\" id=\"qtrans_textarea_".$target."_".$language."\"></textarea>');
+		jQuery('#qtrans_textarea_".$target."_".$language."').attr('cols', jQuery('#".$target."').attr('cols'));
+		jQuery('#qtrans_textarea_".$target."_".$language."').attr('rows', jQuery('#".$target."').attr('rows'));
+		jQuery('#qtrans_textarea_".$target."_".$language."').attr('tabindex', jQuery('#".$target."').attr('tabindex'));
+		jQuery('#qtrans_textarea_".$target."_".$language."').blur(function() {qtrans_switch_postbox('".$parent."','".$target."','".$language."');});
+		jQuery('#qtrans_textarea_".$target."_".$language."').val(qtrans_use('".$language."',jQuery('#".$target."').val()));
+		";
+	return $html;
+}
+
 function qtrans_insertTermInput($id,$name,$term,$language){
 	global $q_config;
 	$html ="
