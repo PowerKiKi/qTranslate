@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/qtranslate\n"
-"POT-Creation-Date: 2009-07-20 16:47+0000\n"
+"POT-Creation-Date: 2009-10-11 12:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgid "Language Management"
 msgstr ""
 
 #: qtranslate_configuration.php:25 qtranslate_configuration.php:582
-#: qtranslate_hooks.php:165
+#: qtranslate_hooks.php:168
 msgid "Languages"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgid ""
 "where &lt;last_seperator&gt; will be used instead."
 msgstr ""
 
-#: qtranslate_configuration.php:181 qtranslate_services.php:298
+#: qtranslate_configuration.php:181 qtranslate_services.php:306
 msgid "Action"
 msgstr ""
 
@@ -265,7 +265,7 @@ msgstr ""
 msgid "Advanced Settings"
 msgstr ""
 
-#: qtranslate_configuration.php:472 qtranslate_services.php:305
+#: qtranslate_configuration.php:472 qtranslate_services.php:313
 msgid "Show"
 msgstr ""
 
@@ -463,7 +463,7 @@ msgstr ""
 msgid "Add Language &raquo;"
 msgstr ""
 
-#: qtranslate_hooks.php:152
+#: qtranslate_hooks.php:155
 msgid "Settings"
 msgstr ""
 
@@ -495,89 +495,89 @@ msgstr ""
 msgid "The server returned a debugging message."
 msgstr ""
 
-#: qtranslate_services.php:155
+#: qtranslate_services.php:154
 #, php-format
 msgid "<div>Translate to %s</div>"
 msgstr ""
 
-#: qtranslate_services.php:186 qtranslate_services.php:187
+#: qtranslate_services.php:185 qtranslate_services.php:186
 msgid "Translate to"
 msgstr ""
 
-#: qtranslate_services.php:265
+#: qtranslate_services.php:273
 msgid "Order deleted."
 msgstr ""
 
-#: qtranslate_services.php:269
+#: qtranslate_services.php:277
 msgid "Status updated for all open orders."
 msgstr ""
 
-#: qtranslate_services.php:294
+#: qtranslate_services.php:302
 msgid "Post Title"
 msgstr ""
 
-#: qtranslate_services.php:295
+#: qtranslate_services.php:303
 msgid "Service"
 msgstr ""
 
-#: qtranslate_services.php:296
+#: qtranslate_services.php:304
 msgid "Source Language"
 msgstr ""
 
-#: qtranslate_services.php:297
+#: qtranslate_services.php:305
 msgid "Target Language"
 msgstr ""
 
-#: qtranslate_services.php:305
+#: qtranslate_services.php:313
 msgid "qTranslate Services Settings"
 msgstr ""
 
-#: qtranslate_services.php:308 qtranslate_services.php:573
-#: qtranslate_services.php:583 qtranslate_services.php:607
+#: qtranslate_services.php:316 qtranslate_services.php:587
+#: qtranslate_services.php:597 qtranslate_services.php:621
 msgid "qTranslate Services"
 msgstr ""
 
-#: qtranslate_services.php:310
+#: qtranslate_services.php:318
 #, php-format
 msgid ""
 "<div id=\"message\" class=\"error fade\"><p>qTranslate Services could not "
 "load <a href=\"%s\">OpenSSL</a>!</p></div>"
 msgstr ""
 
-#: qtranslate_services.php:311
+#: qtranslate_services.php:319
 msgid "Enable qTranslate Services"
 msgstr ""
 
-#: qtranslate_services.php:313
+#: qtranslate_services.php:321
 msgid ""
 "With qTranslate Services, you will be able to use professional human "
 "translation services with a few clicks. (Requires OpenSSL)"
 msgstr ""
 
-#: qtranslate_services.php:314
+#: qtranslate_services.php:322
 msgid "Save after enabling to see more Configuration options."
 msgstr ""
 
-#: qtranslate_services.php:324
+#: qtranslate_services.php:332
 msgid "Open Orders"
 msgstr ""
 
-#: qtranslate_services.php:346
+#: qtranslate_services.php:354
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
-#: qtranslate_services.php:347 qtranslate_services.php:384
-#: qtranslate_services.php:674 qtranslate_services.php:681
+#: qtranslate_services.php:355 qtranslate_services.php:392
+#: qtranslate_services.php:688 qtranslate_services.php:695
 msgid "Website"
 msgstr ""
 
-#: qtranslate_services.php:357
+#: qtranslate_services.php:365
 #, php-format
 msgid "Current Status: %s"
 msgstr ""
 
-#: qtranslate_services.php:365
+#: qtranslate_services.php:373
 #, php-format
 msgid ""
 "qTranslate Services will automatically check every hour whether the "
@@ -585,143 +585,149 @@ msgid ""
 "<a href=\"%s\">check manually</a>."
 msgstr ""
 
-#: qtranslate_services.php:366
+#: qtranslate_services.php:374
 msgid ""
 "Deleting an open order doesn't cancel it. You will have to logon to the "
 "service homepage and cancel it there."
 msgstr ""
 
-#: qtranslate_services.php:368
+#: qtranslate_services.php:376
 msgid "No open orders."
 msgstr ""
 
-#: qtranslate_services.php:374
+#: qtranslate_services.php:382
 msgid "Service Configuration"
 msgstr ""
 
-#: qtranslate_services.php:375
+#: qtranslate_services.php:383
 msgid ""
 "Below, you will find configuration settings for qTranslate Service "
 "Providers, which are required for them to operate."
 msgstr ""
 
-#: qtranslate_services.php:384
+#: qtranslate_services.php:392
 msgid "service_name"
 msgstr ""
 
-#: qtranslate_services.php:385
+#: qtranslate_services.php:393
 msgid "service_description"
 msgstr ""
 
-#: qtranslate_services.php:474
+#: qtranslate_services.php:476
+#, php-format
+msgid ""
+"To translate a post, please go to the <a href=\"%s\">edit posts overview</a>."
+msgstr ""
+
+#: qtranslate_services.php:488
 #, php-format
 msgid "Post with id \"%s\" not found!"
 msgstr ""
 
-#: qtranslate_services.php:482
+#: qtranslate_services.php:496
 msgid "The requested Post has no content, no Translation possible."
 msgstr ""
 
-#: qtranslate_services.php:491
+#: qtranslate_services.php:505
 msgid ""
 "The Post already has content for the selected target language. If a "
 "translation request is send, the current text for the target language will "
 "be overwritten."
 msgstr ""
 
-#: qtranslate_services.php:552
+#: qtranslate_services.php:566
 #, php-format
 msgid "An error occured: %s"
 msgstr ""
 
-#: qtranslate_services.php:554
+#: qtranslate_services.php:568
 #, php-format
 msgid "Additional information: %s"
 msgstr ""
 
-#: qtranslate_services.php:575
+#: qtranslate_services.php:589
 #, php-format
 msgid ""
 "An serious error occured and qTranslate Services cannot proceed. For help, "
 "please visit the <a href=\"%s\">Support Forum</a>"
 msgstr ""
 
-#: qtranslate_services.php:584
+#: qtranslate_services.php:598
 msgid "Order successfully sent."
 msgstr ""
 
-#: qtranslate_services.php:585
+#: qtranslate_services.php:599
 msgid ""
 "Your translation order has been successfully transfered to the selected "
 "service."
 msgstr ""
 
-#: qtranslate_services.php:589
+#: qtranslate_services.php:603
 #, php-format
 msgid "The service returned this message: %s"
 msgstr ""
 
-#: qtranslate_services.php:593
+#: qtranslate_services.php:607
 msgid "Feel free to choose an action:"
 msgstr ""
 
-#: qtranslate_services.php:595
+#: qtranslate_services.php:609
 msgid "Translate this post to another language."
 msgstr ""
 
-#: qtranslate_services.php:596
+#: qtranslate_services.php:610
 msgid "Translate a different post."
 msgstr ""
 
-#: qtranslate_services.php:597
+#: qtranslate_services.php:611
 msgid "View all open orders."
 msgstr ""
 
-#: qtranslate_services.php:598
+#: qtranslate_services.php:612
 msgid "Let qTranslate Services check if any open orders are finished."
 msgstr ""
 
-#: qtranslate_services.php:599
+#: qtranslate_services.php:613
 msgid "View this post."
 msgstr ""
 
-#: qtranslate_services.php:624
+#: qtranslate_services.php:638
 #, php-format
 msgid ""
 "Your article is available in multiple languages. If you do not want to "
 "translate from %1$s, you can switch to one of the following languages: %2$s"
 msgstr ""
 
-#: qtranslate_services.php:632
+#: qtranslate_services.php:646
 msgid "Please choose the language you want to translate to:"
 msgstr ""
 
-#: qtranslate_services.php:644
+#: qtranslate_services.php:658
 msgid "Continue"
 msgstr ""
 
-#: qtranslate_services.php:649
+#: qtranslate_services.php:663
 #, php-format
 msgid "Please review your article and <a href=\"%s\">edit</a> it if needed."
 msgstr ""
 
-#: qtranslate_services.php:655
+#: qtranslate_services.php:669
 msgid ""
 "ERROR: Could not connect to qTranslate Services. Please try again later."
 msgstr ""
 
-#: qtranslate_services.php:661
+#: qtranslate_services.php:675
 msgid "Use the following Translation Service:"
 msgstr ""
 
-#: qtranslate_services.php:675
+#: qtranslate_services.php:689
 #, php-format
 msgid ""
 "Cannot use this service, not all <a href=\"%s\">required fields</a> filled "
 "in for this service."
 msgstr ""
 
-#: qtranslate_services.php:687
+#: qtranslate_services.php:701
 msgid ""
 "Your article will be SSL encrypted and securly sent to qTranslate Services, "
 "which will forward your text to the chosen Translation Service. Once "
@@ -729,11 +735,11 @@ msgid ""
 "appear on your blog."
 msgstr ""
 
-#: qtranslate_services.php:690
+#: qtranslate_services.php:704
 msgid "Request Translation"
 msgstr ""
 
-#: qtranslate_services.php:703
+#: qtranslate_services.php:717
 msgid "Translate"
 msgstr ""
 
@@ -796,7 +802,7 @@ msgid ""
 "version</a>."
 msgstr ""
 
-#: qtranslate_wphacks.php:277
+#: qtranslate_wphacks.php:320
 msgid "Title"
 msgstr ""
 
