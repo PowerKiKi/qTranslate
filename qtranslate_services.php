@@ -186,7 +186,15 @@ function qs_init() {
 		add_meta_box('translatediv', __('Translate to','qtranslate'), 'qs_translate_box', 'page', 'side', 'core');
 		
 		add_action('qtranslate_languageColumn',			'qs_translateButtons', 10, 2);
-		add_posts_page(__('Translate','qtranslate'), __('Translate','qtranslate'), 'edit_published_posts', 'qtranslate_services', 'qs_service');
+		
+		// add plugin page without menu link for users with permission
+		if(current_user_can('edit_published_posts')) {
+			//add_posts_page(__('Translate','qtranslate'), __('Translate','qtranslate'), 'edit_published_posts', 'qtranslate_services', 'qs_service');
+			global $_registered_pages;
+			$hookname = get_plugin_page_hookname('qtranslate_services', 'edit.php');
+			add_action($hookname, 'qs_service');
+			$_registered_pages[$hookname] = true;
+		}
 	}
 }
 
