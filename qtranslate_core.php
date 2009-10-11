@@ -753,7 +753,7 @@ function qtrans_use($lang, $text, $show_available=false) {
 		return $text;
 	}
 	
-	if(is_object($text)||get_class($text) == '__PHP_Incomplete_Class') {
+	if(is_object($text)||@get_class($text) == '__PHP_Incomplete_Class') {
 		foreach(get_object_vars($text) as $key => $t) {
 			$text->$key = qtrans_use($lang,$text->$key,$show_available);
 		}
