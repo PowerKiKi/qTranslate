@@ -31,7 +31,9 @@ function qtrans_adminMenu() {
 	
 	// generate menu with flags for every enabled language
 	foreach($q_config['enabled_languages'] as $id => $language) {
-		$link = (strpos(add_query_arg('lang',$language), "wp-admin/") === false) ? preg_replace('#[^?&]*/#i', '', add_query_arg('lang',$language)) : preg_replace('#[^?&]*wp-admin/#i', '', add_query_arg('lang',$language));
+		$link = add_query_arg('lang', $language);
+		$link = (strpos($link, "wp-admin/") === false) ? preg_replace('#[^?&]*/#i', '', $link) : preg_replace('#[^?&]*wp-admin/#i', '', $link);
+		if(strpos($link, "?")===0) $link = 'options-general.php?page=qtranslate&godashboard=1&lang='.$language;
 		add_menu_page(__($q_config['language_name'][$language], 'qtranslate'), __($q_config['language_name'][$language], 'qtranslate'), 'read', $link, NULL, trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]);
 	}
 }
@@ -186,6 +188,12 @@ function qtrans_language_columns($columns) {
 
 function qtranslate_conf() {
 	global $q_config, $wpdb;
+	
+	// do redirection for dashboard
+	if(isset($_GET['godashboard'])) {
+		echo '<h2>'.__('Switching Language', 'qtranslate').'</h2>'.sprintf(__('Switching language to %1$s... If the Dashboard isn\'t loading, use this <a href="%2$s" title="Dashboard">link</a>.','qtranslate'),$q_config['language_name'][qtrans_getLanguage()],admin_url()).'<script type="text/javascript">document.location="'.admin_url().'";</script>';
+		exit();
+	}
 	
 	// init some needed variables
 	$error = '';
