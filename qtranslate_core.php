@@ -538,6 +538,9 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 	$url = str_replace('&amp;','&',$url);
 	$url = str_replace('&#038;','&',$url);
 	
+	// check for trailing slash
+	$nottrailing = (strpos($url,'?')===false && strpos($url,'#')===false && substr($url,-1,1)!='/');
+	
 	// check if it's an external link
 	$urlinfo = qtrans_parseURL($url);
 	$home = rtrim(get_option('home'),"/");
@@ -626,6 +629,10 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 		}
 		$url .= "lang=".$lang;
 	}
+	
+	// remove trailing slash if there wasn't one to begin with
+	if($nottrailing && strpos($url,'?')===false && strpos($url,'#')===false && substr($url,-1,1)=='/')
+		$url = substr($url,0,-1);
 	
 	// &amp; workaround
 	$complete = str_replace('&','&amp;',$home."/".$url);
