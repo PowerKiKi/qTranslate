@@ -287,7 +287,7 @@ function qtrans_initJS() {
 			";
 	$q_config['js']['qtrans_switch_postbox'].= "
 			jQuery('#qtrans_switcher_'+parent+'_'+lang).addClass('active');
-			jQuery('#qtrans_textarea_'+target+'_'+lang).show();
+			jQuery('#qtrans_textarea_'+target+'_'+lang).show().focus();
 		}
 	";
 		
