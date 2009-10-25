@@ -160,7 +160,7 @@ function qtrans_extractURL($url, $host = '', $referer = '') {
 			$url = substr($url, strlen($home['path']));
 			if($url) {
 				// might have language information
-				if(preg_match("#^([a-z]{2})/#i",$url,$match)) {
+				if(preg_match("#^([a-z]{2})(/.*)?$#i",$url,$match)) {
 					if(qtrans_isEnabled($match[1])) {
 						// found language information
 						$result['language'] = $match[1];
@@ -630,12 +630,13 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 		$url .= "lang=".$lang;
 	}
 	
-	// remove trailing slash if there wasn't one to begin with
-	if($nottrailing && strpos($url,'?')===false && strpos($url,'#')===false && substr($url,-1,1)=='/' && (substr($url,-4,1)!='/' && strlen($url) > 3 || substr($url,-4,1)=='/' && !qtrans_isEnabled(substr($url,-3,2) || strlen($url)==3 && !qtrans_isEnabled(substr($url,-3,2)))))
-		$url = substr($url,0,-1);
-	
 	// &amp; workaround
 	$complete = str_replace('&','&amp;',$home."/".$url);
+
+	// remove trailing slash if there wasn't one to begin with
+	if($nottrailing && strpos($complete,'?')===false && strpos($complete,'#')===false && substr($complete,-1,1)=='/')
+		$complete = substr($complete,0,-1);
+	
 	return $complete;
 }
 
