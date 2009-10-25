@@ -30,8 +30,10 @@ function qtrans_header(){
 	echo ".qtrans_flag_and_text { padding-left:20px }\n";
 	foreach($q_config['enabled_languages'] as $language) {
 		echo ".qtrans_flag_".$language." { background:url(".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
-	}	
+	}
 	echo "</style>\n";
+	// skip the rest if 404
+	if(is_404()) return;
 	// set links to translations of current page
 	foreach($q_config['enabled_languages'] as $language) {
 		if($language != qtrans_getLanguage())
