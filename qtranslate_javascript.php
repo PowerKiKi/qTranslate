@@ -283,11 +283,13 @@ function qtrans_initJS() {
 		$q_config['js']['qtrans_switch_postbox'].= "
 				jQuery('#'+target).val(qtrans_integrate('".$language."', jQuery('#qtrans_textarea_'+target+'_'+'".$language."').val(), jQuery('#'+target).val()));
 				jQuery('#'+parent+' .qtranslate_lang_div').removeClass('active');
-				jQuery('#qtrans_textarea_'+target+'_'+'".$language."').hide();
+				if(lang!=false) jQuery('#qtrans_textarea_'+target+'_'+'".$language."').hide();
 			";
 	$q_config['js']['qtrans_switch_postbox'].= "
-			jQuery('#qtrans_switcher_'+parent+'_'+lang).addClass('active');
-			jQuery('#qtrans_textarea_'+target+'_'+lang).show().focus();
+			if(lang!=false) {
+				jQuery('#qtrans_switcher_'+parent+'_'+lang).addClass('active');
+				jQuery('#qtrans_textarea_'+target+'_'+lang).show().focus();
+			}
 		}
 	";
 		
