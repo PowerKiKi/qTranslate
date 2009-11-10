@@ -270,6 +270,10 @@ function qtranslate_conf() {
 					$q_config['default_language'] = $_POST['language_code'];
 			}
 		}
+		if(get_magic_quotes_gpc()) {
+				if(isset($_POST['language_date_format'])) $_POST['language_date_format'] = stripslashes($_POST['language_date_format']);
+				if(isset($_POST['language_time_format'])) $_POST['language_time_format'] = stripslashes($_POST['language_time_format']);
+		}
 		if($error=='') {
 			// everything is fine, insert language
 			$q_config['language_name'][$_POST['language_code']] = $_POST['language_name'];
