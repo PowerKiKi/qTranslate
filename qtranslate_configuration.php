@@ -33,7 +33,12 @@ function qtrans_adminMenu() {
 	foreach($q_config['enabled_languages'] as $id => $language) {
 		$link = add_query_arg('lang', $language);
 		$link = (strpos($link, "wp-admin/") === false) ? preg_replace('#[^?&]*/#i', '', $link) : preg_replace('#[^?&]*wp-admin/#i', '', $link);
-		if(strpos($link, "?")===0||strpos($link, "index.php?")===0) $link = 'edit.php?lang='.$language;
+		if(strpos($link, "?")===0||strpos($link, "index.php?")===0) {
+			if(current_user_can('manage_options')) 
+				$link = 'options-general.php?page=qtranslate&godashboard=1&lang='.$language; 
+			else
+				$link = 'edit.php?lang='.$language;
+		}
 		add_menu_page(__($q_config['language_name'][$language], 'qtranslate'), __($q_config['language_name'][$language], 'qtranslate'), 'read', $link, NULL, trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]);
 	}
 }
