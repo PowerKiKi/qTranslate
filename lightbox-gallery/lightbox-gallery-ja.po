@@ -1,0 +1,181 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lightbox Gallery\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-11-08 18:55+0900\n"
+"PO-Revision-Date: 2009-11-08 18:59+0900\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Japanese\n"
+"X-Poedit-Country: JAPAN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;_c\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: lightbox-gallery\n"
+
+#: lightbox-gallery/lightbox-gallery.php:160
+msgid "Settings"
+msgstr "設定"
+
+#: lightbox-gallery/lightbox-gallery.php:168
+#: lightbox-gallery/lightbox-gallery.php:194
+msgid "Lightbox Gallery"
+msgstr "Lightbox Gallery"
+
+#: lightbox-gallery/lightbox-gallery.php:182
+msgid "Options updated."
+msgstr "オプションは更新されました。"
+
+#: lightbox-gallery/lightbox-gallery.php:186
+msgid "Options deleted."
+msgstr "オプションは削除されました。"
+
+#: lightbox-gallery/lightbox-gallery.php:200
+#: lightbox-gallery/lightbox-gallery.php:261
+#: lightbox-gallery/lightbox-gallery.php:277
+msgid "Click to toggle"
+msgstr "クリックで切替"
+
+#: lightbox-gallery/lightbox-gallery.php:201
+msgid "Lightbox Gallery Options"
+msgstr "Lightbox Gallery オプション"
+
+#: lightbox-gallery/lightbox-gallery.php:210
+msgid "Choose the gallery loading type"
+msgstr "ギャラリー読込タイプを選択してください"
+
+#: lightbox-gallery/lightbox-gallery.php:211
+msgid "Lightbox"
+msgstr "Lightbox"
+
+#: lightbox-gallery/lightbox-gallery.php:212
+msgid "Highslide JS"
+msgstr "Highslide JS"
+
+#: lightbox-gallery/lightbox-gallery.php:213
+#, php-format
+msgid "Caution: Highslide JS is licensed under a Creative Commons Attribution-NonCommercial 2.5 License. You need the author's permission to use Highslide JS on commercial websites. <a href=\"%s\" target=\"_blank\">Please look at the author's website.</a>"
+msgstr "注意： Highslide JSは、Creative Commons 表示-非営利 2.5 一般のライセンスです。Highslide JSを商用ウェブサイトで使用するには著作者の許可が必要です。<a href=\"%s\" target=\"_blank\">著作者のウェブサイトをご覧ください。</a>"
+
+#: lightbox-gallery/lightbox-gallery.php:216
+msgid "In case that you would like to use the lightbox in certain categories (comma-deliminated)"
+msgstr "特定のカテゴリーでLightboxを使用したい場合（カンマ区切り）"
+
+#: lightbox-gallery/lightbox-gallery.php:220
+msgid "In case that you would like to use the lightbox in certain pages (comma-deliminated)"
+msgstr "特定のページでLightboxを使用したい場合（カンマ区切り）"
+
+#: lightbox-gallery/lightbox-gallery.php:224
+msgid "In case that you would like to disable to load the lightbox-gallery.css"
+msgstr "lightbox-gallery.cssの読み込みを禁止する場合"
+
+#: lightbox-gallery/lightbox-gallery.php:225
+msgid "Do not use the lightbox-gallery.css"
+msgstr "lightbox-gallery.cssを使用しない"
+
+#: lightbox-gallery/lightbox-gallery.php:228
+msgid "In case that you would like to disable to load the column inline css"
+msgstr "コラムのインラインcssの読み込みを禁止する場合"
+
+#: lightbox-gallery/lightbox-gallery.php:229
+msgid "Do not use the column inline css"
+msgstr "コラムのインラインcssを使用しない"
+
+#: lightbox-gallery/lightbox-gallery.php:232
+msgid "In case that you would like to set the default number of columns"
+msgstr "デフォルトのコラム数をセットする場合"
+
+#: lightbox-gallery/lightbox-gallery.php:236
+msgid "In case that you would like to set the default thumbnail size"
+msgstr "デフォルトのサムネイルサイズをセットする場合"
+
+#: lightbox-gallery/lightbox-gallery.php:240
+msgid "In case that you would like to set the default lightbox size"
+msgstr "デフォルトのlightboxサイズをセットする場合"
+
+#: lightbox-gallery/lightbox-gallery.php:247
+msgid "Choose the script loading point"
+msgstr "スクリプトの読込ポイントを選択してください"
+
+#: lightbox-gallery/lightbox-gallery.php:248
+msgid "Header"
+msgstr "ヘッダー"
+
+#: lightbox-gallery/lightbox-gallery.php:249
+msgid "Footer"
+msgstr "フッター"
+
+#: lightbox-gallery/lightbox-gallery.php:252
+msgid "Update Options &raquo;"
+msgstr "オプションを更新する &raquo;"
+
+#: lightbox-gallery/lightbox-gallery.php:262
+msgid "Delete Options"
+msgstr "オプションを削除する"
+
+#: lightbox-gallery/lightbox-gallery.php:264
+msgid "Are you sure to delete options? Options you set will be deleted."
+msgstr "本当にオプションを削除しますか？設定したオプションは削除されます。"
+
+#: lightbox-gallery/lightbox-gallery.php:268
+msgid "Delete Options &raquo;"
+msgstr "オプションを削除する &raquo;"
+
+#: lightbox-gallery/lightbox-gallery.php:278
+msgid "Donation"
+msgstr "寄付"
+
+#: lightbox-gallery/lightbox-gallery.php:280
+msgid "If you liked this plugin, please make a donation via paypal! Any amount is welcome. Your support is much appreciated."
+msgstr "このプラグインをお気に召しましたら、Paypalよりご寄付をよろしくお願いいたします。"
+
+#: lightbox-gallery/lightbox-gallery.php:362
+msgid "Pages:"
+msgstr "ページ："
+
+#: lightbox-gallery/lightbox-gallery.php:364
+msgid "Next page"
+msgstr "次のページ"
+
+#: lightbox-gallery/lightbox-gallery.php:365
+msgid "Previous page"
+msgstr "前のページ"
+
+#: lightbox-gallery/lightbox-gallery.php:435
+msgid "camera"
+msgstr "機種"
+
+#: lightbox-gallery/lightbox-gallery.php:437
+msgid "aperture"
+msgstr "絞り値"
+
+#: lightbox-gallery/lightbox-gallery.php:439
+msgid "focal_length"
+msgstr "焦点距離"
+
+#: lightbox-gallery/lightbox-gallery.php:441
+msgid "ISO"
+msgstr "ISO"
+
+#: lightbox-gallery/lightbox-gallery.php:445
+msgid "shutter_speed"
+msgstr "シャッタースピード"
+
+#: lightbox-gallery/lightbox-gallery.php:448
+msgid "created_timestamp"
+msgstr "撮影日時"
+
+#~ msgid ""
+#~ "In case that you would like to disable to load the jquery.lightbox.css"
+#~ msgstr "jquery.lightbox.cssの読み込みを禁止する場合"
+#~ msgid "Do not use the jquery.lightbox.css"
+#~ msgstr "jquery.lightbox.cssを使用しない"
+#~ msgid ""
+#~ "In case that you would like to disable to load the jquery.tooltip.css"
+#~ msgstr "jquery.tooltip.cssの読み込みを禁止する場合"
+#~ msgid "Do not use the jquery.tooltip.css"
+#~ msgstr "jquery.tooltip.cssを使用しない"
+

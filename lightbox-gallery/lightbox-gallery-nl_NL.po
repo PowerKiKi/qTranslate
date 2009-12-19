@@ -1,0 +1,145 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lightbox Gallery 0.4 nl\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-06-30 20:13+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Peter Arends <lightbox-gallery@peterarends.net>\n"
+"Language-Team: Peter Arends <lightbox-gallery@peterarends.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-Country: The Netherlands\n"
+
+#: lightbox-gallery/lightbox-gallery.php:147
+msgid "Settings"
+msgstr "Instellingen"
+
+#: lightbox-gallery/lightbox-gallery.php:155
+#: lightbox-gallery/lightbox-gallery.php:181
+msgid "Lightbox Gallery"
+msgstr "Lightbox Gallery"
+
+#: lightbox-gallery/lightbox-gallery.php:169
+msgid "Options updated."
+msgstr "Opties geupdate"
+
+#: lightbox-gallery/lightbox-gallery.php:173
+msgid "Options deleted."
+msgstr "Opties verwijderd"
+
+#: lightbox-gallery/lightbox-gallery.php:187
+#: lightbox-gallery/lightbox-gallery.php:231
+#: lightbox-gallery/lightbox-gallery.php:247
+msgid "Click to toggle"
+msgstr "Click om te tonen"
+
+#: lightbox-gallery/lightbox-gallery.php:188
+msgid "Lightbox Gallery Options"
+msgstr "Lightbox Gallery opties"
+
+#: lightbox-gallery/lightbox-gallery.php:194
+msgid "In case that you would like to use the lightbox in certain categories (comma-deliminated)"
+msgstr "Als je de 'lightbox' in meerdere categorieën wil gebruiken (id's gescheiden door komma's)"
+
+#: lightbox-gallery/lightbox-gallery.php:198
+msgid "In case that you would like to use the lightbox in certain pages (comma-deliminated)"
+msgstr "Als je de 'lightbox' op meerdere pagina's wil gebruiken (id's gescheiden door komma's)"
+
+#: lightbox-gallery/lightbox-gallery.php:202
+msgid "In case that you would like to disable to load the lightbox-gallery.css"
+msgstr "In het geval dat je lightbox-gallery.css niet wil laden"
+
+#: lightbox-gallery/lightbox-gallery.php:203
+msgid "Do not use the lightbox-gallery.css"
+msgstr "lightbox-gallery.css niet gebruiken"
+
+#: lightbox-gallery/lightbox-gallery.php:206
+msgid "In case that you would like to disable to load the jquery.lightbox.css"
+msgstr "In het geval dat je jquery.lightbox.css niet wil laden"
+
+#: lightbox-gallery/lightbox-gallery.php:207
+msgid "Do not use the jquery.lightbox.css"
+msgstr "jquery.lightbox.css niet gebruiken"
+
+#: lightbox-gallery/lightbox-gallery.php:210
+msgid "In case that you would like to disable to load the jquery.tooltip.css"
+msgstr "In het geval dat je jquery.tooltip.css niet wil laden"
+
+#: lightbox-gallery/lightbox-gallery.php:211
+msgid "Do not use the jquery.tooltip.css"
+msgstr "jquery.tooltip.css niet gebruiken"
+
+#: lightbox-gallery/lightbox-gallery.php:214
+msgid "In case that you would like to disable to load the column inline css"
+msgstr "In het geval dat je geen 'column inline css' wil laden"
+
+#: lightbox-gallery/lightbox-gallery.php:215
+msgid "Do not use the column inline css"
+msgstr "'column inline css niet gebruiken'"
+
+#: lightbox-gallery/lightbox-gallery.php:218
+msgid "In case that you would like to set the default number of columns"
+msgstr "In het geval dat je het standaard aantal kolommen in wil stellen"
+
+#: lightbox-gallery/lightbox-gallery.php:222
+msgid "Update Options &raquo;"
+msgstr "Update opties &raquo;"
+
+#: lightbox-gallery/lightbox-gallery.php:232
+msgid "Delete Options"
+msgstr "Opties verwijderen"
+
+#: lightbox-gallery/lightbox-gallery.php:234
+msgid "Are you sure to delete options? Options you set will be deleted."
+msgstr "Weet je zeker dat je de gedane instellingen wilt verwijderen?"
+
+#: lightbox-gallery/lightbox-gallery.php:238
+msgid "Delete Options &raquo;"
+msgstr "Opties verwijderen"
+
+#: lightbox-gallery/lightbox-gallery.php:248
+msgid "Donation"
+msgstr "Doneren"
+
+#: lightbox-gallery/lightbox-gallery.php:250
+msgid "If you liked this plugin, please make a donation via paypal! Any amount is welcome. Your support is much appreciated."
+msgstr "Maak een donatie met behulp van Paypal als deze plugin je bevalt! Elk bedrag is welkom en je hulp wordt erg gewaardeerd."
+
+#: lightbox-gallery/lightbox-gallery.php:324
+msgid "Pages:"
+msgstr "Pagina's"
+
+#: lightbox-gallery/lightbox-gallery.php:326
+msgid "Next page"
+msgstr "Volgende pagina"
+
+#: lightbox-gallery/lightbox-gallery.php:327
+msgid "Previous page"
+msgstr "Vorige pagina"
+
+#: lightbox-gallery/lightbox-gallery.php:379
+msgid "camera"
+msgstr "Camera"
+
+#: lightbox-gallery/lightbox-gallery.php:381
+msgid "aperture"
+msgstr "Diafragma"
+
+#: lightbox-gallery/lightbox-gallery.php:383
+msgid "focal_length"
+msgstr "Brandpuntsafstand"
+
+#: lightbox-gallery/lightbox-gallery.php:385
+msgid "ISO"
+msgstr "ISO"
+
+#: lightbox-gallery/lightbox-gallery.php:389
+msgid "shutter_speed"
+msgstr "Sluitersnelheid"
+
+#: lightbox-gallery/lightbox-gallery.php:392
+msgid "created_timestamp"
+msgstr "Datum"
+
