@@ -203,6 +203,10 @@ function qtrans_versionLocale() {
 	return 'en_US';
 }
 
+function qtrans_esc_html($text) {
+	return qtrans_useDefaultLanguage($text);
+}
+
 function qtrans_useRawTitle($title, $raw_title = '') {
 	if($raw_title=='') $raw_title = $title;
 	$raw_title = qtrans_useDefaultLanguage($raw_title);
@@ -244,6 +248,7 @@ add_filter('the_excerpt_rss',				'qtrans_useCurrentLanguageIfNotFoundShowAvailab
 add_filter('the_title',						'qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('the_category',					'qtrans_useTermLib', 0);
 add_filter('sanitize_title',				'qtrans_useRawTitle',0, 2);
+add_filter('esc_html',						'qtrans_esc_html', 0);
 add_filter('comment_moderation_subject',	'qtrans_useDefaultLanguage',0);
 add_filter('comment_moderation_text',		'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',				'qtrans_dateFromCommentForCurrentLanguage',0,2);

@@ -238,10 +238,7 @@ function qtrans_initJS() {
 		";
 	
 	$q_config['js']['qtrans_wpOnload'] = "
-		if(typeof wpOnload=='function') {
-			qt_wpOnload = wpOnload;
-		}
-		wpOnload = function() {
+		jQuery(document).ready(function() {
 			qtrans_editorInit();
 			var h = wpCookies.getHash('TinyMCE_content_size');
 			var ta = document.getElementById('content');
@@ -259,8 +256,7 @@ function qtrans_initJS() {
 				jQuery('#content').hide();
 				jQuery('#qtrans_textarea_content').show().addClass('theEditor');
 			}
-			if(typeof qt_wpOnload=='function') qt_wpOnload();
-		}
+		});
 		";
 	
 	$q_config['js']['qtrans_get_active_language'] = "

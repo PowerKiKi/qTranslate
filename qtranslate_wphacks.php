@@ -147,7 +147,6 @@ function qtrans_modifyRichEditor($old_content) {
 	$content_append .="qtrans_editorInit1();\n";
 	$content_append .="qtrans_editorInit2();\n";
 	$content_append .="jQuery('#qtrans_imsg').hide();\n";
-	$content_append .="switchEditors.edInit();\n";
 	$content_append .="qtrans_editorInit3();\n";
 	$content_append .="}\n";
 	if($init_editor) {
