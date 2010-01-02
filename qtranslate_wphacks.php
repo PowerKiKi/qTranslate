@@ -64,6 +64,7 @@ function qtrans_modifyRichEditor($old_content) {
 		}
 		$init_editor = false;
 	}
+	// save callback hook
 		
 	preg_match("/<textarea[^>]*id='([^']+)'/",$old_content,$matches);
 	$id = $matches[1];
@@ -131,8 +132,6 @@ function qtrans_modifyRichEditor($old_content) {
 	// show default language tab
 	$content_append .="document.getElementById('content').style.display='none';\n";
 	$content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='edButton active';\n";
-	// make editor save the correct content
-	$content_append .= $q_config['js']['qtrans_saveCallback'];
 	// show default language
 	$content_append .="var ta = document.getElementById('".$id."');\n";
 	$content_append .="qtrans_assign('qtrans_textarea_".$id."',qtrans_use('".$q_config['default_language']."',ta.value));\n";

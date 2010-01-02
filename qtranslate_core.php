@@ -497,22 +497,8 @@ function qtrans_useTermLib($obj) {
 		if(isset($q_config['term_name'][$obj->name][$q_config['language']])) {
 			$obj->name = $q_config['term_name'][$obj->name][$q_config['language']];
 		} 
-	} else {
-		// string conversion - unpretty workaround for missing filter :(
-		preg_match_all("#<a [^>]+>([^<]+)</a>#i",$obj,$matches);
-		if(is_array($matches) && sizeof($matches[0]) > 0) {
-			$search = array();
-			$replace = array();
-			foreach($matches[1] as $match) {
-				if(isset($q_config['term_name'][$match][$q_config['language']])) {
-					$search[] = '>'.$match.'<';
-					$replace[] = '>'.$q_config['term_name'][$match][$q_config['language']].'<';
-				}
-			}
-			$obj = str_replace($search,$replace,$obj);
-		} elseif(isset($q_config['term_name'][$obj][$q_config['language']])) {
-			$obj = $q_config['term_name'][$obj][$q_config['language']];
-		}
+	} elseif(isset($q_config['term_name'][$obj][$q_config['language']])) {
+		$obj = $q_config['term_name'][$obj][$q_config['language']];
 	}
 	return $obj;
 }
