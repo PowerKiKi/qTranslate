@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. For Problems visit the <a href="http://www.qianqin.de/qtranslate/forum/">Support Forum</a>.
-Version: 2.5.4
+Version: 2.5.4b
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher, professional, human, translation, service
@@ -63,7 +63,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 
 	Specials thanks
 	===============
-	Arming (Gift), Riccardo (Donation), Tim (Gift), Bernhard (Donation), Benjamin (Donation), Dominique (Donation), Robert (Donation), Andrea (Donation), Cynllunio Pentir Design (Donation), Johannes (Donation), Pierre (Donation), Data Test Lab bvba (Donation), Rural China Education Fundation (Donation), Dimitri (Donation), Tammo (Donation), Benjamin (Donation), Jacques (Donation), Robert (Donation), Alexis (Gift), Roger (Donation), Carmen (Gift), Jean-Pierre (Postcard), Bruno (Gift), Andrea (Gift), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
+	Julie (Donation), Sami (Donation), Arming (Gift), Riccardo (Donation), Tim (Gift), Bernhard (Donation), Benjamin (Donation), Dominique (Donation), Robert (Donation), Andrea (Donation), Cynllunio Pentir Design (Donation), Johannes (Donation), Pierre (Donation), Data Test Lab bvba (Donation), Rural China Education Fundation (Donation), Dimitri (Donation), Tammo (Donation), Benjamin (Donation), Jacques (Donation), Robert (Donation), Alexis (Gift), Roger (Donation), Carmen (Gift), Jean-Pierre (Postcard), Bruno (Gift), Andrea (Gift), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
 */
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
