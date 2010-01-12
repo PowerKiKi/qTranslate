@@ -24,14 +24,15 @@
 function qtrans_header(){
 	global $q_config;
 	echo "\n<meta http-equiv=\"Content-Language\" content=\"".$q_config['locale'][$q_config['language']]."\" />\n";
-	echo "<style type=\"text/css\" media=\"screen\">\n";
-	echo ".qtrans_flag span { display:none }\n";
-	echo ".qtrans_flag { height:12px; width:18px; display:block }\n";
-	echo ".qtrans_flag_and_text { padding-left:20px }\n";
+	$css = "<style type=\"text/css\" media=\"screen\">\n";
+	$css .=".qtrans_flag span { display:none }\n";
+	$css .=".qtrans_flag { height:12px; width:18px; display:block }\n";
+	$css .=".qtrans_flag_and_text { padding-left:20px }\n";
 	foreach($q_config['enabled_languages'] as $language) {
-		echo ".qtrans_flag_".$language." { background:url(".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
+		$css .=".qtrans_flag_".$language." { background:url(".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
 	}
-	echo "</style>\n";
+	$css .="</style>\n";
+	echo apply_filters('qtranslate_css',$css);
 	// skip the rest if 404
 	if(is_404()) return;
 	// set links to translations of current page
@@ -334,6 +335,7 @@ if(!defined('WP_ADMIN')) {
 	add_filter('single_cat_title',				'qtrans_useTermLib',0);
 	add_filter('the_category',					'qtrans_useTermLib',0);
 	add_filter('get_terms',						'qtrans_useTermLib',0);
+	add_filter('get_category',					'qtrans_useTermLib',0);
 }
 
 ?>
