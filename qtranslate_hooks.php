@@ -32,7 +32,7 @@ function qtrans_header(){
 		$css .=".qtrans_flag_".$language." { background:url(".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
 	}
 	$css .="</style>\n";
-	echo apply_filters('qtranslate_css',$css);
+	echo apply_filters('qtranslate_header_css',$css);
 	// skip the rest if 404
 	if(is_404()) return;
 	// set links to translations of current page
