@@ -234,7 +234,6 @@ function qtrans_initJS() {
 			var h = wpCookies.getHash('TinyMCE_content_size');
 			var ta = document.getElementById('content');
 			edCanvas = document.getElementById('qtrans_textarea_content'); 
-			ta.value = switchEditors.pre_wpautop(ta.value);
 			
 			if ( getUserSetting( 'editor' ) == 'html' ) {
 				if ( h )
@@ -316,7 +315,7 @@ function qtrans_initJS() {
 			if(lang=='html') {
 				if ( ! inst || inst.isHidden() )
 					return false;
-				vta.style.height = inst.getContentAreaContainer().offsetHeight + 6 + 'px';
+				vta.style.height = inst.getContentAreaContainer().offsetHeight + 24 + 'px';
 				inst.hide();
 				qt.style.display = 'block';
 				vta.style.color = '#000';
