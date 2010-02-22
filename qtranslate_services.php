@@ -287,9 +287,11 @@ function qs_translate_box($post) {
 	<ul>
 <?php
 	foreach($languages as $language) {
+		if(isset($_REQUEST['post'])) {
 ?>
-		<li><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]; ?>" alt="<?php echo $q_config['language_name'][$language]; ?>"> <a href="edit.php?page=qtranslate_services&post=<?php echo intval($_REQUEST['post']); ?>&target_language=<?php echo $language; ?>"><?php echo $q_config['language_name'][$language]; ?></li>
+			<li><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]; ?>" alt="<?php echo $q_config['language_name'][$language]; ?>"> <a href="edit.php?page=qtranslate_services&post=<?php echo intval($_REQUEST['post']); ?>&target_language=<?php echo $language; ?>"><?php echo $q_config['language_name'][$language]; ?></li>
 <?php
+		}
 	}
 ?>
 	</ul>
