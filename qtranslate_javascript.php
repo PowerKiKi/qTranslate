@@ -215,7 +215,7 @@ function qtrans_initJS() {
 		";
 		
 	$q_config['js']['qtrans_disable_old_editor'] = "
-		jQuery('#content').removeClass('theEditor');
+		jQuery('#content').removeClass('theEditor').css('display','none');
 		";
 		
 	$q_config['js']['qtrans_tinyMCEOverload'] = "
@@ -244,7 +244,8 @@ function qtrans_initJS() {
 				jQuery('#quicktags').hide();
 				// Activate TinyMCE if it's the user's default editor
 				jQuery('#content').hide();
-				jQuery('#qtrans_textarea_content').show().addClass('theEditor');
+				jQuery('#qtrans_textarea_content').show();
+				tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
 				var waitForTinyMCE = window.setInterval(function() {
 					if(tinyMCE.get('qtrans_textarea_content')!=undefined) {
 						tinyMCE.get('qtrans_textarea_content').onSaveContent.add(function(ed, o) {

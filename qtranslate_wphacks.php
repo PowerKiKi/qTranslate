@@ -117,9 +117,6 @@ function qtrans_modifyRichEditor($old_content) {
 	
 	$content = apply_filters('qtranslate_toolbar', $content);
 	
-	// hijack tinymce control
-	$content .= $q_config['js']['qtrans_disable_old_editor'];
-	
 	// hide old title bar
 	$content .= "document.getElementById('titlediv').style.display='none';\n";
 	
@@ -127,10 +124,17 @@ function qtrans_modifyRichEditor($old_content) {
 	$content .="// ]]>\n</script>\n";
 	
 	$content_append .="<script type=\"text/javascript\">\n// <![CDATA[\n";
+	// disable old editor here if editor is to be initialized
+	if($init_editor) 	$content_append .= $q_config['js']['qtrans_disable_old_editor'];
 	$content_append .="function qtrans_editorInit2() {\n";
 	
+	// disable old editor here if editor is not to be initialized
+	if(!$init_editor) 	$content_append .= $q_config['js']['qtrans_disable_old_editor'];
+	
+	// hijack tinymce control
+	$content_append .= $q_config['js']['qtrans_disable_old_editor'];
+	
 	// show default language tab
-	$content_append .="document.getElementById('content').style.display='none';\n";
 	$content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='edButton active';\n";
 	// show default language
 	$content_append .="var ta = document.getElementById('".$id."');\n";
