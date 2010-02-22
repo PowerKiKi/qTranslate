@@ -248,7 +248,6 @@ add_filter('the_excerpt',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable'
 add_filter('the_excerpt_rss',				'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_title',						'qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('sanitize_title',				'qtrans_useRawTitle',0, 2);
-add_filter('esc_html',						'qtrans_esc_html', 0);
 add_filter('comment_moderation_subject',	'qtrans_useDefaultLanguage',0);
 add_filter('comment_moderation_text',		'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',				'qtrans_dateFromCommentForCurrentLanguage',0,2);
@@ -324,6 +323,8 @@ if(!defined('WP_ADMIN')) {
 	add_filter('widget_title',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 	add_filter('widget_text',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 	
+	// filter options
+	add_filter('esc_html',						'qtrans_esc_html', 0);
 	// don't filter untranslated posts in admin
 	add_filter('posts_where_request',		'qtrans_excludeUntranslatedPosts');
 	
