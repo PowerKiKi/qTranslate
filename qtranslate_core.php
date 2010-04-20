@@ -806,4 +806,14 @@ function qtrans_use($lang, $text, $show_available=false) {
 	return "<p>".preg_replace('/%LANG:([^:]*):([^%]*)%/', $language_list, $q_config['not_available'][$lang])."</p>";
 }
 
+function qtrans_showAllSeperated($text) {
+	if(empty($text)) return $text;
+	global $q_config;
+	$result = "";
+	foreach(qtrans_getSortedLanguages() as $language) {
+		$result .= $q_config['language_name'][$language].":\n".qtrans_use($language, $text)."\n\n";
+	}
+	return $result;
+}
+
 ?>

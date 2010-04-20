@@ -282,7 +282,10 @@ add_filter('term_links-post_tag',			'qtrans_useCurrentLanguageIfNotFoundUseDefau
 add_filter('link_name',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('link_description',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('pre_option_rss_language',		'qtrans_getLanguage',0);
-add_filter('the_author',			    	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter('the_author',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+add_filter( "_wp_post_revision_field_post_title", 'qtrans_showAllSeperated', 0);
+add_filter( "_wp_post_revision_field_post_content", 'qtrans_showAllSeperated', 0);
+add_filter( "_wp_post_revision_field_post_excerpt", 'qtrans_showAllSeperated', 0);
 
 // Hooks (execution time non-critical filters) 
 add_filter('author_feed_link',				'qtrans_convertURL');
@@ -314,7 +317,6 @@ add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
 add_filter('plugin_action_links', 			'qtrans_links', 10, 2 );
 add_filter('manage_language_columns',		'qtrans_language_columns');
 add_filter('core_version_check_locale',		'qtrans_versionLocale');
-
 // skip this filters if on backend
 if(!defined('WP_ADMIN')) {
 	add_filter('the_posts',					'qtrans_postsFilter');
