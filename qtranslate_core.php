@@ -129,8 +129,8 @@ function qtrans_init() {
 	// load plugin translations
 	load_plugin_textdomain('qtranslate', PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/lang');
 	
-	// remove traces of language
-	unset($_GET['lang']);
+	// remove traces of language (or better not?)
+	//unset($_GET['lang']);
 	$_SERVER['REQUEST_URI'] = $q_config['url_info']['url'];
 	$_SERVER['HTTP_HOST'] = $q_config['url_info']['host'];
 	
