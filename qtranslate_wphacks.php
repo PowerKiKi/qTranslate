@@ -47,7 +47,8 @@ function qtrans_modifyCategoryForm($term) {
 }
 
 function qtrans_modifyTagForm($term) {
-	return qtrans_modifyTermForm('tag-name', __('Tag Name', 'qtranslate'), $term);
+	qtrans_modifyTermForm('name', __('Tag Name', 'qtranslate'), $term);
+	qtrans_modifyTermForm('tag-name', __('Tag Name', 'qtranslate'), $term);
 }
 
 function qtrans_modifyLinkCategoryForm($term) {

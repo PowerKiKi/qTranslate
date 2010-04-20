@@ -251,7 +251,7 @@ add_filter('sanitize_title',				'qtrans_useRawTitle',0, 2);
 add_filter('comment_moderation_subject',	'qtrans_useDefaultLanguage',0);
 add_filter('comment_moderation_text',		'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',				'qtrans_dateFromCommentForCurrentLanguage',0,2);
-add_filter('get_comment_time',				'qtrans_timeFromCommentForCurrentLanguage',0,3);
+add_filter('get_comment_time',				'qtrans_timeFromCommentForCurrentLanguage',0,4);
 add_filter('get_the_modified_date',			'qtrans_dateModifiedFromPostForCurrentLanguage',0,2);
 add_filter('get_the_modified_time',			'qtrans_timeModifiedFromPostForCurrentLanguage',0,3);
 add_filter('get_the_time',					'qtrans_timeFromPostForCurrentLanguage',0,3);

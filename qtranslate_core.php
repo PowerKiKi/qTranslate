@@ -475,7 +475,8 @@ function qtrans_dateFromCommentForCurrentLanguage($old_date, $format ='') {
 	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$comment->comment_date), $old_date);
 }
 
-function qtrans_timeFromCommentForCurrentLanguage($old_date, $format = '', $gmt = false) {
+function qtrans_timeFromCommentForCurrentLanguage($old_date, $format = '', $gmt = false, $translate = true) {
+	if(!$translate) return $old_date;
 	global $comment;
 	$comment_date = $gmt? $comment->comment_date_gmt : $comment->comment_date;
 	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$comment_date), $old_date);
