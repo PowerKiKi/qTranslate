@@ -3,7 +3,7 @@ Contributors: chineseleper
 Tags: multilingual, language, admin, tinymce, bilingual, widget, switcher, i18n, l10n, multilanguage, professional, translation, service, human
 Requires at least: 2.9.2
 Tested up to: 2.9.2
-Stable tag: 2.5.6
+Stable tag: 2.5.7
 Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
 Adds userfriendly multilingual content management and translation support into Wordpress.
