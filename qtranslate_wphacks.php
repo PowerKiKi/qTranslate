@@ -105,6 +105,7 @@ function qtrans_modifyRichEditor($old_content) {
 	$content .= $q_config['js']['qtrans_save'];
 	$content .= $q_config['js']['qtrans_integrate_title'];
 	$content .= $q_config['js']['qtrans_get_active_language'];
+	$content .= $q_config['js']['qtrans_hook_on_tinyMCE'];
 
 	// insert language, visual and html buttons
 	$el = qtrans_getSortedLanguages();

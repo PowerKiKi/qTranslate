@@ -245,17 +245,23 @@ function qtrans_initJS() {
 				// Activate TinyMCE if it's the user's default editor
 				jQuery('#content').hide();
 				jQuery('#qtrans_textarea_content').show();
-				tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
-				var waitForTinyMCE = window.setInterval(function() {
-					if(tinyMCE.get('qtrans_textarea_content')!=undefined) {
-						tinyMCE.get('qtrans_textarea_content').onSaveContent.add(function(ed, o) {
-							qtrans_save(o.content);
-						});
-						window.clearInterval(waitForTinyMCE);
-					}
-				}, 250);
+				qtrans_hook_on_tinyMCE();
 			}
 		});
+		";
+		
+	$q_config['js']['qtrans_hook_on_tinyMCE'] = "
+		qtrans_hook_on_tinyMCE = function() {
+			tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');
+			var waitForTinyMCE = window.setInterval(function() {
+				if(tinyMCE.get('qtrans_textarea_content')!=undefined) {
+					tinyMCE.get('qtrans_textarea_content').onSaveContent.add(function(ed, o) {
+						qtrans_save(o.content);
+					});
+					window.clearInterval(waitForTinyMCE);
+				}
+			}, 250);
+		}
 		";
 	
 	$q_config['js']['qtrans_get_active_language'] = "
@@ -333,7 +339,7 @@ function qtrans_initJS() {
 				if (inst) {
 					inst.show();
 				} else {
-					tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_'+id);
+					qtrans_hook_on_tinyMCE();
 				}
 				document.getElementById('edButtonHTML').className = '';
 				document.getElementById('edButtonPreview').className = 'active';
