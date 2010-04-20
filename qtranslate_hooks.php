@@ -339,6 +339,8 @@ if(!defined('WP_ADMIN')) {
 	add_filter('the_category',					'qtrans_useTermLib',0);
 	add_filter('get_terms',						'qtrans_useTermLib',0);
 	add_filter('get_category',					'qtrans_useTermLib',0);
+	add_filter('get_comment_author',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+	add_filter('the_author',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 }
 
 ?>
