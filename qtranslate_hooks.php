@@ -193,7 +193,7 @@ function qtrans_languageColumn($column) {
 function qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage($content) {
 	// workaround for page listing on admin
 	if(!is_string($content)) return $content;
-	if(defined('WP_ADMIN') && preg_match('#edit\-pages\.php(\?.*)?$#', $_SERVER['REQUEST_URI'])) {
+	if(defined('WP_ADMIN') && preg_match('#edit\.php\?post_type=page(&.*)?$#', $_SERVER['REQUEST_URI'])) {
 		return htmlspecialchars(qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage(htmlspecialchars_decode($content)));
 	} else {
 		return qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($content);

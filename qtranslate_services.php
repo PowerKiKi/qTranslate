@@ -125,8 +125,12 @@ function qs_queryQS($action, $data='', $fast = false) {
 	fclose($fp);
 	
 	preg_match("#^Content-Length:\s*([0-9]+)\s*$#ism",$res, $match);
-	$content_length = $match[1];
-	$content = substr($res, -$content_length, $content_length);
+	if(isset($match[1])) {
+		$content_length = $match[1];
+		$content = substr($res, -$content_length, $content_length);
+	} else {
+		$content = $res;
+	}
 	$debug = $content;
 	$content = qs_base64_unserialize($content);
 	openssl_open($content['data'], $content, $content['key'], $private_key);
@@ -245,7 +249,7 @@ function qs_config_pre_hook($message) {
 			
 			foreach($services as $service_id => $service) {
 				// check if there are already settings for the field
-				if(!is_array($service_settings[$service_id])) $service_settings[$service_id] = array();
+				if(!isset($service_settings[$service_id])||!is_array($service_settings[$service_id])) $service_settings[$service_id] = array();
 				
 				// update fields
 				foreach($service['service_required_fields'] as $field) {
@@ -283,19 +287,19 @@ function qs_translate_box($post) {
 	global $q_config;
 	$languages = qtrans_getSortedLanguages();
 ?>
-<p>
 	<ul>
 <?php
 	foreach($languages as $language) {
 		if(isset($_REQUEST['post'])) {
 ?>
-			<li><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]; ?>" alt="<?php echo $q_config['language_name'][$language]; ?>"> <a href="edit.php?page=qtranslate_services&post=<?php echo intval($_REQUEST['post']); ?>&target_language=<?php echo $language; ?>"><?php echo $q_config['language_name'][$language]; ?></li>
+			<li><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]; ?>" alt="<?php echo $q_config['language_name'][$language]; ?>"> <a href="edit.php?page=qtranslate_services&post=<?php echo intval($_REQUEST['post']); ?>&target_language=<?php echo $language; ?>"><?php echo $q_config['language_name'][$language]; ?></a></li>
 <?php
+		} else {
+			echo '<li>'.__('Please save your post first.','qtranslate').'</li>';
 		}
 	}
 ?>
 	</ul>
-</p>
 <?php
 }
 
@@ -449,7 +453,7 @@ function qs_UpdateOrder($order_id) {
 		// query server for updates
 		$order['order']['order_url'] = get_option('home');
 		$result = qs_queryQS(QS_RETRIEVE_TRANSLATION, $order['order']);
-		$orders[$key]['status'] = $result['order_comment'];
+		if(isset($result['order_comment'])) $orders[$key]['status'] = $result['order_comment'];
 		// update db if post is updated
 		if(isset($result['order_status']) && $result['order_status']==QS_STATE_CLOSED) {
 			$order['post_id'] = intval($order['post_id']);
@@ -508,7 +512,7 @@ function qs_service() {
 	}
 	if(sizeof($available_languages)==1) {
 		if($available_languages[0] == $translate_to) {
-			$translate_to = '';
+			unset($translate_to);
 		}
 		$translate_from = $available_languages[0];
 	} elseif($translate_from == '' && sizeof($available_languages) > 1) {

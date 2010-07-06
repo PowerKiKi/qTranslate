@@ -43,7 +43,8 @@ function qtrans_modifyTermForm($id, $name, $term) {
 }
 
 function qtrans_modifyCategoryForm($term) {
-	return qtrans_modifyTermForm('cat_name', __('Category Name', 'qtranslate'), $term);
+	qtrans_modifyTermForm('name', __('Category Name', 'qtranslate'), $term);
+	qtrans_modifyTermForm('tag-name', __('Category Name', 'qtranslate'), $term);
 }
 
 function qtrans_modifyTagForm($term) {

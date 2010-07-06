@@ -86,7 +86,7 @@ function qtrans_init() {
 	// detect language and forward if needed
 	if($q_config['detect_browser_language'] && $q_config['url_info']['redirect'] && !isset($_COOKIE['qtrans_cookie_test']) && $q_config['url_info']['language'] == $q_config['default_language']) {
 		$prefered_languages = array();
-		if(preg_match_all("#([^;,]+)(;[^,0-9]*([0-9\.]+)[^,]*)?#i",$_SERVER["HTTP_ACCEPT_LANGUAGE"], $matches, PREG_SET_ORDER)) {
+		if(isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) && preg_match_all("#([^;,]+)(;[^,0-9]*([0-9\.]+)[^,]*)?#i",$_SERVER["HTTP_ACCEPT_LANGUAGE"], $matches, PREG_SET_ORDER)) {
 			$priority = 1.0;
 			foreach($matches as $match) {
 				if(!isset($match[3])) {
@@ -127,7 +127,7 @@ function qtrans_init() {
 	}
 	
 	// load plugin translations
-	load_plugin_textdomain('qtranslate', PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/lang');
+	load_plugin_textdomain('qtranslate', false, dirname(plugin_basename( __FILE__ )).'/lang');
 	
 	// remove traces of language (or better not?)
 	//unset($_GET['lang']);
@@ -517,7 +517,7 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 	global $q_config;
 	
 	// invalid language
-	if($url=='') $url = clean_url($q_config['url_info']['url']);
+	if($url=='') $url = esc_url($q_config['url_info']['url']);
 	if($lang=='') $lang = $q_config['language'];
 	if(defined('WP_ADMIN')&&!$forceadmin) return $url;
 	if(!qtrans_isEnabled($lang)) return "";
