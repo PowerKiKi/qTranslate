@@ -44,6 +44,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	es by June
 	vi by hathhai
 	ar by Mohamed Magdy
+	pt by netolazaro
 	
 	Plugin Translation Contributers
 	===============================
@@ -131,6 +132,7 @@ $q_config['pre_domain']['ja'] = "ja";
 $q_config['pre_domain']['es'] = "es";
 $q_config['pre_domain']['vi'] = "vi";
 $q_config['pre_domain']['ar'] = "ar";
+$q_config['pre_domain']['pt'] = "pt";
 
 // Names for languages in the corresponding language, add more if needed
 $q_config['language_name']['de'] = "Deutsch";
@@ -147,6 +149,7 @@ $q_config['language_name']['ja'] = "日本語";
 $q_config['language_name']['es'] = "Español";
 $q_config['language_name']['vi'] = "Tiếng Việt";
 $q_config['language_name']['ar'] = "العربية";
+$q_config['language_name']['pt'] = "Português";
 
 // Locales for languages
 // see locale -a for available locales
@@ -164,6 +167,7 @@ $q_config['locale']['ja'] = "ja";
 $q_config['locale']['es'] = "es_ES";
 $q_config['locale']['vi'] = "vi";
 $q_config['locale']['ar'] = "ar";
+$q_config['locale']['pt'] = "pt_BR";
 
 // Language not available messages
 // %LANG:<normal_seperator>:<last_seperator>% generates a list of languages seperated by <normal_seperator> except for the last one, where <last_seperator> will be used instead.
@@ -181,6 +185,7 @@ $q_config['not_available']['ja'] = "申し訳ありません、このコンテ�
 $q_config['not_available']['es'] = "Disculpa, pero esta entrada está disponible sólo en %LANG:, : y %.";
 $q_config['not_available']['vi'] = "Rất tiếc, mục này chỉ tồn tại ở %LANG:, : và %.";
 $q_config['not_available']['ar'] = "عفوا، هذه المدخلة موجودة فقط في %LANG:, : و %.";
+$q_config['not_available']['pt'] = "Desculpe-nos, mas este texto esta apenas disponível em %LANG:, : y %.";
 
 // qTranslate Services
 $q_config['qtranslate_services'] = false;
@@ -203,6 +208,7 @@ $q_config['date_format']['ja'] = '%Y年%m月%d日';
 $q_config['date_format']['es'] = '%d de %B de %Y';
 $q_config['date_format']['vi'] = '%d/%m/%Y';
 $q_config['date_format']['ar'] = '%d/%m/%Y';
+$q_config['date_format']['pt'] = '%d de %B de %Y';
 
 $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
@@ -218,6 +224,7 @@ $q_config['time_format']['ja'] = '%H:%M';
 $q_config['time_format']['es'] = '%H:%M hrs.';
 $q_config['time_format']['vi'] = '%H:%M';
 $q_config['time_format']['ar'] = '%H:%M';
+$q_config['time_format']['pt'] = '%H:%M hrs.';
 
 // Flag images configuration
 // Look in /flags/ directory for a huge list of flags for usage
@@ -235,6 +242,7 @@ $q_config['flag']['ja'] = 'jp.png';
 $q_config['flag']['es'] = 'es.png';
 $q_config['flag']['vi'] = 'vn.png';
 $q_config['flag']['ar'] = 'arle.png';
+$q_config['flag']['pt'] = 'br.png';
 
 // Location of flags (needs trailing slash!)
 $q_config['flag_location'] = 'plugins/qtranslate/flags/';
