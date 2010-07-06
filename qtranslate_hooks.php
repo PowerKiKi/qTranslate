@@ -215,6 +215,13 @@ function qtrans_useRawTitle($title, $raw_title = '') {
 	return $title;
 }
 
+function qtrans_checkCanonical($redirect_url, $requested_url) {
+	// fix canonical conflicts with language urls
+	if(qtrans_convertURL($redirect_url)==qtrans_convertURL($requested_url)) 
+		return false;
+	return $redirect_url;
+}
+
 // Hooks for Plugin compatibility
 
 function wpsupercache_supercache_dir($uri) {
@@ -300,6 +307,7 @@ add_filter('year_link',						'qtrans_convertURL');
 add_filter('category_feed_link',			'qtrans_convertURL');
 add_filter('category_link',					'qtrans_convertURL');
 add_filter('tag_link',						'qtrans_convertURL');
+add_filter('term_link',						'qtrans_convertURL');
 add_filter('the_permalink',					'qtrans_convertURL');
 add_filter('feed_link',						'qtrans_convertURL');
 add_filter('post_comments_feed_link',		'qtrans_convertURL');
@@ -314,9 +322,10 @@ add_filter('wp_list_pages_excludes',	    'qtrans_excludePages');
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('admin_footer',					'qtrans_modifyExcerpt');
 add_filter('bloginfo_url',					'qtrans_convertBlogInfoURL',10,2);
-add_filter('plugin_action_links', 			'qtrans_links', 10, 2 );
+add_filter('plugin_action_links', 			'qtrans_links', 10, 2);
 add_filter('manage_language_columns',		'qtrans_language_columns');
 add_filter('core_version_check_locale',		'qtrans_versionLocale');
+add_filter('redirect_canonical',			'qtrans_checkCanonical', 10, 2);
 // skip this filters if on backend
 if(!defined('WP_ADMIN')) {
 	add_filter('the_posts',					'qtrans_postsFilter');
