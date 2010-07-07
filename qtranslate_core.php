@@ -457,10 +457,9 @@ function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
 	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$post->post_modified), $old_date);
 }
 
-function qtrans_timeFromPostForCurrentLanguage($old_date, $format = '', $gmt = false) {
-	global $post;
-	if(!is_object($post)) return $old_date;
-	if($format == get_option('date_format')) return qtrans_dateFromPostForCurrentLanguage($old_date, $format);
+function qtrans_timeFromPostForCurrentLanguage($old_date, $format = '', $post = null, $gmt = false) {
+	$post = get_post($post);
+	
 	$post_date = $gmt? $post->post_date_gmt : $post->post_date;
 	return qtrans_strftime(qtrans_convertTimeFormat($format), mysql2date('U',$post_date), $old_date);
 }

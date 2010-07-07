@@ -259,11 +259,9 @@ add_filter('comment_moderation_subject',	'qtrans_useDefaultLanguage',0);
 add_filter('comment_moderation_text',		'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',				'qtrans_dateFromCommentForCurrentLanguage',0,2);
 add_filter('get_comment_time',				'qtrans_timeFromCommentForCurrentLanguage',0,4);
-add_filter('get_the_modified_date',			'qtrans_dateModifiedFromPostForCurrentLanguage',0,2);
-add_filter('get_the_modified_time',			'qtrans_timeModifiedFromPostForCurrentLanguage',0,3);
+add_filter('get_post_modified_time',		'qtrans_timeModifiedFromPostForCurrentLanguage',0,3);
 add_filter('get_the_time',					'qtrans_timeFromPostForCurrentLanguage',0,3);
-add_filter('the_time',						'qtrans_timeFromPostForCurrentLanguage',0,2);
-add_filter('the_date',						'qtrans_dateFromPostForCurrentLanguage',0,4);
+add_filter('get_the_date',					'qtrans_dateFromPostForCurrentLanguage',0,4);
 add_filter('locale',						'qtrans_localeForCurrentLanguage',99);
 add_filter('term_name',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('tag_rows',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
@@ -335,21 +333,21 @@ if(!defined('WP_ADMIN')) {
 	add_filter('widget_text',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 	
 	// filter options
-	add_filter('esc_html',						'qtrans_esc_html', 0);
+	add_filter('esc_html',					'qtrans_esc_html', 0);
 	// don't filter untranslated posts in admin
 	add_filter('posts_where_request',		'qtrans_excludeUntranslatedPosts');
 	
 	// leave terms in default language
-	add_filter('cat_row',						'qtrans_useTermLib',0);
-	add_filter('cat_rows',						'qtrans_useTermLib',0);
-	add_filter('wp_get_object_terms',			'qtrans_useTermLib',0);
-	add_filter('single_tag_title',				'qtrans_useTermLib',0);
-	add_filter('single_cat_title',				'qtrans_useTermLib',0);
-	add_filter('the_category',					'qtrans_useTermLib',0);
-	add_filter('get_terms',						'qtrans_useTermLib',0);
-	add_filter('get_category',					'qtrans_useTermLib',0);
-	add_filter('get_comment_author',			'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
-	add_filter('the_author',					'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+	add_filter('cat_row',					'qtrans_useTermLib',0);
+	add_filter('cat_rows',					'qtrans_useTermLib',0);
+	add_filter('wp_get_object_terms',		'qtrans_useTermLib',0);
+	add_filter('single_tag_title',			'qtrans_useTermLib',0);
+	add_filter('single_cat_title',			'qtrans_useTermLib',0);
+	add_filter('the_category',				'qtrans_useTermLib',0);
+	add_filter('get_terms',					'qtrans_useTermLib',0);
+	add_filter('get_category',				'qtrans_useTermLib',0);
+	add_filter('get_comment_author',		'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
+	add_filter('the_author',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 }
 
 ?>
