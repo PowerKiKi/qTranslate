@@ -3,7 +3,7 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. For Problems visit the <a href="http://www.qianqin.de/qtranslate/forum/">Support Forum</a>.
-Version: 2.5.8
+Version: 2.5.9b
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher, professional, human, translation, service
@@ -60,6 +60,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	bg by Dimitar Mitev
 	da by meviper
 	mk by Pavle Boskoski
+	cz by bengo
 	
 	Sponsored Features
 	==================
@@ -67,7 +68,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 
 	Specials thanks
 	===============
-	Christoph (Gift), cuba design(Donation), Jevgenijs (Donation), UltraSnow.de (Donation), Maximilian (Donation), Sparktivity LLC (Donation), Hotchkiss Consulting, LLC (Donation), Thomas (Donation), Julie (Donation), Sami (Donation), Arming (Gift), Riccardo (Donation), Tim (Gift), Bernhard (Donation), Benjamin (Donation), Dominique (Donation), Robert (Donation), Andrea (Donation), Cynllunio Pentir Design (Donation), Johannes (Donation), Pierre (Donation), Data Test Lab bvba (Donation), Rural China Education Fundation (Donation), Dimitri (Donation), Tammo (Donation), Benjamin (Donation), Jacques (Donation), Robert (Donation), Alexis (Gift), Roger (Donation), Carmen (Gift), Jean-Pierre (Postcard), Bruno (Gift), Andrea (Gift), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
+	Elena (Donation), Danny (Donation), Danny (Donation), Geertje (Donation), Bento Graphics (Donation), 7am (Donation), Christoph (Gift), cuba design(Donation), Jevgenijs (Donation), UltraSnow.de (Donation), Maximilian (Donation), Sparktivity LLC (Donation), Hotchkiss Consulting, LLC (Donation), Thomas (Donation), Julie (Donation), Sami (Donation), Arming (Gift), Riccardo (Donation), Tim (Gift), Bernhard (Donation), Benjamin (Donation), Dominique (Donation), Robert (Donation), Andrea (Donation), Cynllunio Pentir Design (Donation), Johannes (Donation), Pierre (Donation), Data Test Lab bvba (Donation), Rural China Education Fundation (Donation), Dimitri (Donation), Tammo (Donation), Benjamin (Donation), Jacques (Donation), Robert (Donation), Alexis (Gift), Roger (Donation), Carmen (Gift), Jean-Pierre (Postcard), Bruno (Gift), Andrea (Gift), Daniele (Postcard), Gerlando (Donation), Bostjan (Donation)
 */
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
@@ -75,7 +76,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 
 // qTranslate Editor will only activated for the given version of Wordpress.
 // Can be changed to use with other versions but might cause problems and/or data loss!
-define('QT_SUPPORTED_WP_VERSION', '3.0');
+define('QT_SUPPORTED_WP_VERSION', '3.0.1');
 define('QT_STRING',		1);
 define('QT_BOOLEAN',	2);
 define('QT_INTEGER',	3);
