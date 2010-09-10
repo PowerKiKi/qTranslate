@@ -429,7 +429,7 @@ function qtrans_strftime($format, $date, $default = '', $before = '', $after = '
 	$search[] = '/(([^%])%E|^%E)/'; $replace[] = '${2}'.$day; // date j
 	$search[] = '/(([^%])%f|^%f)/'; $replace[] = '${2}'.date('w',$date); // date w
 	$search[] = '/(([^%])%F|^%F)/'; $replace[] = '${2}'.date('z',$date); // date z
-	$search[] = '/(([^%])%i|^%i)/'; $replace[] = '${2}'.date('i',$date); // date i
+	$search[] = '/(([^%])%i|^%i)/'; $replace[] = '${2}'.date('n',$date); // date i
 	$search[] = '/(([^%])%J|^%J)/'; $replace[] = '${2}'.date('t',$date); // date t
 	$search[] = '/(([^%])%k|^%k)/'; $replace[] = '${2}'.date('L',$date); // date L
 	$search[] = '/(([^%])%K|^%K)/'; $replace[] = '${2}'.date('B',$date); // date B
