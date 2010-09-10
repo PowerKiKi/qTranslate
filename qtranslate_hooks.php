@@ -316,6 +316,9 @@ add_filter('manage_posts_custom_column',	'qtrans_languageColumn');
 add_filter('manage_pages_columns',			'qtrans_languageColumnHeader');
 add_filter('manage_pages_custom_column',	'qtrans_languageColumn');
 add_filter('wp_list_pages_excludes',	    'qtrans_excludePages');
+add_filter('comment_notification_text', 	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
+add_filter('comment_notification_headers',	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
+add_filter('comment_notification_subject',	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('admin_footer',					'qtrans_modifyExcerpt');
