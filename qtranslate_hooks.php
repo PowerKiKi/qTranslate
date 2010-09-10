@@ -19,11 +19,9 @@
 
 /* qTranslate Hooks */
 
-// qtrans_init hooks in locale filter which comes before init action
-
 function qtrans_header(){
 	global $q_config;
-	echo "\n<meta http-equiv=\"Content-Language\" content=\"".$q_config['locale'][$q_config['language']]."\" />\n";
+	echo "\n<meta http-equiv=\"Content-Language\" content=\"".str_replace('_','-',$q_config['locale'][$q_config['language']])."\" />\n";
 	$css = "<style type=\"text/css\" media=\"screen\">\n";
 	$css .=".qtrans_flag span { display:none }\n";
 	$css .=".qtrans_flag { height:12px; width:18px; display:block }\n";
@@ -38,7 +36,7 @@ function qtrans_header(){
 	// set links to translations of current page
 	foreach($q_config['enabled_languages'] as $language) {
 		if($language != qtrans_getLanguage())
-			echo '<link hreflang="'.$language.'" href="'.qtrans_convertURL('',$language).'" rel="alternate" rev="alternate" />'."\n";
+			echo '<link hreflang="'.$language.'" href="'.qtrans_convertURL('',$language).'" rel="alternate" />'."\n";
 	}	
 }
 
@@ -245,7 +243,7 @@ add_action('add_tag_form',					'qtrans_modifyTagForm');
 add_action('edit_tag_form',					'qtrans_modifyTagForm');
 add_action('edit_link_category_form',		'qtrans_modifyLinkCategoryForm');
 add_action('widgets_init',					'qtrans_widget_init'); 
-add_action('plugins_loaded',				'qtrans_init'); 
+add_action('plugins_loaded',				'qtrans_init', 2); 
 add_action('admin_head',					'qtrans_adminHeader');
 add_action('admin_menu',					'qtrans_adminMenu');
 
