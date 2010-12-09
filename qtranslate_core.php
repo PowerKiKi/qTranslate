@@ -245,7 +245,6 @@ function qtrans_loadConfig() {
 	$hide_default_language = get_option('qtranslate_hide_default_language');
 	
 	// default if not set
-	if(!is_array($ignore_file_types)) $ignore_file_types = $q_config['ignore_file_types'];
 	if(!is_array($date_formats)) $date_formats = $q_config['date_format'];
 	if(!is_array($time_formats)) $time_formats = $q_config['time_format'];
 	if(!is_array($na_messages)) $na_messages = $q_config['not_available'];
@@ -254,6 +253,7 @@ function qtrans_loadConfig() {
 	if(!is_array($language_names)) $language_names = $q_config['language_name'];
 	if(!is_array($enabled_languages)) $enabled_languages = $q_config['enabled_languages'];
 	if(!is_array($term_name)) $term_name = $q_config['term_name'];
+	if(empty($ignore_file_types)) $ignore_file_types = $q_config['ignore_file_types'];
 	if(empty($default_language)) $default_language = $q_config['default_language'];
 	if(empty($use_strftime)) $use_strftime = $q_config['use_strftime'];
 	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
