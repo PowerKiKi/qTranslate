@@ -82,6 +82,9 @@ define('QT_BOOLEAN',	2);
 define('QT_INTEGER',	3);
 define('QT_URL',		4);
 define('QT_LANGUAGE',	5);
+define('QT_UNTRANSLATED_HIDE', 1);
+define('QT_UNTRANSLATED_MESSAGE', 0);
+define('QT_UNTRANSLATED_DEFAULT', 2);
 define('QT_URL_QUERY',	1);
 define('QT_URL_PATH',	2);
 define('QT_URL_DOMAIN',	3);
@@ -104,7 +107,7 @@ $q_config['default_language'] = 'en';
 $q_config['detect_browser_language'] = true;
 
 // hide pages without content
-$q_config['hide_untranslated'] = false;
+$q_config['hide_untranslated'] = QT_UNTRANSLATED_MESSAGE;
 
 // automatically update .mo files
 $q_config['auto_update_mo'] = true;
