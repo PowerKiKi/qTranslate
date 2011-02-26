@@ -577,8 +577,8 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 		return $home."/".$url;
 	}
 	
-	// dirty hack for wp-login.php
-	if(strpos($url,"wp-login.php")!==false) {
+	// ignore wp internal links
+	if(preg_match("#^(wp-login.php|wp-signup.php|wp-register.php|wp-admin/)#", $url)) {
 		return $home."/".$url;
 	}
 	

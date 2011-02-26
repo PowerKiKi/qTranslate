@@ -249,7 +249,7 @@ function qtrans_initJS() {
 			}
 		});
 		";
-		
+	
 	$q_config['js']['qtrans_hook_on_tinyMCE'] = "
 		qtrans_hook_on_tinyMCE = function() {
 			tinyMCE.execCommand('mceAddControl', false, 'qtrans_textarea_content');

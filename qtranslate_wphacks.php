@@ -366,5 +366,4 @@ function qtrans_createEditorToolbarButton($language, $id, $js_function = 'switch
 		";
 	return $html;
 }
-
 ?>
