@@ -243,10 +243,12 @@ add_filter('supercache_dir',					'wpsupercache_supercache_dir',0);
 
 // Hooks (Actions)
 add_action('wp_head',						'qtrans_header');
-add_action('edit_category_form',			'qtrans_modifyCategoryForm');
-add_action('add_tag_form',					'qtrans_modifyTagForm');
-add_action('edit_tag_form',					'qtrans_modifyTagForm');
-add_action('edit_link_category_form',		'qtrans_modifyLinkCategoryForm');
+add_action('category_edit_form',			'qtrans_modifyTermFormFor');
+add_action('post_tag_edit_form',			'qtrans_modifyTermFormFor');
+add_action('link_category_edit_form',		'qtrans_modifyTermFormFor');
+add_action('category_add_form',				'qtrans_modifyTermFormFor');
+add_action('post_tag_add_form',				'qtrans_modifyTermFormFor');
+add_action('link_category_add_form',		'qtrans_modifyTermFormFor');
 add_action('widgets_init',					'qtrans_widget_init'); 
 add_action('plugins_loaded',				'qtrans_init', 2); 
 add_action('admin_head',					'qtrans_adminHeader');

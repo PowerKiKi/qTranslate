@@ -42,18 +42,9 @@ function qtrans_modifyTermForm($id, $name, $term) {
 	echo "// ]]>\n</script>\n";
 }
 
-function qtrans_modifyCategoryForm($term) {
-	qtrans_modifyTermForm('name', __('Category Name', 'qtranslate'), $term);
-	qtrans_modifyTermForm('tag-name', __('Category Name', 'qtranslate'), $term);
-}
-
-function qtrans_modifyTagForm($term) {
-	qtrans_modifyTermForm('name', __('Tag Name', 'qtranslate'), $term);
-	qtrans_modifyTermForm('tag-name', __('Tag Name', 'qtranslate'), $term);
-}
-
-function qtrans_modifyLinkCategoryForm($term) {
-	return qtrans_modifyTermForm('name', __('Category Name', 'qtranslate'), $term);
+function qtrans_modifyTermFormFor($term) {
+	qtrans_modifyTermForm('name', __('Name'), $term);
+	qtrans_modifyTermForm('tag-name', __('Name'), $term);
 }
 
 // Modifys TinyMCE to edit multilingual content
