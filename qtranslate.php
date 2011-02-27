@@ -37,7 +37,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	fi by Tatu Siltanen
 	fr by Damien Choizit
 	nl by RobV
-	se by bear3556, johdah 
+	sv by bear3556, johdah 
 	it by Lorenzo De Tomasi
 	ro, hu by Jani Monoses
 	ja by Brian Parker
@@ -128,7 +128,7 @@ $q_config['pre_domain']['zh'] = "zh";
 $q_config['pre_domain']['fi'] = "fs";
 $q_config['pre_domain']['fr'] = "fr";
 $q_config['pre_domain']['nl'] = "nl";
-$q_config['pre_domain']['se'] = "se";
+$q_config['pre_domain']['sv'] = "sv";
 $q_config['pre_domain']['it'] = "it";
 $q_config['pre_domain']['ro'] = "ro";
 $q_config['pre_domain']['hu'] = "hu";
@@ -145,7 +145,7 @@ $q_config['language_name']['zh'] = "中文";
 $q_config['language_name']['fi'] = "suomi";
 $q_config['language_name']['fr'] = "Français";
 $q_config['language_name']['nl'] = "Nederlands";
-$q_config['language_name']['se'] = "Svenska";
+$q_config['language_name']['sv'] = "Svenska";
 $q_config['language_name']['it'] = "Italiano";
 $q_config['language_name']['ro'] = "Română";
 $q_config['language_name']['hu'] = "Magyar";
@@ -181,7 +181,7 @@ $q_config['not_available']['zh'] = "对不起，此内容只适用于%LANG:，:�
 $q_config['not_available']['fi'] = "Anteeksi, mutta tämä kirjoitus on saatavana ainoastaan näillä kielillä: %LANG:, : ja %.";
 $q_config['not_available']['fr'] = "Désolé, cet article est seulement disponible en %LANG:, : et %.";
 $q_config['not_available']['nl'] = "Onze verontschuldigingen, dit bericht is alleen beschikbaar in %LANG:, : en %.";
-$q_config['not_available']['se'] = "Tyvärr är denna artikel enbart tillgänglig på %LANG:, : och %.";
+$q_config['not_available']['sv'] = "Tyvärr är denna artikel enbart tillgänglig på %LANG:, : och %.";
 $q_config['not_available']['it'] = "Ci spiace, ma questo articolo è disponibile soltanto in %LANG:, : e %.";
 $q_config['not_available']['ro'] = "Din păcate acest articol este disponibil doar în %LANG:, : și %.";
 $q_config['not_available']['hu'] = "Sajnos ennek a bejegyzésnek csak %LANG:, : és % nyelvű változata van.";
@@ -204,7 +204,7 @@ $q_config['date_format']['zh'] = '%x %A';
 $q_config['date_format']['fi'] = '%e.&m.%C';
 $q_config['date_format']['fr'] = '%A %e %B %Y';
 $q_config['date_format']['nl'] = '%d/%m/%y';
-$q_config['date_format']['se'] = '%Y/%m/%d';
+$q_config['date_format']['sv'] = '%Y/%m/%d';
 $q_config['date_format']['it'] = '%e %B %Y';
 $q_config['date_format']['ro'] = '%A, %e %B %Y';
 $q_config['date_format']['hu'] = '%Y %B %e, %A';
@@ -220,7 +220,7 @@ $q_config['time_format']['zh'] = '%I:%M%p';
 $q_config['time_format']['fi'] = '%H:%M';
 $q_config['time_format']['fr'] = '%H:%M';
 $q_config['time_format']['nl'] = '%H:%M';
-$q_config['time_format']['se'] = '%H:%M';
+$q_config['time_format']['sv'] = '%H:%M';
 $q_config['time_format']['it'] = '%H:%M';
 $q_config['time_format']['ro'] = '%H:%M';
 $q_config['time_format']['hu'] = '%H:%M';
@@ -238,7 +238,7 @@ $q_config['flag']['zh'] = 'cn.png';
 $q_config['flag']['fi'] = 'fi.png';
 $q_config['flag']['fr'] = 'fr.png';
 $q_config['flag']['nl'] = 'nl.png';
-$q_config['flag']['se'] = 'se.png';
+$q_config['flag']['sv'] = 'se.png';
 $q_config['flag']['it'] = 'it.png';
 $q_config['flag']['ro'] = 'ro.png';
 $q_config['flag']['hu'] = 'hu.png';
