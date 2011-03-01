@@ -306,7 +306,6 @@ add_filter('the_permalink',					'qtrans_convertURL');
 add_filter('feed_link',						'qtrans_convertURL');
 add_filter('post_comments_feed_link',		'qtrans_convertURL');
 add_filter('tag_feed_link',					'qtrans_convertURL');
-add_filter('clean_url',						'qtrans_convertURL');
 add_filter('get_search_form',				'qtrans_fixSearchForm', 10, 1);
 add_filter('manage_posts_columns',			'qtrans_languageColumnHeader');
 add_filter('manage_posts_custom_column',	'qtrans_languageColumn');
