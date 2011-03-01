@@ -83,6 +83,8 @@ function qtrans_init() {
 		$q_config['language'] = $q_config['url_info']['language'];
 	}
 	
+	$q_config['language'] = apply_filters('qtranslate_language', $q_config['language']);
+	
 	// detect language and forward if needed
 	if($q_config['detect_browser_language'] && $q_config['url_info']['redirect'] && !isset($_COOKIE['qtrans_cookie_test']) && $q_config['url_info']['language'] == $q_config['default_language']) {
 		$target = false;
