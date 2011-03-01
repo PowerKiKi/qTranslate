@@ -188,16 +188,6 @@ function qtrans_languageColumn($column) {
 	return $column;
 }
 
-function qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage($content) {
-	// workaround for page listing on admin
-	if(!is_string($content)) return $content;
-	if(defined('WP_ADMIN') && preg_match('#edit\.php\?post_type=page(&.*)?$#', $_SERVER['REQUEST_URI'])) {
-		return htmlspecialchars(qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage(htmlspecialchars_decode($content)));
-	} else {
-		return qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($content);
-	}
-}
-
 function qtrans_versionLocale() {
 	return 'en_US';
 }
@@ -259,7 +249,6 @@ add_action('wp_after_admin_bar_render',		'qtrans_fixSearchUrl');
 add_filter('the_content',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_excerpt',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_excerpt_rss',				'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
-add_filter('the_title',						'qtrans_htmlDecodeUseCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('sanitize_title',				'qtrans_useRawTitle',0, 2);
 add_filter('comment_moderation_subject',	'qtrans_useDefaultLanguage',0);
 add_filter('comment_moderation_text',		'qtrans_useDefaultLanguage',0);
@@ -269,6 +258,7 @@ add_filter('get_post_modified_time',		'qtrans_timeModifiedFromPostForCurrentLang
 add_filter('get_the_time',					'qtrans_timeFromPostForCurrentLanguage',0,3);
 add_filter('get_the_date',					'qtrans_dateFromPostForCurrentLanguage',0,4);
 add_filter('locale',						'qtrans_localeForCurrentLanguage',99);
+add_filter('the_title',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage', 0);
 add_filter('term_name',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('tag_rows',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
 add_filter('list_cats',						'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
