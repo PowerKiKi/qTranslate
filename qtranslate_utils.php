@@ -100,7 +100,8 @@ function qtrans_getAvailableLanguages($text) {
 function qtrans_isAvailableIn($post_id, $language='') {
 	global $q_config;
 	if($language == '') $language = $q_config['default_language'];
-	$languages = qtrans_getAvailableLanguages(&get_post($post_id)->post_content);
+	$post = &get_post($post_id);
+	$languages = qtrans_getAvailableLanguages($post->post_content);
 	return in_array($language,$languages);
 }
 
