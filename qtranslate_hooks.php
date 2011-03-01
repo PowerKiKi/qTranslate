@@ -315,6 +315,7 @@ add_filter('wp_list_pages_excludes',	    'qtrans_excludePages');
 add_filter('comment_notification_text', 	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 add_filter('comment_notification_headers',	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 add_filter('comment_notification_subject',	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
+add_filter('wp_setup_nav_menu_item',		'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('admin_footer',					'qtrans_modifyExcerpt');
