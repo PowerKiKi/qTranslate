@@ -99,7 +99,9 @@ function qtrans_init() {
 				$prefered_languages[$match[1]] = $pr;
 			}
 			arsort($prefered_languages, SORT_NUMERIC);
+			var_dump($prefered_languages);
 			foreach($prefered_languages as $language => $priority) {
+				if(strlen($language)>2) $language = substr($language,0,2);
 				if(qtrans_isEnabled($language)) {
 					if($q_config['hide_default_language'] && $language == $q_config['default_language']) break;
 					$target = qtrans_convertURL(get_option('home'),$language);
