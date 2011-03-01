@@ -74,6 +74,12 @@ function qtrans_modifyRichEditor($old_content) {
 		return $old_content;
 	}
 	
+	// fix wpautop bug
+	if($init_editor && has_filter('the_editor_content', 'wp_richedit_pre')) {
+		remove_filter('the_editor_content', 'wp_richedit_pre');
+		add_filter('the_editor_content', 'wp_htmledit_pre');
+	}
+	
 	$content = "";
 	$content_append = "";
 	
@@ -125,14 +131,11 @@ function qtrans_modifyRichEditor($old_content) {
 	// disable old editor here if editor is not to be initialized
 	if(!$init_editor) 	$content_append .= $q_config['js']['qtrans_disable_old_editor'];
 	
-	// hijack tinymce control
-	$content_append .= $q_config['js']['qtrans_disable_old_editor'];
-	
 	// show default language tab
 	$content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='edButton active';\n";
 	// show default language
-	$content_append .="var ta = document.getElementById('".$id."');\n";
-	$content_append .="qtrans_assign('qtrans_textarea_".$id."',qtrans_use('".$q_config['default_language']."',ta.value));\n";
+	$content_append .="var text = document.getElementById('".$id."').value;\n";
+	$content_append .="qtrans_assign('qtrans_textarea_".$id."',qtrans_use('".$q_config['default_language']."',text));\n";
 	
 	$content_append .="}\n";
 
@@ -140,12 +143,7 @@ function qtrans_modifyRichEditor($old_content) {
 	// make tinyMCE get the correct data
 	$content_append .=$q_config['js']['qtrans_tinyMCEOverload'];
 	$content_append .="}\n";
-	$content_append .="function qtrans_editorInit() {\n";
-	$content_append .="qtrans_editorInit1();\n";
-	$content_append .="qtrans_editorInit2();\n";
-	$content_append .="jQuery('#qtrans_imsg').hide();\n";
-	$content_append .="qtrans_editorInit3();\n";
-	$content_append .="}\n";
+	$content_append .=$q_config['js']['qtrans_editorInit'];
 	if($init_editor) {
 		$content_append .=$q_config['js']['qtrans_wpOnload'];
 	} else {

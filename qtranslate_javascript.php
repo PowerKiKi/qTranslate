@@ -206,8 +206,8 @@ function qtrans_initJS() {
 			var inst = tinyMCE.get(id);
 			var ta = document.getElementById(id);
 			if(inst && ! inst.isHidden()) {
-				htm = switchEditors.wpautop(text);
-				inst.execCommand('mceSetContent', null, htm);
+				text = switchEditors.wpautop(text);
+				inst.execCommand('mceSetContent', null, text);
 			} else {
 				ta.value = text;
 			}
@@ -216,6 +216,7 @@ function qtrans_initJS() {
 		
 	$q_config['js']['qtrans_disable_old_editor'] = "
 		jQuery('#content').removeClass('theEditor').css('display','none');
+		if(typeof tinyMCE!='undefined') tinyMCE.execCommand('mceRemoveControl', false, 'content');
 		";
 		
 	$q_config['js']['qtrans_tinyMCEOverload'] = "
@@ -231,6 +232,16 @@ function qtrans_initJS() {
 	$q_config['js']['qtrans_wpOnload'] = "
 		jQuery(document).ready(function() {
 			qtrans_editorInit();
+		});
+		";
+		
+	$q_config['js']['qtrans_editorInit'] = "
+		qtrans_editorInit = function() {
+			qtrans_editorInit1();
+			qtrans_editorInit2();
+			jQuery('#qtrans_imsg').hide();
+			qtrans_editorInit3();
+			
 			var h = wpCookies.getHash('TinyMCE_content_size');
 			var ta = document.getElementById('content');
 			edCanvas = document.getElementById('qtrans_textarea_content'); 
@@ -247,7 +258,7 @@ function qtrans_initJS() {
 				jQuery('#qtrans_textarea_content').show();
 				qtrans_hook_on_tinyMCE();
 			}
-		});
+		}
 		";
 	
 	$q_config['js']['qtrans_hook_on_tinyMCE'] = "
