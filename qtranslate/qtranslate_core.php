@@ -1,4 +1,5 @@
 <?php // encoding: utf-8
+
 /*  Copyright 2008  Qian Qin  (email : mail@qianqin.de)
 
 	This program is free software; you can redistribute it and/or modify
@@ -99,6 +100,7 @@ function qtrans_init() {
 			}
 			arsort($prefered_languages, SORT_NUMERIC);
 			foreach($prefered_languages as $language => $priority) {
+				if(strlen($language)>2) $language = substr($language,0,2);
 				if(qtrans_isEnabled($language)) {
 					if($q_config['hide_default_language'] && $language == $q_config['default_language']) break;
 					$target = qtrans_convertURL(get_option('home'),$language);
@@ -573,8 +575,8 @@ function qtrans_convertURL($url='', $lang='', $forceadmin = false) {
 		return $home."/".$url;
 	}
 	
-	// dirty hack for wp-login.php
-	if(strpos($url,"wp-login.php")!==false) {
+	// ignore wp internal links
+	if(preg_match("#^(wp-login.php|wp-signup.php|wp-register.php|wp-admin/)#", $url)) {
 		return $home."/".$url;
 	}
 	

@@ -97,6 +97,13 @@ function qtrans_getAvailableLanguages($text) {
 	return $result;
 }
 
+function qtrans_isAvailableIn($post_id, $language='') {
+	global $q_config;
+	if($language == '') $language = $q_config['default_language'];
+	$languages = qtrans_getAvailableLanguages(&get_post($post_id)->post_content);
+	return in_array($language,$languages);
+}
+
 function qtrans_convertDateFormatToStrftimeFormat($format) {
 	$mappings = array(
 		'd' => '%d',
@@ -226,6 +233,12 @@ function qtrans_getSortedLanguages($reverse = false) {
 	}
 	if($reverse) krsort($clean_languages);
 	return $clean_languages;
+}
+
+function qtrans_fixSearchUrl($id='adminbarsearch') {
+	echo "<script type=\"text/javascript\">\n// <![CDATA[\n";
+	echo "document.getElementById('adminbarsearch').action='".trailingslashit(qtrans_convertURL(get_home_url()))."';\n";
+	echo "// ]]>\n</script>\n";
 }
 
 ?>
