@@ -315,7 +315,6 @@ add_filter('wp_list_pages_excludes',	    'qtrans_excludePages');
 add_filter('comment_notification_text', 	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 add_filter('comment_notification_headers',	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 add_filter('comment_notification_subject',	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
-add_filter('wp_setup_nav_menu_item',		'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('admin_footer',					'qtrans_modifyExcerpt');
@@ -327,6 +326,8 @@ add_filter('redirect_canonical',			'qtrans_checkCanonical', 10, 2);
 // skip this filters if on backend
 if(!defined('WP_ADMIN')) {
 	add_filter('the_posts',					'qtrans_postsFilter');
+	add_filter('wp_setup_nav_menu_item',		'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
+	
 	// Compability with Default Widgets
 	qtrans_optionFilter();
 	add_filter('widget_title',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
