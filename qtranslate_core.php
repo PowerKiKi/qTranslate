@@ -111,7 +111,10 @@ function qtrans_init() {
 			}
 		}
 		$target = apply_filters("qtranslate_language_detect_redirect", $target);
-		if($target !== false) wp_redirect($target);
+		if($target !== false) {
+			wp_redirect($target);
+			exit();
+		}
 	}
 	
 	/*
