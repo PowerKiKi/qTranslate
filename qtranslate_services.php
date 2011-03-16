@@ -693,7 +693,7 @@ if(!empty($message)) {
 		<div id="submitbox" class="postbox">
 			<h3 class="hndle"><?php _e('Confirm Order', 'qtranslate'); ?></h3>
 			<div class="inside">
-				<p><?php _e('Press confirm your order.', 'qtranslate'); ?></p>
+				<p><?php _e('Please confirm your order.', 'qtranslate'); ?></p>
 				<div class="qs_submit"><a class="button-primary" onclick="sendorder();"><?php _e('Confirm Order', 'qtranslate'); ?></a></div>
 			</div>
 		</div>
@@ -760,7 +760,6 @@ if(!empty($message)) {
 			service_id: id, 
 			post_id: '<?php echo $post_id; ?>'}, 
 			function(response) {
-				jQuery('#qs_content_preview').val(response);
 				eval(response);
 		});
 	}
