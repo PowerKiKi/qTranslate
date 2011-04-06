@@ -26,8 +26,12 @@ function qtrans_header(){
 	$css .=".qtrans_flag span { display:none }\n";
 	$css .=".qtrans_flag { height:12px; width:18px; display:block }\n";
 	$css .=".qtrans_flag_and_text { padding-left:20px }\n";
+	$baseurl = WP_CONTENT_URL;
+	if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == '1' || $_SERVER['HTTPS'] == 'on')) {
+		$baseurl = preg_replace('#^http://#','https://', $baseurl);
+	}
 	foreach($q_config['enabled_languages'] as $language) {
-		$css .=".qtrans_flag_".$language." { background:url(".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
+		$css .=".qtrans_flag_".$language." { background:url(".$baseurl.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
 	}
 	$css .="</style>\n";
 	echo apply_filters('qtranslate_header_css',$css);
@@ -306,6 +310,7 @@ add_filter('the_permalink',					'qtrans_convertURL');
 add_filter('feed_link',						'qtrans_convertURL');
 add_filter('post_comments_feed_link',		'qtrans_convertURL');
 add_filter('tag_feed_link',					'qtrans_convertURL');
+add_filter('get_pagenum_link',				'qtrans_convertURL');
 add_filter('get_search_form',				'qtrans_fixSearchForm', 10, 1);
 add_filter('manage_posts_columns',			'qtrans_languageColumnHeader');
 add_filter('manage_posts_custom_column',	'qtrans_languageColumn');
