@@ -26,8 +26,12 @@ function qtrans_header(){
 	$css .=".qtrans_flag span { display:none }\n";
 	$css .=".qtrans_flag { height:12px; width:18px; display:block }\n";
 	$css .=".qtrans_flag_and_text { padding-left:20px }\n";
+	$baseurl = WP_CONTENT_URL;
+	if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == '1' || $_SERVER['HTTPS'] == 'on')) {
+		$baseurl = preg_replace('#^http://#','https://', $baseurl);
+	}
 	foreach($q_config['enabled_languages'] as $language) {
-		$css .=".qtrans_flag_".$language." { background:url(".WP_CONTENT_URL.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
+		$css .=".qtrans_flag_".$language." { background:url(".$baseurl.'/'.$q_config['flag_location'].$q_config['flag'][$language].") no-repeat }\n";
 	}
 	$css .="</style>\n";
 	echo apply_filters('qtranslate_header_css',$css);
@@ -196,10 +200,12 @@ function qtrans_esc_html($text) {
 	return qtrans_useDefaultLanguage($text);
 }
 
-function qtrans_useRawTitle($title, $raw_title = '') {
+function qtrans_useRawTitle($title, $raw_title = '', $context = 'save') {
 	if($raw_title=='') $raw_title = $title;
-	$raw_title = qtrans_useDefaultLanguage($raw_title);
-	$title = strip_tags($raw_title); 
+	if('save'==$context) {
+		$raw_title = qtrans_useDefaultLanguage($raw_title);
+		$title = remove_accents($raw_title);
+	}
 	return $title;
 }
 
@@ -249,7 +255,7 @@ add_action('wp_after_admin_bar_render',		'qtrans_fixSearchUrl');
 add_filter('the_content',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_excerpt',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
 add_filter('the_excerpt_rss',				'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);
-add_filter('sanitize_title',				'qtrans_useRawTitle',0, 2);
+add_filter('sanitize_title',				'qtrans_useRawTitle',0, 3);
 add_filter('comment_moderation_subject',	'qtrans_useDefaultLanguage',0);
 add_filter('comment_moderation_text',		'qtrans_useDefaultLanguage',0);
 add_filter('get_comment_date',				'qtrans_dateFromCommentForCurrentLanguage',0,2);
@@ -306,6 +312,7 @@ add_filter('the_permalink',					'qtrans_convertURL');
 add_filter('feed_link',						'qtrans_convertURL');
 add_filter('post_comments_feed_link',		'qtrans_convertURL');
 add_filter('tag_feed_link',					'qtrans_convertURL');
+add_filter('get_pagenum_link',				'qtrans_convertURL');
 add_filter('get_search_form',				'qtrans_fixSearchForm', 10, 1);
 add_filter('manage_posts_columns',			'qtrans_languageColumnHeader');
 add_filter('manage_posts_custom_column',	'qtrans_languageColumn');
@@ -315,7 +322,6 @@ add_filter('wp_list_pages_excludes',	    'qtrans_excludePages');
 add_filter('comment_notification_text', 	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 add_filter('comment_notification_headers',	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 add_filter('comment_notification_subject',	'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
-add_filter('wp_setup_nav_menu_item',		'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
 
 add_filter('the_editor',					'qtrans_modifyRichEditor');
 add_filter('admin_footer',					'qtrans_modifyExcerpt');
@@ -327,6 +333,8 @@ add_filter('redirect_canonical',			'qtrans_checkCanonical', 10, 2);
 // skip this filters if on backend
 if(!defined('WP_ADMIN')) {
 	add_filter('the_posts',					'qtrans_postsFilter');
+	add_filter('wp_setup_nav_menu_item',		'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage');
+	
 	// Compability with Default Widgets
 	qtrans_optionFilter();
 	add_filter('widget_title',				'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);

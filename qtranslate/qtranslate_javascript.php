@@ -256,6 +256,7 @@ function qtrans_initJS() {
 				// Activate TinyMCE if it's the user's default editor
 				jQuery('#content').hide();
 				jQuery('#qtrans_textarea_content').show();
+				jQuery('#qtrans_textarea_content').val(switchEditors.wpautop(jQuery('#qtrans_textarea_content').val()));
 				qtrans_hook_on_tinyMCE();
 			}
 		}

@@ -84,7 +84,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='') {
 					echo ' class="active"';
 				echo '><a href="'.qtrans_convertURL($url, $language).'"';
 				// set hreflang
-				echo ' hreflang="'.$language.'"';
+				echo ' hreflang="'.$language.'" title="'.$q_config['language_name'][$language].'"';
 				if($style=='image')
 					echo ' class="qtrans_flag qtrans_flag_'.$language.'"';
 				echo '><span';
@@ -116,7 +116,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='') {
 				if($language == $q_config['language'])
 					echo ' class="active"';
 				echo '><a href="'.qtrans_convertURL($url, $language).'"';
-				echo ' class="qtrans_flag_'.$language.' qtrans_flag_and_text"';
+				echo ' class="qtrans_flag_'.$language.' qtrans_flag_and_text" title="'.$q_config['language_name'][$language].'"';
 				echo '><span>'.$q_config['language_name'][$language].'</span></a></li>';
 			}
 			echo "</ul><div class=\"qtrans_widget_end\"></div>";
