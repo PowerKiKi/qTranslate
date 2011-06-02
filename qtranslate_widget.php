@@ -79,7 +79,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='') {
 		case 'dropdown':
 			echo '<ul class="qtrans_language_chooser" id="'.$id.'">';
 			foreach(qtrans_getSortedLanguages() as $language) {
-				$classes[] = array('lang_'.$language);
+				$classes = array('lang-'.$language);
 				if($language == $q_config['language'])
 					$classes[] = 'active';
 				echo '<li class='. implode(' ', $classes) .'><a href="'.qtrans_convertURL($url, $language).'"';
