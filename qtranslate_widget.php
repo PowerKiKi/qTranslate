@@ -82,7 +82,7 @@ function qtrans_generateLanguageSelectCode($style='', $id='') {
 				$classes = array('lang-'.$language);
 				if($language == $q_config['language'])
 					$classes[] = 'active';
-				echo '<li class='. implode(' ', $classes) .'><a href="'.qtrans_convertURL($url, $language).'"';
+				echo '<li class="'. implode(' ', $classes) .'"><a href="'.qtrans_convertURL($url, $language).'"';
 				// set hreflang
 				echo ' hreflang="'.$language.'" title="'.$q_config['language_name'][$language].'"';
 				if($style=='image')
