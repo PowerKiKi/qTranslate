@@ -268,7 +268,7 @@ function qtrans_initJS() {
 		qtrans_hook_on_tinyMCE = function(id) {
 			tinyMCEPreInit.mceInit[id].setup = function(ed) {
 				ed.onSaveContent.add(function(ed, o) {
-					qtrans_save(o.content);
+					qtrans_save(switchEditors.pre_wpautop(o.content));
 				});
 			};
 			tinyMCEPreInit.mceInit[id].elements = 'qtrans_textarea_'+id;
