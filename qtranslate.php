@@ -68,6 +68,9 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	zh_CN by silverfox
 	eo by Chuck Smith
 	pt_BR by Marcelo Paoli
+	ru by viaestvita
+	ro by ipuiu
+	sv by tobi
 	
 	Sponsored Features
 	==================
