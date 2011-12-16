@@ -84,9 +84,6 @@ function qtrans_optionFilter($do='enable') {
 
 function qtrans_adminHeader() {
 	echo "<style type=\"text/css\" media=\"screen\">\n";
-	echo ".edButton { cursor:pointer; display:block; float:right; height:18px; margin:5px 5px 0px 0px; padding:4px 5px 2px; border-width:1px; border-style:solid;";
-	echo	"-moz-border-radius: 3px 3px 0 0; -webkit-border-top-right-radius: 3px; -webkit-border-top-left-radius: 3px; -khtml-border-top-right-radius: 3px;";
-	echo	"-khtml-border-top-left-radius: 3px; border-top-right-radius: 3px; border-top-left-radius: 3px; background-color:#F1F1F1; border-color:#DFDFDF; color:#999999; }\n";
 	echo ".qtrans_title_input { border:0pt none; font-size:1.7em; outline-color:invert; outline-style:none; outline-width:medium; padding:0pt; width:100%; }\n";
 	echo ".qtrans_title_wrap { border-color:#CCCCCC; border-style:solid; border-width:1px; padding:2px 3px; }\n";
 	echo "#qtrans_textarea_content { padding:6px; border:0 none; line-height:150%; outline: none; margin:0pt; width:100%; -moz-box-sizing: border-box;";
@@ -94,7 +91,7 @@ function qtrans_adminHeader() {
 	echo ".qtrans_title { -moz-border-radius: 6px 6px 0 0;";
 	echo	"-webkit-border-top-right-radius: 6px; -webkit-border-top-left-radius: 6px; -khtml-border-top-right-radius: 6px; -khtml-border-top-left-radius: 6px;";
 	echo	"border-top-right-radius: 6px; border-top-left-radius: 6px; }\n";
-	echo "#edButtonPreview { margin-left:6px !important;}";
+	echo ".hide-if-no-js.wp-switch-editor.switch-tmce { margin-left:6px !important;}";
 	echo "#qtranslate_debug { width:100%; height:200px }";
 	echo "#postexcerpt textarea { height:4em; margin:0; width:98% }";
 	echo ".qtranslate_lang_div { float:right; height:12px; width:18px; padding:6px 5px 8px 5px; cursor:pointer }";
@@ -221,6 +218,13 @@ function qtrans_fixSearchForm($form) {
 	return $form;
 }
 
+function qtrans_fixAdminBar($wp_admin_bar) {
+	global $wp_admin_bar;
+	foreach($wp_admin_bar->get_nodes() as $node) {
+		$wp_admin_bar->add_node(qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($node));
+	}
+}
+
 // Hooks for Plugin compatibility
 
 function wpsupercache_supercache_dir($uri) {
@@ -249,6 +253,7 @@ add_action('widgets_init',					'qtrans_widget_init');
 add_action('plugins_loaded',				'qtrans_init', 2); 
 add_action('admin_head',					'qtrans_adminHeader');
 add_action('admin_menu',					'qtrans_adminMenu');
+add_action('wp_before_admin_bar_render',	'qtrans_fixAdminBar');
 add_action('wp_after_admin_bar_render',		'qtrans_fixSearchUrl');
 
 // Hooks (execution time critical filters) 

@@ -59,11 +59,11 @@ function qtrans_modifyRichEditor($old_content) {
 	}
 	// save callback hook
 		
-	preg_match("/<textarea[^>]*id='([^']+)'/",$old_content,$matches);
+	preg_match("/<textarea[^>]*id=\"([^']+)\"/",$old_content,$matches);
 	$id = $matches[1];
-	preg_match("/cols='([^']+)'/",$old_content,$matches);
+	preg_match("/cols=\"([^\"]+)\"/",$old_content,$matches);
 	$cols = $matches[1];
-	preg_match("/rows='([^']+)'/",$old_content,$matches);
+	preg_match("/rows=\"([^\"]+)\"/",$old_content,$matches);
 	$rows = $matches[1];
 	// don't do anything if not editing the content
 	if($id!="content") return $old_content;
@@ -84,10 +84,9 @@ function qtrans_modifyRichEditor($old_content) {
 	$content_append = "";
 	
 	// create editing field for selected languages
-	$old_content = substr($old_content,0,26)
-		."<textarea id='qtrans_textarea_".$id."' name='qtrans_textarea_".$id."' tabindex='2' rows='".$rows."' cols='".$cols."' style='display:none' onblur='qtrans_save(this.value);'></textarea>"
-		.substr($old_content,26);
-	
+	$qt_textarea = '<textarea id="qtrans_textarea_'.$id.'" name="qtrans_textarea_'.$id.'" tabindex="2" rows="'.$rows.'" cols="'.$cols.'" style="display:none" onblur="qtrans_save(this.value);"></textarea>';
+	$old_content = preg_replace('#(<textarea[^>]*>.*</textarea>)#', '$1'.$qt_textarea, $old_content);
+
 	// do some crazy js to alter the admin view
 	$content .="<script type=\"text/javascript\">\n// <![CDATA[\n";
 	$content .="function qtrans_editorInit1() {\n";
@@ -132,7 +131,7 @@ function qtrans_modifyRichEditor($old_content) {
 	if(!$init_editor) 	$content_append .= $q_config['js']['qtrans_disable_old_editor'];
 	
 	// show default language tab
-	$content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='edButton active';\n";
+	$content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='wp-switch-editor switch-tmce switch-html';\n";
 	// show default language
 	$content_append .="var text = document.getElementById('".$id."').value;\n";
 	$content_append .="qtrans_assign('qtrans_textarea_".$id."',qtrans_use('".$q_config['default_language']."',text));\n";
@@ -148,7 +147,7 @@ function qtrans_modifyRichEditor($old_content) {
 		$content_append .=$q_config['js']['qtrans_wpOnload'];
 	} else {
 		$content_append .="var qtmsg = document.getElementById('qtrans_imsg');\n";
-		$content_append .="var et = document.getElementById('editor-toolbar');\n";
+		$content_append .="var et = document.getElementById('wp-".$id."-editor-tools');\n";
 		$content_append .="et.parentNode.insertBefore(qtmsg, et);\n";
 	}
 	$content_append = apply_filters('qtranslate_modify_editor_js', $content_append);
@@ -343,12 +342,12 @@ function qtrans_insertTitleInput($language){
 function qtrans_createEditorToolbarButton($language, $id, $js_function = 'switchEditors.go', $label = ''){
 	global $q_config;
 	$html = "
-		var bc = document.getElementById('editor-toolbar');
-		var mb = document.getElementById('media-buttons');
+		var bc = document.getElementById('wp-".$id."-editor-tools');
+		var mb = document.getElementById('wp-".$id."-media-buttons');
 		var ls = document.createElement('a');
 		var l = document.createTextNode('".(($label==='')?$q_config['language_name'][$language]:$label)."');
 		ls.id = 'qtrans_select_".$language."';
-		ls.className = 'edButton';
+		ls.className = 'wp-switch-editor';
 		ls.onclick = function() { ".$js_function."('".$id."','".$language."'); };
 		ls.appendChild(l);
 		bc.insertBefore(ls,mb);
