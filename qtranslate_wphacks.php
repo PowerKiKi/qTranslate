@@ -74,12 +74,6 @@ function qtrans_modifyRichEditor($old_content) {
 		return $old_content;
 	}
 	
-	// fix wpautop bug
-	if($init_editor && has_filter('the_editor_content', 'wp_richedit_pre')) {
-		remove_filter('the_editor_content', 'wp_richedit_pre');
-		add_filter('the_editor_content', 'wp_htmledit_pre');
-	}
-	
 	$content = "";
 	$content_append = "";
 	

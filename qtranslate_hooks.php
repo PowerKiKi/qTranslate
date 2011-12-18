@@ -357,6 +357,7 @@ if(!defined('WP_ADMIN')) {
 	add_filter('single_tag_title',			'qtrans_useTermLib',0);
 	add_filter('single_cat_title',			'qtrans_useTermLib',0);
 	add_filter('the_category',				'qtrans_useTermLib',0);
+	add_filter('get_term',					'qtrans_useTermLib',0);
 	add_filter('get_terms',					'qtrans_useTermLib',0);
 	add_filter('get_category',				'qtrans_useTermLib',0);
 	add_filter('get_comment_author',		'qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage',0);
