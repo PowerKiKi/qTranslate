@@ -1,9 +1,9 @@
 === qTranslate ===
 Contributors: chineseleper
 Tags: multilingual, language, admin, tinymce, bilingual, widget, switcher, i18n, l10n, multilanguage, professional, translation, service, human
-Requires at least: 3.2.1
-Tested up to: 3.2.1
-Stable tag: 2.5.24
+Requires at least: 3.3
+Tested up to: 3.3
+Stable tag: 2.5.25
 Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
 Adds userfriendly multilingual content management and translation support into Wordpress.
@@ -14,7 +14,7 @@ Writing multilingual content is already hard enough, why make using a plugin eve
 
 qTranslate makes creation of multilingual content as easy as working with a single language. Here are some features:
 
-- qTranslate Services - Professional human and automated machine translation with two clicks
+- qTranslate Services - Professional human translation with two clicks
 - One-Click-Switching between the languages - Change the language as easy as switching between Visual and HTML
 - Language customizations without changing the .mo files - Use Quick-Tags instead for easy localization
 - Multilingual dates out of the box - Translates dates and time for you
