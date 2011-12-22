@@ -265,7 +265,7 @@ function qtrans_loadConfig() {
 	if(empty($url_mode)) $url_mode = $q_config['url_mode'];
 	if(!is_string($flag_location) || $flag_location==='') $flag_location = $q_config['flag_location'];
 	$detect_browser_language = qtrans_validateBool($detect_browser_language, $q_config['detect_browser_language']);
-	$hide_untranslated = qtrans_validateBool($hide_untranslated, $q_config['hide_untranslated']);
+	if(empty($hide_untranslated)) $hide_untranslated = $q_config['hide_untranslated'];
 	$auto_update_mo = qtrans_validateBool($auto_update_mo, $q_config['auto_update_mo']);
 	$hide_default_language = qtrans_validateBool($hide_default_language, $q_config['hide_default_language']);
 	
@@ -316,14 +316,11 @@ function qtrans_saveConfig() {
 	update_option('qtranslate_url_mode', $q_config['url_mode']);
 	update_option('qtranslate_term_name', $q_config['term_name']);
 	update_option('qtranslate_use_strftime', $q_config['use_strftime']);
+	update_option('qtranslate_hide_untranslated', $q_config['hide_untranslated']);
 	if($q_config['detect_browser_language'])
 		update_option('qtranslate_detect_browser_language', '1');
 	else
 		update_option('qtranslate_detect_browser_language', '0');
-	if($q_config['hide_untranslated'])
-		update_option('qtranslate_hide_untranslated', '1');
-	else
-		update_option('qtranslate_hide_untranslated', '0');
 	if($q_config['auto_update_mo'])
 		update_option('qtranslate_auto_update_mo', '1');
 	else
@@ -746,6 +743,9 @@ function qtrans_enableLanguage($lang) {
 
 function qtrans_use($lang, $text, $show_available=false) {
 	global $q_config;
+
+	if ($q_config['hide_untranslated'] == QT_UNTRANSLATED_DEFAULT) $show_available = false;
+	
 	// return full string if language is not enabled
 	if(!qtrans_isEnabled($lang)) return $text;
 	if(is_array($text)) {
@@ -787,11 +787,19 @@ function qtrans_use($lang, $text, $show_available=false) {
 	if(!$show_available){
 		// check if content is available in default language, if not return first language found. (prevent empty result)
 		if($lang!=$q_config['default_language'])
-			return "(".$q_config['language_name'][$q_config['default_language']].") ".qtrans_use($q_config['default_language'], $text, $show_available);
+		{
+			if ($q_config['hide_untranslated'] == QT_UNTRANSLATED_DEFAULT)
+				return qtrans_use($q_config['default_language'], $text, $show_available);
+			else 
+				return "(".$q_config['language_name'][$q_config['default_language']].") ".qtrans_use($q_config['default_language'], $text, $show_available);
+		}
 		foreach($content as $language => $lang_text) {
 			$lang_text = trim($lang_text);
 			if(!empty($lang_text)) {
-				return "(".$q_config['language_name'][$language].") ".$lang_text;
+				if ($q_config['hide_untranslated'] == QT_UNTRANSLATED_DEFAULT)
+					return $lang_text;
+				else 
+					return "(".$q_config['language_name'][$language].") ".$lang_text;
 			}
 		}
 	}

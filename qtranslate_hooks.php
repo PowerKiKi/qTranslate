@@ -118,7 +118,7 @@ function qtrans_useDefaultLanguage($content) {
 
 function qtrans_excludeUntranslatedPosts($where) {
 	global $q_config, $wpdb;
-	if($q_config['hide_untranslated'] && !is_singular()) {
+	if($q_config['hide_untranslated'] == QT_UNTRANSLATED_HIDE && !is_singular()) {
 		$where .= " AND $wpdb->posts.post_content LIKE '%<!--:".qtrans_getLanguage()."-->%'";
 	}
 	return $where;
@@ -127,7 +127,7 @@ function qtrans_excludeUntranslatedPosts($where) {
 function qtrans_excludePages($pages) {
 	global $wpdb, $q_config;
 	static $exclude = 0;
-	if(!$q_config['hide_untranslated']) return $pages;
+	if($q_config['hide_untranslated'] != QT_UNTRANSLATED_HIDE) return $pages;
 	if(is_array($exclude)) return array_merge($exclude, $pages);
 	$query = "SELECT id FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish' AND NOT ($wpdb->posts.post_content LIKE '%<!--:".qtrans_getLanguage()."-->%')" ;
 	$hide_pages = $wpdb->get_results($query);

@@ -224,7 +224,7 @@ function qtranslate_conf() {
 		qtrans_checkSetting('flag_location',			true, QT_URL);
 		qtrans_checkSetting('ignore_file_types',		true, QT_STRING);
 		qtrans_checkSetting('detect_browser_language',	true, QT_BOOLEAN);
-		qtrans_checkSetting('hide_untranslated',		true, QT_BOOLEAN);
+		qtrans_checkSetting('hide_untranslated',		true, QT_INTEGER);
 		qtrans_checkSetting('use_strftime',				true, QT_INTEGER);
 		qtrans_checkSetting('url_mode',					true, QT_INTEGER);
 		qtrans_checkSetting('auto_update_mo',			true, QT_BOOLEAN);
@@ -469,11 +469,13 @@ function qtranslate_conf() {
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php _e('Hide Untranslated Content', 'qtranslate');?></th>
+				<th scope="row"><?php _e('Untranslated Content', 'qtranslate');?></th>
 				<td>
-					<label for="hide_untranslated"><input type="checkbox" name="hide_untranslated" id="hide_untranslated" value="1"<?php echo ($q_config['hide_untranslated'])?' checked="checked"':''; ?>/> <?php _e('Hide Content which is not available for the selected language.', 'qtranslate'); ?></label>
-					<br/>
-					<?php _e('When checked, posts will be hidden if the content is not available for the selected language. If unchecked, a message will appear showing all the languages the content is available in.', 'qtranslate'); ?>
+					<fieldset><legend class="hidden"><?php _e('URL Modification Mode', 'qtranslate') ?></legend>
+						<label title="Hide untranslated"><input type="radio" name="hide_untranslated" value="<?php echo QT_UNTRANSLATED_HIDE; ?>" <?php echo ($q_config['hide_untranslated']==QT_UNTRANSLATED_HIDE)?"checked=\"checked\"":""; ?> /> <?php _e('Hide Content which is not available for the selected language.', 'qtranslate'); ?></label><br />
+						<label title="Show messages"><input type="radio" name="hide_untranslated" value="<?php echo QT_UNTRANSLATED_MESSAGE; ?>" <?php echo ($q_config['hide_untranslated']==QT_UNTRANSLATED_MESSAGE)?"checked=\"checked\"":""; ?> /> <?php _e('Display a message showing all the languages the content is available in.', 'qtranslate'); ?></label><br />
+						<label title="Show default language"><input type="radio" name="hide_untranslated" value="<?php echo QT_UNTRANSLATED_DEFAULT; ?>" <?php echo ($q_config['hide_untranslated']==QT_UNTRANSLATED_DEFAULT)?"checked=\"checked\"":""; ?> /> <?php _e('Display the content in default language (or the first available language)', 'qtranslate'); ?></label><br />
+					</fieldset><br/>
 					<?php _e('This function will not work correctly if you installed qTranslate on a blog with existing entries. In this case you will need to take a look at "Convert Database" under "Advanced Settings".', 'qtranslate'); ?>
 				</td>
 			</tr>
