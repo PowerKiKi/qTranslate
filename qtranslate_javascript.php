@@ -216,7 +216,7 @@ function qtrans_initJS() {
 		
 	$q_config['js']['qtrans_disable_old_editor'] = "
 		var waitForTinyMCE = window.setInterval(function() {
-				if(tinyMCE.get2('content')!=undefined) {
+				if(typeof(tinyMCE) !== 'undefined' && tinyMCE.get2('content')!=undefined) {
 					tinyMCE.get2('content').remove();
 					window.clearInterval(waitForTinyMCE);
 				}
@@ -232,8 +232,26 @@ function qtrans_initJS() {
 		}
 		
 		";
+		
+	$q_config['js']['qtrans_wpActiveEditorOverload'] = "
+		jQuery('.wp-editor-wrap').unbind('mousedown');
+		jQuery('.wp-editor-wrap').mousedown(function(e){
+			wpActiveEditor = 'qtrans_textarea_'+this.id.slice(3, -5);
+		});
+		";
 	
 	$q_config['js']['qtrans_wpOnload'] = "
+		if(typeof(wpOnload)!='undefined') wpOnload2 = wpOnload;
+		wpOnload = function() {
+			for(var i in tinyMCEPreInit.qtInit) {
+				var tmp = tinyMCEPreInit.qtInit[i];
+				tmp.id = 'qtrans_textarea_'+tmp.id;
+				try { quicktags( tmp ); } catch(e){}
+				jQuery('#ed_toolbar').hide();
+			}
+			if(typeof(wpOnload2)=='function') wpOnload2();
+		}
+		
 		jQuery(document).ready(function() {
 			qtrans_editorInit();
 		});

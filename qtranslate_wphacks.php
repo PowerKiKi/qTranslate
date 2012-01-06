@@ -133,8 +133,9 @@ function qtrans_modifyRichEditor($old_content) {
 	$content_append .="}\n";
 
 	$content_append .="function qtrans_editorInit3() {\n";
-	// make tinyMCE get the correct data
+	// make tinyMCE and quickbar get the correct data
 	$content_append .=$q_config['js']['qtrans_tinyMCEOverload'];
+	//$content_append .=$q_config['js']['qtrans_wpActiveEditorOverload'];
 	$content_append .="}\n";
 	$content_append .=$q_config['js']['qtrans_editorInit'];
 	if($init_editor) {
