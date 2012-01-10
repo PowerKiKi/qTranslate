@@ -236,10 +236,4 @@ function qtrans_getSortedLanguages($reverse = false) {
 	return $clean_languages;
 }
 
-function qtrans_fixSearchUrl($id='adminbarsearch') {
-	echo "<script type=\"text/javascript\">\n// <![CDATA[\n";
-	echo "document.getElementById('adminbarsearch').action='".trailingslashit(qtrans_convertURL(get_home_url()))."';\n";
-	echo "// ]]>\n</script>\n";
-}
-
 ?>
