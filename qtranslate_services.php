@@ -187,7 +187,7 @@ p.error a{color:#c00;}
 .qs_status { border:0 }
 .qs_no-bottom-border { border-bottom:0 !important }
 #submitboxcontainer p { margin:6px 6px ; }
-.qs_submit { text-align:right; background: #EAF2FA; border-top:1px solid #ddd; padding:6px }
+.qs_submit { text-align:right; padding:6px }
 <?php
 }
 
@@ -329,6 +329,7 @@ function qs_translate_box($post) {
 <?php
 		} else {
 			echo '<li>'.__('Please save your post first.','qtranslate').'</li>';
+			break;
 		}
 	}
 ?>
@@ -435,7 +436,7 @@ function qs_config_hook($request_uri) {
 	<tr valign="top">
 		<th scope="row" colspan="2">
 			<h4><?php _e('Service Configuration', 'qtranslate');?></h4>
-			<p class="description"><?php _e('Below, you will find configuration settings for qTranslate Service Providers, which are required for them to operate.', 'qtranslate'); ?></p>
+			<p class="description"><!--<?php _e('Below, you will find configuration settings for qTranslate Service Providers, which are required for them to operate.', 'qtranslate'); ?>--></p>
 		</th>
 	</tr>
 <?php
@@ -727,7 +728,7 @@ if(!empty($message)) {
 	<input type="hidden" name="service_id" value="<?php echo $_REQUEST['service_id']; ?>"/>
 	<input type="hidden" name="token" value="<?php echo $_REQUEST['token']; ?>"/>
 	<div id="submitboxcontainer" class="metabox-holder">
-		<div id="submitbox" class="postbox">
+		<div id="submitdiv" class="postbox">
 			<h3 class="hndle"><?php _e('Confirm Order', 'qtranslate'); ?></h3>
 			<div class="inside">
 				<p><?php _e('Please confirm your order.', 'qtranslate'); ?></p>
@@ -737,7 +738,7 @@ if(!empty($message)) {
 	</div>
 <?php else: ?>
 	<div id="submitboxcontainer" class="metabox-holder">
-		<div id="submitbox" class="postbox">
+		<div id="submitdiv" class="postbox">
 			<h3 class="hndle"><?php _e('Request Translation', 'qtranslate'); ?></h3>
 			<div class="inside request">
 				<noscript><?php _e('Javascript is required for qTranslate Services', 'qtranslate'); ?></noscript>
@@ -789,7 +790,7 @@ if(!empty($message)) {
 <script type="text/javascript">
 	function chooseservice(id) {
 		jQuery('#qs_service_'+id).attr('checked','checked');
-		jQuery('#submitbox .request').html('<?php _e('<p><img src="images/wpspin_light.gif"> Getting Quote...</p>', 'qtranslate'); ?>');
+		jQuery('#submitdiv .request').html('<?php _e('<p><img src="images/wpspin_light.gif"> Getting Quote...</p>', 'qtranslate'); ?>');
 		jQuery.post(ajaxurl, {
 			action: 'qs_quote',
 			translate_from: '<?php echo $translate_from; ?>',
@@ -809,7 +810,8 @@ if(!empty($message)) {
 </script>
 		</div>
 	</div>
-	<div class="postbox">
+	<div class="postbox closed">
+		<div class="handlediv" title="<?php _e('Click to toggle'); ?>" onclick="jQuery(this).parent().removeClass('closed');jQuery(this).hide();"><br></div>
 		<h3 class="hndle"><?php _e('Review Article', 'qtranslate'); ?></h3>
 		<div class="inside">
 			<textarea name="qs_content_preview" id="qs_content_preview" readonly="readonly"><?php echo $post_content; ?></textarea>
@@ -831,7 +833,8 @@ if(!empty($message)) {
 
 function qs_quote() {
 	global $q_config;
-	$mode = $_POST['mode'];
+	$mode = 'full';
+	if(isset($_POST['mode'])) $mode = $_POST['mode'];
 	if($mode!='price_only') $mode = 'full';
 	$service_id = $_POST['service_id'];
 	$translate_from = $_POST['translate_from'];
@@ -879,7 +882,7 @@ function qs_quote() {
 		$content .= '</p>';
 	}
 	if($mode == 'full') {
-		echo "jQuery('#submitbox .request').html('";
+		echo "jQuery('#submitdiv .request').html('";
 		echo $content;
 		echo "');";
 	} else if($mode == 'price_only') {
