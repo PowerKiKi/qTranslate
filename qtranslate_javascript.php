@@ -216,7 +216,7 @@ function qtrans_initJS() {
 		
 	$q_config['js']['qtrans_disable_old_editor'] = "
 		var waitForTinyMCE = window.setInterval(function() {
-				if(typeof(tinyMCE) !== 'undefined' && tinyMCE.get2('content')!=undefined) {
+				if(typeof(tinyMCE) !== 'undefined' && typeof(tinyMCE.get2) == 'function' && tinyMCE.get2('content')!=undefined) {
 					tinyMCE.get2('content').remove();
 					window.clearInterval(waitForTinyMCE);
 				}
