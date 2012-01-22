@@ -74,6 +74,11 @@ function qtrans_modifyRichEditor($old_content) {
 		return $old_content;
 	}
 	
+	// remove wpautop
+	if('html' != wp_default_editor()) {
+		remove_filter('the_editor_content', 'wp_richedit_pre');
+	}
+	
 	$content = "";
 	$content_append = "";
 	
