@@ -254,7 +254,6 @@ add_action('plugins_loaded',				'qtrans_init', 2);
 add_action('admin_head',					'qtrans_adminHeader');
 add_action('admin_menu',					'qtrans_adminMenu');
 add_action('wp_before_admin_bar_render',	'qtrans_fixAdminBar');
-add_action('wp_after_admin_bar_render',		'qtrans_fixSearchUrl');
 
 // Hooks (execution time critical filters) 
 add_filter('the_content',					'qtrans_useCurrentLanguageIfNotFoundShowAvailable', 0);

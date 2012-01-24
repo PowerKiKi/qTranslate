@@ -216,7 +216,7 @@ function qtrans_initJS() {
 		
 	$q_config['js']['qtrans_disable_old_editor'] = "
 		var waitForTinyMCE = window.setInterval(function() {
-				if(tinyMCE.get2('content')!=undefined) {
+				if(typeof(tinyMCE) !== 'undefined' && typeof(tinyMCE.get2) == 'function' && tinyMCE.get2('content')!=undefined) {
 					tinyMCE.get2('content').remove();
 					window.clearInterval(waitForTinyMCE);
 				}
@@ -232,8 +232,36 @@ function qtrans_initJS() {
 		}
 		
 		";
+		
+	$q_config['js']['qtrans_wpActiveEditorOverload'] = "
+		jQuery('.wp-editor-wrap').unbind('mousedown');
+		jQuery('.wp-editor-wrap').mousedown(function(e){
+			wpActiveEditor = 'qtrans_textarea_'+this.id.slice(3, -5);
+		});
+		";
 	
 	$q_config['js']['qtrans_wpOnload'] = "
+		if(typeof(wpOnload)!='undefined') wpOnload2 = wpOnload;
+		wpOnload = function() {
+			for(var i in tinyMCEPreInit.qtInit) {
+				var tmp = tinyMCEPreInit.qtInit[i];
+				tmp.id = 'qtrans_textarea_'+tmp.id;
+				try { quicktags( tmp ); } catch(e){}
+				jQuery('#ed_toolbar').hide();
+			}
+			// remove hook so tinymce doesn't load for content
+			var hook = tinyMCEPreInit.mceInit['content']
+			hook.elements='qtrans_textarea_content';
+			delete tinyMCEPreInit.mceInit['content'];
+			tinyMCEPreInit.mceInit['qtrans_textarea_content'] = hook;
+			
+			// fix html for tinymce
+			if('html' != getUserSetting( 'editor' )) {
+				jQuery('#content').val(switchEditors.wpautop(jQuery('#content').val()));
+			}
+			if(typeof(wpOnload2)=='function') wpOnload2();
+		}
+		
 		jQuery(document).ready(function() {
 			qtrans_editorInit();
 		});
@@ -248,7 +276,6 @@ function qtrans_initJS() {
 			
 			var h = wpCookies.getHash('TinyMCE_content_size');
 			var ta = document.getElementById('content');
-			edCanvas = document.getElementById('qtrans_textarea_content'); 
 			
 			jQuery('#content').hide();
 			if ( getUserSetting( 'editor' ) == 'html' ) {
@@ -258,8 +285,7 @@ function qtrans_initJS() {
 			} else {
 				// Activate TinyMCE if it's the user's default editor
 				jQuery('#qtrans_textarea_content').show();
-				jQuery('#qtrans_textarea_content').val(jQuery('#qtrans_textarea_content').val());
-				qtrans_hook_on_tinyMCE('content');
+				qtrans_hook_on_tinyMCE('qtrans_textarea_content');
 			}
 		}
 		";
@@ -271,8 +297,7 @@ function qtrans_initJS() {
 					qtrans_save(switchEditors.pre_wpautop(o.content));
 				});
 			};
-			tinyMCEPreInit.mceInit[id].elements = 'qtrans_textarea_'+id;
-			ed = new tinymce.Editor('qtrans_textarea_'+id, tinyMCEPreInit.mceInit[id]);
+			ed = new tinymce.Editor(id, tinyMCEPreInit.mceInit[id]);
 			ed.render();
 		}
 		";
@@ -362,12 +387,12 @@ function qtrans_initJS() {
 					return false;
 				if ( typeof(QTags) != 'undefined' )
 					QTags.closeAllTags(id);
-				if ( tinyMCEPreInit.mceInit[id] && tinyMCEPreInit.mceInit[id].wpautop )
+				if ( tinyMCEPreInit.mceInit['qtrans_textarea_'+id] && tinyMCEPreInit.mceInit['qtrans_textarea_'+id].wpautop )
 					vta.value = this.wpautop(qtrans_use(qtrans_get_active_language(),ta.value));
 				if (inst) {
 					inst.show();
 				} else {
-					qtrans_hook_on_tinyMCE(id);
+					qtrans_hook_on_tinyMCE('qtrans_textarea_'+id);
 				}
 				
 				dom.removeClass(wrap_id, 'html-active');

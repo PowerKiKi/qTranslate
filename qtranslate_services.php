@@ -22,6 +22,16 @@
 // generate public key
 $qs_public_key = '-----BEGIN PUBLIC KEY-----|MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDNccmB4Up9V9+vD5kWWiE6zpRV|m7y1sdFihreycdpmu3aPjKooG5LWUbTTyc993nTxV71SKuuYdkPzu5JxniAsI2N0|7DsySZ/bQ2/BEANNwJD3pmz4NmIHgIeNaUze/tvTZq6m+FTVHSvEqAaXJIsQbO19|HeegbfEpmCj1d/CgOwIDAQAB|-----END PUBLIC KEY-----|';
 
+// OpenSSL functions used
+$qs_openssl_functions_used = array(
+	'openssl_pkey_new',
+	'openssl_pkey_export',
+	'openssl_pkey_get_details',
+	'openssl_seal',
+	'openssl_open',
+	'openssl_free_key'
+	);
+
 // check schedule
 if (!wp_next_scheduled('qs_cron_hook')) {
 	wp_schedule_event( time(), 'hourly', 'qs_cron_hook' );
@@ -177,7 +187,7 @@ p.error a{color:#c00;}
 .qs_status { border:0 }
 .qs_no-bottom-border { border-bottom:0 !important }
 #submitboxcontainer p { margin:6px 6px ; }
-.qs_submit { text-align:right; background: #EAF2FA; border-top:1px solid #ddd; padding:6px }
+.qs_submit { text-align:right; padding:6px }
 <?php
 }
 
@@ -185,10 +195,18 @@ function qs_load() {
 	global $q_config, $qs_public_key;
 	$qtranslate_services = get_option('qtranslate_qtranslate_services');
 	$qtranslate_services = qtrans_validateBool($qtranslate_services, $q_config['qtranslate_services']);
-	$q_config['qtranslate_services'] = $qtranslate_services && function_exists('openssl_get_publickey');
+	$q_config['qtranslate_services'] = $qtranslate_services && qs_isOpenSSLAvailable();
 	if($q_config['qtranslate_services'] && is_string($qs_public_key)) {
 		$qs_public_key = openssl_get_publickey(join("\n",explode("|",$qs_public_key)));
 	}
+}
+
+function qs_isOpenSSLAvailable() {
+	global $qs_openssl_functions_used;
+	foreach($qs_openssl_functions_used as $function) {
+		if(!function_exists($function)) return false;
+	}
+	return true;
 }
 
 function qs_init() {
@@ -301,17 +319,38 @@ function qs_translate_box($post) {
 ?>
 	<ul>
 <?php
+	$from = $q_config['default_language'];
+	$to = '';
 	foreach($languages as $language) {
+		if($language!=$from) $to = $language;
 		if(isset($_REQUEST['post'])) {
 ?>
-			<li><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]; ?>" alt="<?php echo $q_config['language_name'][$language]; ?>"> <a href="edit.php?page=qtranslate_services&post=<?php echo intval($_REQUEST['post']); ?>&target_language=<?php echo $language; ?>"><?php echo $q_config['language_name'][$language]; ?></a></li>
+			<li><img src="<?php echo trailingslashit(WP_CONTENT_URL).$q_config['flag_location'].$q_config['flag'][$language]; ?>" alt="<?php echo $q_config['language_name'][$language]; ?>"> <a href="edit.php?page=qtranslate_services&post=<?php echo intval($_REQUEST['post']); ?>&target_language=<?php echo $language; ?>"><?php echo $q_config['language_name'][$language]; ?> <span class="qsprice"></span></a></li>
 <?php
 		} else {
 			echo '<li>'.__('Please save your post first.','qtranslate').'</li>';
+			break;
 		}
 	}
 ?>
 	</ul>
+	<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function() {
+		jQuery.post(ajaxurl, {
+			action: 'qs_quote',
+			mode: 'price_only',
+			translate_from: '<?php echo $from; ?>',
+			translate_to: '<?php echo $to; ?>',
+			service_id: 5, 
+			post_id: '<?php echo intval($_REQUEST['post']); ?>'}, 
+			function(response) {
+				eval(response);
+		})
+	});
+	// ]]>
+	</script>
+
 <?php
 }
 
@@ -333,11 +372,10 @@ function qs_config_hook($request_uri) {
 	<tr>
 		<th scope="row"><?php _e('qTranslate Services', 'qtranslate') ?></th>
 		<td>
-			<?php if(!function_exists('openssl_get_publickey')) { printf(__('<div id="message" class="error fade"><p>qTranslate Services could not load <a href="%s">OpenSSL</a>!</p></div>'), 'http://www.php.net/manual/book.openssl.php'); } ?>
+			<?php if(!qs_isOpenSSLAvailable()) { printf(__('<div id="message" class="error fade"><p>qTranslate Services could not load <a href="%s">OpenSSL</a>!</p></div>'), 'http://www.php.net/manual/book.openssl.php'); } ?>
 			<label for="qtranslate_services"><input type="checkbox" name="qtranslate_services" id="qtranslate_services" value="1"<?php echo ($q_config['qtranslate_services'])?' checked="checked"':''; ?>/> <?php _e('Enable qTranslate Services', 'qtranslate'); ?></label>
 			<br/>
-			<?php _e('With qTranslate Services, you will be able to use professional human translation services with a few clicks. (Requires OpenSSL)', 'qtranslate'); ?><br />
-			<?php _e('Save after enabling to see more Configuration options.', 'qtranslate'); ?>
+			<?php _e('With qTranslate Services, you will be able to use professional human translation services with a few clicks.', 'qtranslate'); ?><br />
 		</td>
 	</tr>
 <?php 
@@ -398,7 +436,7 @@ function qs_config_hook($request_uri) {
 	<tr valign="top">
 		<th scope="row" colspan="2">
 			<h4><?php _e('Service Configuration', 'qtranslate');?></h4>
-			<p class="description"><?php _e('Below, you will find configuration settings for qTranslate Service Providers, which are required for them to operate.', 'qtranslate'); ?></p>
+			<p class="description"><!--<?php _e('Below, you will find configuration settings for qTranslate Service Providers, which are required for them to operate.', 'qtranslate'); ?>--></p>
 		</th>
 	</tr>
 <?php
@@ -690,7 +728,7 @@ if(!empty($message)) {
 	<input type="hidden" name="service_id" value="<?php echo $_REQUEST['service_id']; ?>"/>
 	<input type="hidden" name="token" value="<?php echo $_REQUEST['token']; ?>"/>
 	<div id="submitboxcontainer" class="metabox-holder">
-		<div id="submitbox" class="postbox">
+		<div id="submitdiv" class="postbox">
 			<h3 class="hndle"><?php _e('Confirm Order', 'qtranslate'); ?></h3>
 			<div class="inside">
 				<p><?php _e('Please confirm your order.', 'qtranslate'); ?></p>
@@ -700,7 +738,7 @@ if(!empty($message)) {
 	</div>
 <?php else: ?>
 	<div id="submitboxcontainer" class="metabox-holder">
-		<div id="submitbox" class="postbox">
+		<div id="submitdiv" class="postbox">
 			<h3 class="hndle"><?php _e('Request Translation', 'qtranslate'); ?></h3>
 			<div class="inside request">
 				<noscript><?php _e('Javascript is required for qTranslate Services', 'qtranslate'); ?></noscript>
@@ -752,7 +790,7 @@ if(!empty($message)) {
 <script type="text/javascript">
 	function chooseservice(id) {
 		jQuery('#qs_service_'+id).attr('checked','checked');
-		jQuery('#submitbox .request').html('<?php _e('<p><img src="images/wpspin_light.gif"> Getting Quote...</p>', 'qtranslate'); ?>');
+		jQuery('#submitdiv .request').html('<?php _e('<p><img src="images/wpspin_light.gif"> Getting Quote...</p>', 'qtranslate'); ?>');
 		jQuery.post(ajaxurl, {
 			action: 'qs_quote',
 			translate_from: '<?php echo $translate_from; ?>',
@@ -772,7 +810,8 @@ if(!empty($message)) {
 </script>
 		</div>
 	</div>
-	<div class="postbox">
+	<div class="postbox closed">
+		<div class="handlediv" title="<?php _e('Click to toggle'); ?>" onclick="jQuery(this).parent().removeClass('closed');jQuery(this).hide();"><br></div>
 		<h3 class="hndle"><?php _e('Review Article', 'qtranslate'); ?></h3>
 		<div class="inside">
 			<textarea name="qs_content_preview" id="qs_content_preview" readonly="readonly"><?php echo $post_content; ?></textarea>
@@ -794,6 +833,9 @@ if(!empty($message)) {
 
 function qs_quote() {
 	global $q_config;
+	$mode = 'full';
+	if(isset($_POST['mode'])) $mode = $_POST['mode'];
+	if($mode!='price_only') $mode = 'full';
 	$service_id = $_POST['service_id'];
 	$translate_from = $_POST['translate_from'];
 	$translate_to = $_POST['translate_to'];
@@ -817,6 +859,7 @@ function qs_quote() {
 	$answer = qs_queryQS(QS_QUOTE, $request);
 	$price = __('unavailable', 'qtranslate');
 	$currency = '';
+	$short = '';
 	if(isset($answer['price'])) {
 		if($answer['price'] == 0) {
 			$price = __('free', 'qtranslate');
@@ -827,6 +870,7 @@ function qs_quote() {
 			$currency = $answer['currency'];
 		}
 		$content = sprintf(__('<p>Price: %1$s %2$s</p>','qtranslate'), $currency, $price);
+		$short = sprintf(__('~ %1$s %2$s','qtranslate'), $currency, $price);
 		if(!empty($answer['paypalurl'])) {
 			$content .= '<div class="qs_submit"><a href="'.$answer['paypalurl'].'"><img src="https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image&locale='.$q_config['locale'][$q_config['language']].'"></a></div>';
 		} else {
@@ -837,9 +881,15 @@ function qs_quote() {
 		if(isset($answer['error'])) $content .= '<br>'.$answer['message'];
 		$content .= '</p>';
 	}
-	echo "jQuery('#submitbox .request').html('";
-	echo $content;
-	echo "');";
+	if($mode == 'full') {
+		echo "jQuery('#submitdiv .request').html('";
+		echo $content;
+		echo "');";
+	} else if($mode == 'price_only') {
+		echo "jQuery('.qsprice').html('";
+		echo $short;
+		echo "');";
+	}
 	die();
 }
 
