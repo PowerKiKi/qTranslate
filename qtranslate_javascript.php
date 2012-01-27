@@ -257,7 +257,16 @@ function qtrans_initJS() {
 			
 			// fix html for tinymce
 			if('html' != getUserSetting( 'editor' )) {
-				jQuery('#content').val(switchEditors.wpautop(jQuery('#content').val()));
+				var ta = document.getElementById('content');
+				var texts = qtrans_split(ta.value);
+				var content = '';
+	";
+	foreach($q_config['enabled_languages'] as $language)
+		$q_config['js']['qtrans_wpOnload'].= "
+				content = qtrans_integrate('".$language."', switchEditors.wpautop(texts['".$language."']), content);
+			";
+	$q_config['js']['qtrans_wpOnload'].= "
+				ta.value = content;
 			}
 			if(typeof(wpOnload2)=='function') wpOnload2();
 		}
@@ -275,7 +284,6 @@ function qtrans_initJS() {
 			qtrans_editorInit3();
 			
 			var h = wpCookies.getHash('TinyMCE_content_size');
-			var ta = document.getElementById('content');
 			
 			jQuery('#content').hide();
 			if ( getUserSetting( 'editor' ) == 'html' ) {
