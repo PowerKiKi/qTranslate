@@ -217,7 +217,9 @@ function qtrans_initJS() {
 	$q_config['js']['qtrans_disable_old_editor'] = "
 		var waitForTinyMCE = window.setInterval(function() {
 				if(typeof(tinyMCE) !== 'undefined' && typeof(tinyMCE.get2) == 'function' && tinyMCE.get2('content')!=undefined) {
+					content=jQuery('#content').val();
 					tinyMCE.get2('content').remove();
+					jQuery('#content').val(content);
 					window.clearInterval(waitForTinyMCE);
 				}
 			}, 250);
@@ -302,7 +304,9 @@ function qtrans_initJS() {
 		qtrans_hook_on_tinyMCE = function(id) {
 			tinyMCEPreInit.mceInit[id].setup = function(ed) {
 				ed.onSaveContent.add(function(ed, o) {
-					qtrans_save(switchEditors.pre_wpautop(o.content));
+					if (!ed.isHidden())  {
+						qtrans_save(switchEditors.pre_wpautop(o.content));
+					}
 				});
 			};
 			ed = new tinymce.Editor(id, tinyMCEPreInit.mceInit[id]);

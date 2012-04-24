@@ -88,7 +88,6 @@ function qtrans_modifyRichEditor($old_content) {
 
 	// do some crazy js to alter the admin view
 	$content .="<script type=\"text/javascript\">\n// <![CDATA[\n";
-	$content .="function qtrans_editorInit1() {\n";
 	
 	// include needed js functions
 	$content .= $q_config['js']['qtrans_is_array'];
@@ -96,13 +95,15 @@ function qtrans_modifyRichEditor($old_content) {
 	$content .= $q_config['js']['qtrans_split'];
 	$content .= $q_config['js']['qtrans_integrate'];
 	$content .= $q_config['js']['qtrans_use'];
-	$content .= $q_config['js']['qtrans_switch'];
 	$content .= $q_config['js']['qtrans_assign'];
 	$content .= $q_config['js']['qtrans_save'];
 	$content .= $q_config['js']['qtrans_integrate_title'];
 	$content .= $q_config['js']['qtrans_get_active_language'];
 	$content .= $q_config['js']['qtrans_hook_on_tinyMCE'];
 
+	$content .="function qtrans_editorInit1() {\n";
+	$content .= $q_config['js']['qtrans_switch'];
+	
 	// insert language, visual and html buttons
 	$el = qtrans_getSortedLanguages();
 	foreach($el as $language) {
