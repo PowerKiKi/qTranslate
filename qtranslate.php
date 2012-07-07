@@ -3,13 +3,13 @@
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. For Problems visit the <a href="http://www.qianqin.de/qtranslate/forum/">Support Forum</a>.
-Version: 2.5.30
+Version: 2.5.31
 Author: Qian Qin
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher, professional, human, translation, service
 */
 /*
-	Flags in flags directory are made by Luc Balemans and downloaded from
+	Most flags in flags directory are made by Luc Balemans and downloaded from
 	FOTW Flags Of The World website at http://flagspot.net/flags/
 	(http://www.crwflags.com/FOTW/FLAGS/wflags.html)
 */
@@ -45,6 +45,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 	vi by hathhai
 	ar by Mohamed Magdy
 	pt by netolazaro
+	gl by Andrés Bott
 	
 	Plugin Translation Contributers
 	===============================
@@ -86,7 +87,7 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 
 // qTranslate Editor will only activated for the given version of Wordpress.
 // Can be changed to use with other versions but might cause problems and/or data loss!
-define('QT_SUPPORTED_WP_VERSION', '3.4');
+define('QT_SUPPORTED_WP_VERSION', '3.4.1');
 define('QT_STRING',		1);
 define('QT_BOOLEAN',	2);
 define('QT_INTEGER',	3);
@@ -145,6 +146,7 @@ $q_config['pre_domain']['vi'] = "vi";
 $q_config['pre_domain']['ar'] = "ar";
 $q_config['pre_domain']['pt'] = "pt";
 $q_config['pre_domain']['pl'] = "pl";
+$q_config['pre_domain']['gl'] = "gl";
 
 // Names for languages in the corresponding language, add more if needed
 $q_config['language_name']['de'] = "Deutsch";
@@ -163,6 +165,7 @@ $q_config['language_name']['vi'] = "Tiếng Việt";
 $q_config['language_name']['ar'] = "العربية";
 $q_config['language_name']['pt'] = "Português";
 $q_config['language_name']['pl'] = "Polski";
+$q_config['language_name']['gl'] = "galego";
 
 // Locales for languages
 // see locale -a for available locales
@@ -182,6 +185,7 @@ $q_config['locale']['vi'] = "vi";
 $q_config['locale']['ar'] = "ar";
 $q_config['locale']['pt'] = "pt_BR";
 $q_config['locale']['pl'] = "pl_PL";
+$q_config['locale']['gl'] = "gl_ES";
 
 // Language not available messages
 // %LANG:<normal_seperator>:<last_seperator>% generates a list of languages seperated by <normal_seperator> except for the last one, where <last_seperator> will be used instead.
@@ -201,6 +205,7 @@ $q_config['not_available']['vi'] = "Rất tiếc, mục này chỉ tồn tại �
 $q_config['not_available']['ar'] = "عفوا، هذه المدخلة موجودة فقط في %LANG:, : و %.";
 $q_config['not_available']['pt'] = "Desculpe-nos, mas este texto esta apenas disponível em %LANG:, : y %.";
 $q_config['not_available']['pl'] = "Przepraszamy, ten wpis jest dostępny tylko w języku %LANG:, : i %.";
+$q_config['not_available']['gl'] = "Sentímolo moito, ista entrada atopase unicamente en %LANG;,: e %.";
 
 // qTranslate Services
 $q_config['qtranslate_services'] = false;
@@ -225,6 +230,7 @@ $q_config['date_format']['vi'] = '%d/%m/%Y';
 $q_config['date_format']['ar'] = '%d/%m/%Y';
 $q_config['date_format']['pt'] = '%d de %B de %Y';
 $q_config['date_format']['pl'] = '%d/%m/%y';
+$q_config['date_format']['gl'] = '%d de %B de %Y';
 
 $q_config['time_format']['en'] = '%I:%M %p';
 $q_config['time_format']['de'] = '%H:%M';
@@ -242,6 +248,7 @@ $q_config['time_format']['vi'] = '%H:%M';
 $q_config['time_format']['ar'] = '%H:%M';
 $q_config['time_format']['pt'] = '%H:%M hrs.';
 $q_config['time_format']['pl'] = '%H:%M';
+$q_config['time_format']['gl'] = '%H:%M hrs.';
 
 // Flag images configuration
 // Look in /flags/ directory for a huge list of flags for usage
@@ -260,7 +267,8 @@ $q_config['flag']['es'] = 'es.png';
 $q_config['flag']['vi'] = 'vn.png';
 $q_config['flag']['ar'] = 'arle.png';
 $q_config['flag']['pt'] = 'br.png';
-$q_config['flag']['pl'] = 'pl.png';
+$q_config['flag']['pt'] = 'br.png';
+$q_config['flag']['gl'] = 'galego.png';
 
 // Location of flags (needs trailing slash!)
 $q_config['flag_location'] = 'plugins/qtranslate/flags/';

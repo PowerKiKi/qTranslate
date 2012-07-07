@@ -28,7 +28,7 @@ All you need to do is activate the plugin and start writing the content!
 
 For more Information visit the [Plugin Homepage](http://www.qianqin.de/qtranslate/)
 
-Flags in flags directory are made by Luc Balemans and downloaded from FOTW Flags Of The World website at
+Most flags in flags directory are made by Luc Balemans and downloaded from FOTW Flags Of The World website at
 [http://flagspot.net/flags/](http://www.crwflags.com/FOTW/FLAGS/wflags.html)
 
 == Installation ==
