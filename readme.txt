@@ -1,9 +1,9 @@
 === qTranslate ===
 Contributors: chineseleper
 Tags: multilingual, language, admin, tinymce, bilingual, widget, switcher, i18n, l10n, multilanguage, professional, translation, service, human
-Requires at least: 3.3.1
-Tested up to: 3.3.1
-Stable tag: 2.5.28
+Requires at least: 3.4.1
+Tested up to: 3.4.1
+Stable tag: 2.5.31
 Donate Link: http://www.qianqin.de/qtranslate/contribute/
 
 Adds userfriendly multilingual content management and translation support into Wordpress.
@@ -28,7 +28,7 @@ All you need to do is activate the plugin and start writing the content!
 
 For more Information visit the [Plugin Homepage](http://www.qianqin.de/qtranslate/)
 
-Flags in flags directory are made by Luc Balemans and downloaded from FOTW Flags Of The World website at
+Most flags in flags directory are made by Luc Balemans and downloaded from FOTW Flags Of The World website at
 [http://flagspot.net/flags/](http://www.crwflags.com/FOTW/FLAGS/wflags.html)
 
 == Installation ==
