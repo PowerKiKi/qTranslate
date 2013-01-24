@@ -242,7 +242,7 @@ function qtrans_initJS() {
 			}
 			// remove hook so tinymce doesn't load for content
 			var hook = tinyMCEPreInit.mceInit['content']
-			hook.elements='qtrans_textarea_content';
+			hook.elements='hook-to-nothing';
 			delete tinyMCEPreInit.mceInit['content'];
 			tinyMCEPreInit.mceInit['qtrans_textarea_content'] = hook;
 			
@@ -275,7 +275,7 @@ function qtrans_initJS() {
 				// correct p for tinymce
 				jQuery('#qtrans_textarea_content').val(switchEditors.wpautop(jQuery('#qtrans_textarea_content').val()))
 				// let wp3.5 autohook take care of init
-				//qtrans_hook_on_tinyMCE('qtrans_textarea_content');
+				qtrans_hook_on_tinyMCE('qtrans_textarea_content');
 			}
 		}
 		";
