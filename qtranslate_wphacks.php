@@ -63,8 +63,6 @@ function qtrans_modifyRichEditor($old_content) {
 	$id = $matches[1];
 	preg_match("/cols=\"([^\"]+)\"/",$old_content,$matches);
 	$cols = $matches[1];
-	preg_match("/rows=\"([^\"]+)\"/",$old_content,$matches);
-	$rows = $matches[1];
 	// don't do anything if not editing the content
 	if($id!="content") return $old_content;
 	
@@ -83,7 +81,7 @@ function qtrans_modifyRichEditor($old_content) {
 	$content_append = "";
 	
 	// create editing field for selected languages
-	$qt_textarea = '<textarea id="qtrans_textarea_'.$id.'" name="qtrans_textarea_'.$id.'" tabindex="2" rows="'.$rows.'" cols="'.$cols.'" style="display:none" onblur="qtrans_save(this.value);"></textarea>';
+	$qt_textarea = '<textarea id="qtrans_textarea_'.$id.'" name="qtrans_textarea_'.$id.'" tabindex="2" cols="'.$cols.'" style="display:none" onblur="qtrans_save(this.value);"></textarea>';
 	$old_content = preg_replace('#(<textarea[^>]*>.*</textarea>)#', '$1'.$qt_textarea, $old_content);
 
 	// do some crazy js to alter the admin view
@@ -123,12 +121,7 @@ function qtrans_modifyRichEditor($old_content) {
 	$content .="// ]]>\n</script>\n";
 	
 	$content_append .="<script type=\"text/javascript\">\n// <![CDATA[\n";
-	// disable old editor here if editor is to be initialized
-	if($init_editor) 	$content_append .= $q_config['js']['qtrans_disable_old_editor'];
 	$content_append .="function qtrans_editorInit2() {\n";
-	
-	// disable old editor here if editor is not to be initialized
-	if(!$init_editor) 	$content_append .= $q_config['js']['qtrans_disable_old_editor'];
 	
 	// show default language tab
 	$content_append .="document.getElementById('qtrans_select_".$q_config['default_language']."').className='wp-switch-editor switch-tmce switch-html';\n";
