@@ -165,7 +165,7 @@ function qtrans_modifyExcerpt() {
 		echo qtrans_createTitlebarButton('postexcerpt', $language, 'excerpt', 'qtrans_switcher_postexcerpt_'.$language);
 		echo qtrans_createTextArea('postexcerpt', $language, 'excerpt', 'qtrans_switcher_postexcerpt_'.$language);
 	}
-	echo "qtrans_switch_postbox('postexcerpt','excerpt','".$q_config['default_language']."');";
+	echo "qtrans_switch_postbox('postexcerpt','excerpt','".$q_config['default_language']."', false);";
 	echo "jQuery('#excerpt').hide();";
 	echo "}";
 	echo "// ]]>\n</script>\n";
