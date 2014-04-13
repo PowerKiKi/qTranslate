@@ -1,115 +1,118 @@
-<?php // encoding: utf-8
+<?php
 /*
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
 Description: Adds userfriendly multilingual content support into Wordpress. For Problems visit the <a href="http://www.qianqin.de/qtranslate/forum/">Support Forum</a>.
-Version: 2.5.38
+Version: 2.6
+<<<<<<< HEAD
+Author: Qan Qin
+=======
 Author: Qian Qin
+>>>>>>> QT_SUPPORTED_WP_VERSION fix
 Author URI: http://www.qianqin.de
 Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilingual, widget, switcher, professional, human, translation, service
 */
 /*
-	Most flags in flags directory are made by Luc Balemans and downloaded from
-	FOTW Flags Of The World website at http://flagspot.net/flags/
-	(http://www.crwflags.com/FOTW/FLAGS/wflags.html)
+    Most flags in flags directory are made by Luc Balemans and downloaded from
+    FOTW Flags Of The World website at http://flagspot.net/flags/
+    (http://www.crwflags.com/FOTW/FLAGS/wflags.html)
 */
 /*  Copyright 2008  Qian Qin  (email : mail@qianqin.de)
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /*
-	Default Language Contributers
-	=============================
-	en, de by Qian Qin
-	zh by Junyan Chen
-	fi by Tatu Siltanen
-	fr by Damien Choizit
-	nl by RobV
-	sv by bear3556, johdah 
-	it by Lorenzo De Tomasi
-	ro, hu by Jani Monoses
-	ja by Brian Parker
-	es by June
-	vi by hathhai
-	ar by Mohamed Magdy
-	pt by netolazaro
-	gl by Andrés Bott
-	
-	Plugin Translation Contributers
-	===============================
-	en, de by Qian Qin
-	es_ES by Alejandro Urrutia
-	fr by eriath
-	tr by freeuser
-	it by shecky
-	nl by BlackDex
-	id by Masino Sinaga
-	pt by claudiotereso
-	az by evlenirikbiz
-	bg by Dimitar Mitev
-	da by meviper
-	mk by Pavle Boskoski
-	cz by bengo
-	ja by dapperdanman1400
-	ms by webgrrrl
-	es_CA by CarlosSanz
-	hu by nb000
-	zh_CN by silverfox
-	eo by Chuck Smith
-	pt_BR by Marcelo Paoli
-	ru by viaestvita
-	ro by ipuiu
-	sv by tobi
-	
-	Sponsored Features
-	==================
-	Excerpt Translation by bastiaan van rooden (www.nothing.ch)
+    Default Language Contributers
+    =============================
+    en, de by Qian Qin
+    zh by Junyan Chen
+    fi by Tatu Siltanen
+    fr by Damien Choizit
+    nl by RobV
+    sv by bear3556, johdah
+    it by Lorenzo De Tomasi
+    ro, hu by Jani Monoses
+    ja by Brian Parker
+    es by June
+    vi by hathhai
+    ar by Mohamed Magdy
+    pt by netolazaro
+    gl by Andrés Bott
 
-	Specials thanks
-	===============
-	All Supporters! Thanks for all the gifts, cards and donations!
+    Plugin Translation Contributers
+    ===============================
+    en, de by Qian Qin
+    es_ES by Alejandro Urrutia
+    fr by eriath
+    tr by freeuser
+    it by shecky
+    nl by BlackDex
+    id by Masino Sinaga
+    pt by claudiotereso
+    az by evlenirikbiz
+    bg by Dimitar Mitev
+    da by meviper
+    mk by Pavle Boskoski
+    cz by bengo
+    ja by dapperdanman1400
+    ms by webgrrrl
+    es_CA by CarlosSanz
+    hu by nb000
+    zh_CN by silverfox
+    eo by Chuck Smith
+    pt_BR by Marcelo Paoli
+    ru by viaestvita
+    ro by ipuiu
+    sv by tobi
+
+    Sponsored Features
+    ==================
+    Excerpt Translation by bastiaan van rooden (www.nothing.ch)
+
+    Specials thanks
+    ===============
+    All Supporters! Thanks for all the gifts, cards and donations!
 */
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
 /* There is no need to edit anything here! */
-
-// qTranslate Editor will only activated for the given version of Wordpress.
-// Can be changed to use with other versions but might cause problems and/or data loss!
-define('QT_SUPPORTED_WP_VERSION', '3.7.1');
-define('QT_STRING',		1);
-define('QT_BOOLEAN',	2);
-define('QT_INTEGER',	3);
-define('QT_URL',		4);
-define('QT_LANGUAGE',	5);
+//qTranslate use global $wp_version
+//Will be works with new versions of Wordpress, don't need to change version every time
+define('QT_SUPPORTED_WP_VERSION', $wp_version);
+define('QT_STRING',        1);
+define('QT_BOOLEAN',    2);
+define('QT_INTEGER',    3);
+define('QT_URL',        4);
+define('QT_LANGUAGE',    5);
 define('QT_UNTRANSLATED_HIDE', 1);
 define('QT_UNTRANSLATED_MESSAGE', 0);
 define('QT_UNTRANSLATED_DEFAULT', 2);
-define('QT_URL_QUERY',	1);
-define('QT_URL_PATH',	2);
-define('QT_URL_DOMAIN',	3);
-define('QT_STRFTIME_OVERRIDE',	1);
-define('QT_DATE_OVERRIDE',		2);
-define('QT_DATE',				3);
-define('QT_STRFTIME',			4);
+define('QT_URL_QUERY',    1);
+define('QT_URL_PATH',    2);
+define('QT_URL_DOMAIN',    3);
+define('QT_STRFTIME_OVERRIDE',    1);
+define('QT_DATE_OVERRIDE',        2);
+define('QT_DATE',                3);
+define('QT_STRFTIME',            4);
 
 // enable the use of following languages (order=>language)
 $q_config['enabled_languages'] = array(
-		'0' => 'de',
-		'1' => 'en', 
-		'2' => 'zh'
-	);
+        '0' => 'de',
+        '1' => 'en',
+        '2' => 'zh'
+    );
 
 // sets default language
 $q_config['default_language'] = 'en';
@@ -126,7 +129,7 @@ $q_config['auto_update_mo'] = true;
 // hide language tag for default language
 $q_config['hide_default_language'] = true;
 
-// sets default url mode 
+// sets default url mode
 // QT_URL_QUERY - query (questionmark)
 // QT_URL_PATH - pre-path
 // QT_URL_DOMAIN - pre-domain
@@ -274,7 +277,7 @@ $q_config['flag']['pt'] = 'br.png';
 $q_config['flag']['gl'] = 'galego.png';
 
 // Location of flags (needs trailing slash!)
-$q_config['flag_location'] = 'plugins/qtranslate/flags/';
+$q_config['flag_location'] = 'plugins/qTranslate/flags/';
 
 // Don't convert URLs to this file types
 $q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js';
@@ -459,7 +462,7 @@ require_once(dirname(__FILE__)."/qtranslate_configuration.php");
 
 // load qTranslate Services if available
 if(file_exists(dirname(__FILE__)."/qtranslate_services.php"))
-	require_once(dirname(__FILE__)."/qtranslate_services.php");
+    require_once(dirname(__FILE__)."/qtranslate_services.php");
 
 // set hooks at the end
 require_once(dirname(__FILE__)."/qtranslate_hooks.php");
