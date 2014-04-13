@@ -1,4 +1,4 @@
-<?php // encoding: utf-8
+<?php
 /*
 Plugin Name: qTranslate
 Plugin URI: http://www.qianqin.de/qtranslate/
@@ -88,17 +88,6 @@ Tags: multilingual, multi, language, admin, tinymce, qTranslate, Polyglot, bilin
 /* DEFAULT CONFIGURATION PART BEGINS HERE */
 
 /* There is no need to edit anything here! */
-
-<<<<<<< HEAD
-// qTranslate Editor will only activated for the given version of Wordpress.
-// Can be changed to use with other versions but might cause problems and/or data loss!
-define('QT_SUPPORTED_WP_VERSION', '3.8');
-define('QT_STRING',		1);
-define('QT_BOOLEAN',	2);
-define('QT_INTEGER',	3);
-define('QT_URL',		4);
-define('QT_LANGUAGE',	5);
-=======
 //qTranslate use global $wp_version
 //Will be works with new versions of Wordpress, don't need to change version every time
 define('QT_SUPPORTED_WP_VERSION', $wp_version);
@@ -107,7 +96,6 @@ define('QT_BOOLEAN',    2);
 define('QT_INTEGER',    3);
 define('QT_URL',        4);
 define('QT_LANGUAGE',    5);
->>>>>>> QT_SUPPORTED_WP_VERSION fix
 define('QT_UNTRANSLATED_HIDE', 1);
 define('QT_UNTRANSLATED_MESSAGE', 0);
 define('QT_UNTRANSLATED_DEFAULT', 2);
@@ -289,7 +277,7 @@ $q_config['flag']['pt'] = 'br.png';
 $q_config['flag']['gl'] = 'galego.png';
 
 // Location of flags (needs trailing slash!)
-$q_config['flag_location'] = 'plugins/qtranslate/flags/';
+$q_config['flag_location'] = 'plugins/qTranslate/flags/';
 
 // Don't convert URLs to this file types
 $q_config['ignore_file_types'] = 'gif,jpg,jpeg,png,pdf,swf,tif,rar,zip,7z,mpg,divx,mpeg,avi,css,js';
