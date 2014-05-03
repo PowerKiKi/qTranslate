@@ -455,9 +455,9 @@ function qtrans_strftime($format, $date, $default = '', $before = '', $after = '
 	return $before.strftime($format, $date).$after;
 }
 
-function qtrans_dateFromPostForCurrentLanguage($old_date, $format ='', $before = '', $after = '') {
+function qtrans_dateFromPostForCurrentLanguage($old_date, $format ='') {
 	global $post;
-	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$post->post_date), $old_date, $before, $after);
+	return qtrans_strftime(qtrans_convertDateFormat($format), mysql2date('U',$post->post_date), $old_date);
 }
 
 function qtrans_dateModifiedFromPostForCurrentLanguage($old_date, $format ='') {
