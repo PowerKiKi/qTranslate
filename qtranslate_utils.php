@@ -163,6 +163,8 @@ function qtrans_convertDateFormatToStrftimeFormat($format) {
 
 function qtrans_convertFormat($format, $default_format) {
 	global $q_config;
+        // if timestamp is requested, don't replace it
+        if('U'==$format) return qtrans_convertDateFormatToStrftimeFormat($format);
 	// check for multilang formats
 	$format = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($format);
 	$default_format = qtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage($default_format);
