@@ -1,5 +1,5 @@
 === qTranslate ===
-Contributors: chineseleper
+Contributors: johnclause, chineseleper, Vavooon, grafcom
 Tags: multilingual, language, admin, tinymce, bilingual, widget, switcher, i18n, l10n, multilanguage, professional, translation, service, human
 Requires at least: 3.8.1
 Tested up to: 3.8.1
